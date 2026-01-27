@@ -1,60 +1,69 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabaseClient';
 import HeroSection from '../components/home/HeroSection';
-import InstituteStats from '../components/home/InstituteStats';
 import ProfessorCard from '../components/common/ProfessorCard';
 import StudentCard from '../components/common/StudentCard';
 import WorkCard from '../components/works/WorkCard';
 import TopicCard from '../components/community/TopicCard';
-import { ArrowLeft, Users, BookOpen, MessageSquare, GraduationCap } from 'lucide-react';
+import { Users, BookOpen, MessageSquare, GraduationCap } from 'lucide-react';
 
 const HomePage = () => {
   const [faculty, setFaculty] = useState<any[]>([]);
   const [research, setResearch] = useState<any[]>([]);
   const [topics, setTopics] = useState<any[]>([]);
   const [studentsList, setStudentsList] = useState<any[]>([]);
+  const [stats, setStats] = useState({ professors: 0, students: 0, works: 0 });
+  const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        // 1. Elite Faculty (Last 4 approved professors)
+        // Fetch Stats
+        const [profResult, studResult, workResult] = await Promise.all([
+          supabase.from('profiles').select('id', { count: 'exact', head: true }).eq('role', 'professor'),
+          supabase.from('profiles').select('id', { count: 'exact', head: true }).eq('role', 'student'),
+          supabase.from('works').select('id', { count: 'exact', head: true })
+        ]);
+
+        setStats({
+          professors: profResult.count || 0,
+          students: studResult.count || 0,
+          works: workResult.count || 0
+        });
+
+        // 1. Elite Faculty
         const { data: facultyData } = await supabase
           .from('profiles')
           .select('*')
           .eq('role', 'professor')
-          .order('created_at', { ascending: false })
-          .limit(4);
+          .order('created_at', { ascending: false });
 
-        // 2. Latest Research (Last 3 works)
+        // 2. Latest Research
         const { data: researchData } = await supabase
           .from('works')
           .select(`
             *,
             profiles:professor_id (full_name, avatar_url)
           `)
-          .order('created_at', { ascending: false })
-          .limit(3);
+          .order('created_at', { ascending: false });
 
-        // 3. Scientific Discourse (Top 2 active community topics)
-        // We'll use created_at for "Latest" as requested in ordering reminder: "order by 'created_at' descending"
+        // 3. Scientific Discourse
         const { data: topicsData } = await supabase
           .from('community_topics')
           .select(`
             *,
             profiles:author_id (full_name)
           `)
-          .order('created_at', { ascending: false })
-          .limit(2);
+          .order('created_at', { ascending: false });
 
-        // 4. New Researchers (Last 4 joined students)
+        // 4. New Researchers
         const { data: studentsData } = await supabase
           .from('profiles')
           .select('*')
           .eq('role', 'student')
-          .order('created_at', { ascending: false })
-          .limit(4);
+          .order('created_at', { ascending: false });
 
         if (facultyData) setFaculty(facultyData);
         if (researchData) setResearch(researchData.map(w => ({
@@ -80,12 +89,17 @@ const HomePage = () => {
     fetchData();
   }, []);
 
+  const filteredFaculty = faculty.filter(f => f.full_name?.includes(searchTerm)).slice(0, 4);
+  const filteredResearch = research.filter(r => r.title?.includes(searchTerm)).slice(0, 3);
+  const filteredTopics = topics.filter(t => t.title?.includes(searchTerm)).slice(0, 2);
+  const filteredStudents = studentsList.filter(s => s.full_name?.includes(searchTerm)).slice(0, 4);
+
   const EmptyState = ({ message }: { message: string }) => (
     <div style={{
       textAlign: 'center',
       padding: '3rem',
-      backgroundColor: 'var(--color-surface)',
-      borderRadius: 'var(--radius-lg)',
+      backgroundColor: 'white',
+      borderRadius: 'var(--radius-md)',
       border: '1px dashed var(--color-accent)',
       color: 'var(--color-primary)',
       fontWeight: 'bold'
@@ -95,97 +109,93 @@ const HomePage = () => {
   );
 
   const SectionHeader = ({ title, link, icon: Icon }: { title: string, link: string, icon: any }) => (
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2.5rem', borderBottom: '2px solid var(--color-surface-alt)', paddingBottom: '1rem' }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-        <div style={{ backgroundColor: 'var(--color-primary)', padding: '0.6rem', borderRadius: 'var(--radius-md)', color: 'white' }}>
-          <Icon size={24} />
-        </div>
-        <h2 style={{ fontSize: '1.75rem', color: 'var(--color-primary)', fontWeight: '800' }}>{title}</h2>
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+        <Icon size={20} color="var(--color-accent)" />
+        <h2 style={{ fontSize: '1.25rem', color: '#1E293B', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{title}</h2>
       </div>
-      <a href={link} style={{ color: 'var(--color-accent)', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1rem' }}>
-        استكشاف الكل <ArrowLeft size={18} />
+      <a href={link} style={{ color: 'var(--color-text-secondary)', fontWeight: 'bold', fontSize: '0.85rem' }}>
+        عرض الكل
       </a>
     </div>
   );
 
   return (
     <>
-      <HeroSection />
-      <InstituteStats />
+      <HeroSection stats={stats} onSearch={setSearchTerm} />
 
-      <div style={{ backgroundColor: 'white', padding: '5rem 0' }}>
+      <div style={{ backgroundColor: '#F8FAFC', padding: '4rem 0' }}>
         <div className="container">
-          {/* Elite Faculty */}
-          <section style={{ marginBottom: '6rem' }}>
-            <SectionHeader title="نخبة الأساتذة" link="/professors" icon={Users} />
-            {loading ? (
-              <div className="animate-pulse" style={{ height: '300px', backgroundColor: 'var(--color-surface)', borderRadius: 'var(--radius-md)' }}></div>
-            ) : faculty.length > 0 ? (
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-                gap: '2rem'
-              }}>
-                {faculty.map((professor) => (
-                  <ProfessorCard key={professor.id} professor={professor} />
-                ))}
-              </div>
-            ) : <EmptyState message="سيتم إضافة المحتوى قريباً" />}
-          </section>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '4rem' }}>
 
-          {/* Latest Research */}
-          <section style={{ marginBottom: '6rem' }}>
-            <SectionHeader title="أحدث البحوث والمؤلفات" link="/works" icon={BookOpen} />
-            {loading ? (
-              <div className="animate-pulse" style={{ height: '350px', backgroundColor: 'var(--color-surface)', borderRadius: 'var(--radius-md)' }}></div>
-            ) : research.length > 0 ? (
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
-                gap: '2.5rem'
-              }}>
-                {research.map((work) => (
-                  <WorkCard key={work.id} work={work} />
-                ))}
-              </div>
-            ) : <EmptyState message="سيتم إضافة المحتوى قريباً" />}
-          </section>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '4rem' }}>
+              {/* Left Column: Research & Discourse */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '4rem' }}>
+                <section>
+                  <SectionHeader title="آخر الأبحاث والأعمال" link="/works" icon={BookOpen} />
+                  {loading ? (
+                    <div className="animate-pulse" style={{ height: '300px', backgroundColor: 'white', borderRadius: 'var(--radius-md)' }}></div>
+                  ) : filteredResearch.length > 0 ? (
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '1.5rem' }}>
+                      {filteredResearch.map((work) => (
+                        <WorkCard key={work.id} work={work} />
+                      ))}
+                    </div>
+                  ) : <EmptyState message="سيتم إضافة المحتوى قريباً" />}
+                </section>
 
-          {/* Scientific Discourse */}
-          <section style={{ marginBottom: '6rem' }}>
-            <SectionHeader title="المجالس العلمية النشطة" link="/community" icon={MessageSquare} />
-            {loading ? (
-              <div className="animate-pulse" style={{ height: '250px', backgroundColor: 'var(--color-surface)', borderRadius: 'var(--radius-md)' }}></div>
-            ) : topics.length > 0 ? (
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))',
-                gap: '2rem'
-              }}>
-                {topics.map((topic) => (
-                  <TopicCard key={topic.id} topic={topic} />
-                ))}
+                <section>
+                  <SectionHeader title="المجالس العلمية" link="/community" icon={MessageSquare} />
+                  {loading ? (
+                    <div className="animate-pulse" style={{ height: '200px', backgroundColor: 'white', borderRadius: 'var(--radius-md)' }}></div>
+                  ) : filteredTopics.length > 0 ? (
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '1.5rem' }}>
+                      {filteredTopics.map((topic) => (
+                        <TopicCard key={topic.id} topic={topic} />
+                      ))}
+                    </div>
+                  ) : <EmptyState message="سيتم إضافة المحتوى قريباً" />}
+                </section>
               </div>
-            ) : <EmptyState message="سيتم إضافة المحتوى قريباً" />}
-          </section>
 
-          {/* New Researchers */}
-          <section>
-            <SectionHeader title="الباحثون الجدد" link="/students" icon={GraduationCap} />
-            {loading ? (
-              <div className="animate-pulse" style={{ height: '280px', backgroundColor: 'var(--color-surface)', borderRadius: 'var(--radius-md)' }}></div>
-            ) : studentsList.length > 0 ? (
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-                gap: '2rem'
-              }}>
-                {studentsList.map((student) => (
-                  <StudentCard key={student.id} student={student} />
-                ))}
+              {/* Right Column: Faculty & Students */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '4rem' }}>
+                <section>
+                  <SectionHeader title="بيئة بحثية للنخبة" link="/professors" icon={Users} />
+                  {loading ? (
+                    <div className="animate-pulse" style={{ height: '350px', backgroundColor: 'white', borderRadius: 'var(--radius-md)' }}></div>
+                  ) : filteredFaculty.length > 0 ? (
+                    <div style={{
+                      display: 'grid',
+                      gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+                      gap: '1.25rem'
+                    }}>
+                      {filteredFaculty.map((professor) => (
+                        <ProfessorCard key={professor.id} professor={professor} />
+                      ))}
+                    </div>
+                  ) : <EmptyState message="سيتم إضافة المحتوى قريباً" />}
+                </section>
+
+                <section>
+                  <SectionHeader title="الباحثون المنضمون" link="/students" icon={GraduationCap} />
+                  {loading ? (
+                    <div className="animate-pulse" style={{ height: '250px', backgroundColor: 'white', borderRadius: 'var(--radius-md)' }}></div>
+                  ) : filteredStudents.length > 0 ? (
+                    <div style={{
+                      display: 'grid',
+                      gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+                      gap: '1.25rem'
+                    }}>
+                      {filteredStudents.map((student) => (
+                        <StudentCard key={student.id} student={student} />
+                      ))}
+                    </div>
+                  ) : <EmptyState message="سيتم إضافة المحتوى قريباً" />}
+                </section>
               </div>
-            ) : <EmptyState message="سيتم إضافة المحتوى قريباً" />}
-          </section>
+            </div>
+          </div>
         </div>
       </div>
     </>

@@ -16,54 +16,53 @@ interface WorkCardProps {
 const WorkCard = ({ work }: WorkCardProps) => {
     return (
         <div className="card-hover" style={{
-            padding: '2rem',
+            padding: '1.25rem',
             backgroundColor: 'white',
             border: '1px solid var(--color-border)',
             borderRadius: 'var(--radius-md)',
             display: 'flex',
             flexDirection: 'column',
-            gap: '1rem',
-            height: '100%'
+            gap: '0.75rem',
+            height: '100%',
+            transition: 'all 0.3s ease'
         }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                <div>
-                    <span style={{
-                        fontSize: '0.8rem',
-                        color: 'var(--color-accent)',
-                        fontWeight: 'bold',
-                        textTransform: 'uppercase',
-                        letterSpacing: '1px'
-                    }}>
-                        {work.type === 'Article' ? 'بحث' : 'كتاب'}
-                    </span>
-                    <Link to={`/works/${work.id}`}>
-                        <h3 style={{ fontSize: '1.25rem', marginTop: '0.5rem', marginBottom: '0.5rem', color: 'var(--color-text-primary)', lineHeight: '1.4' }}>
-                            {work.title}
-                        </h3>
-                    </Link>
-                </div>
-                <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--color-text-secondary)', fontSize: '0.85rem' }}>
+                <span style={{
+                    fontSize: '0.75rem',
+                    color: 'var(--color-accent)',
+                    fontWeight: 'bold',
+                    letterSpacing: '0.5px'
+                }}>
+                    {work.type === 'Article' ? 'بحث' : 'كتاب'}
+                </span>
+                <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--color-text-secondary)', fontSize: '0.8rem' }}>
                     <Calendar size={14} />
                     {work.publishDate}
                 </span>
             </div>
 
-            <p style={{ color: 'var(--color-text-secondary)', lineHeight: '1.6', fontSize: '0.95rem', flex: 1 }}>
-                {work.abstract.length > 150 ? `${work.abstract.substring(0, 150)}...` : work.abstract}
+            <Link to={`/works/${work.id}`}>
+                <h3 style={{ fontSize: '1.1rem', color: 'var(--color-primary)', fontWeight: '700', lineHeight: '1.4' }}>
+                    {work.title}
+                </h3>
+            </Link>
+
+            <p style={{ color: 'var(--color-text-secondary)', lineHeight: '1.5', fontSize: '0.85rem', flex: 1 }}>
+                {work.abstract.length > 100 ? `${work.abstract.substring(0, 100)}...` : work.abstract}
             </p>
 
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid var(--color-surface-alt)' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                    <div style={{ width: '28px', height: '28px', borderRadius: '50%', overflow: 'hidden', backgroundColor: 'var(--color-surface-alt)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.5rem', paddingTop: '0.75rem', borderTop: '1px solid var(--color-surface-alt)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <div style={{ width: '24px', height: '24px', borderRadius: '50%', overflow: 'hidden', backgroundColor: 'var(--color-surface-alt)' }}>
                         {work.professorImageUrl ? (
                             <img src={work.professorImageUrl} alt={work.professorName} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                         ) : (
-                            <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--color-text-secondary)', fontSize: '0.7rem' }}>
+                            <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--color-text-secondary)', fontSize: '0.6rem' }}>
                                 ?
                             </div>
                         )}
                     </div>
-                    <span style={{ fontSize: '0.85rem', fontWeight: '500' }}>{work.professorName}</span>
+                    <span style={{ fontSize: '0.8rem', fontWeight: '600' }}>{work.professorName}</span>
                 </div>
 
                 <Link to={`/works/${work.id}`} style={{
@@ -71,11 +70,10 @@ const WorkCard = ({ work }: WorkCardProps) => {
                     fontWeight: 'bold',
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '0.4rem',
-                    fontSize: '0.9rem'
+                    gap: '0.3rem',
+                    fontSize: '0.85rem'
                 }}>
-                    التفاصيل
-                    <ArrowRight size={16} />
+                    <ArrowRight size={14} />
                 </Link>
             </div>
         </div>

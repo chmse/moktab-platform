@@ -3,9 +3,12 @@ import Navbar from './Navbar';
 
 const Footer = () => {
     return (
-        <footer style={{ backgroundColor: 'var(--color-surface)', borderTop: '1px solid var(--color-border)', padding: '2rem 0', marginTop: 'auto' }}>
-            <div className="container" style={{ textAlign: 'center', color: 'var(--color-text-secondary)' }}>
-                <p>&copy; {new Date().getFullYear()} منصة مكتب الأكاديمية. جميع الحقوق محفوظة.</p>
+        <footer style={{ backgroundColor: '#0F172A', borderTop: '1px solid rgba(255,255,255,0.05)', padding: '3rem 0', marginTop: 'auto' }}>
+            <div className="container" style={{ textAlign: 'center', color: 'rgba(255,255,255,0.6)' }}>
+                <p style={{ marginBottom: '0.5rem', fontSize: '0.9rem' }}>&copy; {new Date().getFullYear()} مَنْصَة مَكْتَب الأكاديمية. جميع الحقوق محفوظة.</p>
+                <p style={{ fontSize: '0.85rem', fontWeight: 'bold' }}>
+                    برمجة وتطوير <span style={{ color: 'var(--color-accent)' }}>شمس الدين</span>
+                </p>
             </div>
         </footer>
     );
