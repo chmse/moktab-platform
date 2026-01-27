@@ -20,7 +20,19 @@ const Navbar = () => {
     }, []);
 
     return (
-        <nav style={{ backgroundColor: 'var(--color-primary)', color: 'white', padding: '1rem 0', position: 'sticky', top: 0, zIndex: 1000, boxShadow: 'var(--shadow-sm)' }}>
+        <nav style={{
+            background: 'linear-gradient(to right, #000051, #1A237E)',
+            backdropFilter: 'blur(10px)',
+            WebkitBackdropFilter: 'blur(10px)',
+            backgroundColor: 'rgba(0, 0, 81, 0.85)',
+            color: 'white',
+            padding: '1rem 0',
+            position: 'sticky',
+            top: 0,
+            zIndex: 1000,
+            boxShadow: 'var(--shadow-sm)',
+            borderBottom: '1px solid rgba(197, 160, 89, 0.3)'
+        }}>
             <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
 
                 {/* User Menu Area (Left - RTL) */}
@@ -140,8 +152,12 @@ const Navbar = () => {
                 </ul>
 
                 {/* Logo (Right - RTL) */}
-                <div style={{ fontSize: '1.75rem', fontWeight: '800', letterSpacing: '1px' }}>
-                    <Link to="/" style={{ color: 'white', textDecoration: 'none' }}>مكتب</Link>
+                <div style={{ fontSize: '1.5rem', fontWeight: '800', letterSpacing: '0.5px' }}>
+                    <Link to="/" style={{ color: 'white', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        <span style={{ color: 'var(--color-accent)' }}>مَنْصَة</span>
+                        <span>مَكْتَب</span>
+                        <span style={{ fontSize: '1.2rem', opacity: 0.9 }}>الأكاديمية</span>
+                    </Link>
                 </div>
             </div>
 
