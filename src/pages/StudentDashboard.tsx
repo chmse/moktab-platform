@@ -330,13 +330,59 @@ const ProfileSettings = () => {
 
             <div>
                 <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>رابط الصورة الشخصية (URL)</label>
-                <input
-                    type="url"
-                    value={avatarUrl}
-                    onChange={(e) => setAvatarUrl(e.target.value)}
-                    placeholder="https://example.com/avatar.jpg"
-                    style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--color-border)' }}
-                />
+                <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                    <input
+                        type="url"
+                        value={avatarUrl}
+                        onChange={(e) => setAvatarUrl(e.target.value)}
+                        placeholder="https://example.com/avatar.jpg"
+                        style={{ flex: 1, padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--color-border)' }}
+                    />
+                    <label style={{
+                        padding: '0.75rem 1rem',
+                        backgroundColor: 'var(--color-surface-alt)',
+                        border: '1px solid var(--color-border)',
+                        borderRadius: 'var(--radius-md)',
+                        cursor: 'pointer',
+                        whiteSpace: 'nowrap',
+                        fontSize: '0.9rem'
+                    }}>
+                        رفع صورة
+                        <input
+                            type="file"
+                            accept="image/*"
+                            style={{ display: 'none' }}
+                            onChange={async (e) => {
+                                const file = e.target.files?.[0];
+                                if (!file) return;
+
+                                try {
+                                    setLoading(true);
+                                    const fileExt = file.name.split('.').pop();
+                                    const fileName = `${Math.random()}.${fileExt}`;
+                                    const filePath = `avatars/${fileName}`;
+
+                                    const { error: uploadError } = await supabase.storage
+                                        .from('avatars')
+                                        .upload(filePath, file);
+
+                                    if (uploadError) throw uploadError;
+
+                                    const { data: { publicUrl } } = supabase.storage
+                                        .from('avatars')
+                                        .getPublicUrl(filePath);
+
+                                    setAvatarUrl(publicUrl);
+                                    setMessage({ type: 'success', text: 'تم رفع الصورة بنجاح!' });
+                                } catch (error: any) {
+                                    setMessage({ type: 'error', text: 'فشل رفع الصورة: ' + error.message });
+                                } finally {
+                                    setLoading(false);
+                                }
+                            }}
+                        />
+                    </label>
+                </div>
             </div>
 
             <div>

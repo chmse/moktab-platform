@@ -50,15 +50,17 @@ const HeroSection = ({ stats, onSearch }: HeroSectionProps) => {
                         onChange={(e) => onSearch(e.target.value)}
                         style={{
                             width: '100%',
-                            padding: '1rem 3.5rem 1rem 1.5rem',
-                            borderRadius: '12px',
-                            border: '1px solid rgba(255,255,255,0.1)',
-                            fontSize: '1rem',
+                            padding: '1.25rem 3.5rem 1.25rem 1.5rem',
+                            borderRadius: '16px',
+                            border: '2px solid #C5A059',
+                            boxShadow: '0 0 15px rgba(197, 160, 89, 0.2), inset 0 0 20px rgba(0,0,0,0.2)',
+                            fontSize: '1.1rem',
                             outline: 'none',
-                            backgroundColor: 'rgba(255,255,255,0.05)',
+                            backgroundColor: 'rgba(15, 23, 42, 0.8)',
                             color: 'white',
-                            backdropFilter: 'blur(5px)',
-                            transition: 'all 0.3s ease'
+                            backdropFilter: 'blur(10px)',
+                            transition: 'all 0.3s ease',
+                            fontFamily: 'inherit'
                         }}
                         onFocus={(e) => {
                             e.target.style.backgroundColor = 'rgba(255,255,255,0.1)';

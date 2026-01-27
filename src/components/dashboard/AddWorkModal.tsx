@@ -155,15 +155,95 @@ const AddWorkModal = ({ isOpen, onClose, onSuccess }: AddWorkModalProps) => {
 
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                         <div>
-                            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>رابط الملف (PDF)</label>
-                            <input
-                                type="text"
-                                value={pdfUrl}
-                                onChange={(e) => setPdfUrl(e.target.value)}
-                                placeholder="https://example.com/file.pdf"
-                                style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--color-border)' }}
-                            />
+                            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>مصدر الملف</label>
+                            <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                                <button
+                                    type="button"
+                                    onClick={() => setPdfUrl('')}
+                                    style={{
+                                        flex: 1, padding: '0.5rem', fontSize: '0.85rem',
+                                        backgroundColor: !pdfUrl.startsWith('http') && pdfUrl !== '' ? 'var(--color-primary)' : 'var(--color-surface)',
+                                        color: !pdfUrl.startsWith('http') && pdfUrl !== '' ? 'white' : 'var(--color-text)',
+                                        border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm)'
+                                    }}
+                                >
+                                    رفع ملف (PDF)
+                                </button>
+                                <button
+                                    type="button"
+                                    style={{
+                                        flex: 1, padding: '0.5rem', fontSize: '0.85rem',
+                                        backgroundColor: 'var(--color-surface)',
+                                        border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm)'
+                                    }}
+                                >
+                                    أو أدخل رابط مباشر
+                                </button>
+                            </div>
+
+                            <div style={{ position: 'relative' }}>
+                                <input
+                                    type="text"
+                                    value={pdfUrl}
+                                    onChange={(e) => setPdfUrl(e.target.value)}
+                                    placeholder="رابط خارجي (ASJP, ResearchGate...)"
+                                    style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--color-border)' }}
+                                />
+                                <div style={{ marginTop: '0.5rem' }}>
+                                    <label style={{
+                                        display: 'inline-flex',
+                                        alignItems: 'center',
+                                        gap: '0.5rem',
+                                        padding: '0.5rem 1rem',
+                                        backgroundColor: 'var(--color-surface-alt)',
+                                        border: '1px dashed var(--color-border)',
+                                        borderRadius: 'var(--radius-md)',
+                                        cursor: 'pointer',
+                                        fontSize: '0.85rem',
+                                        color: 'var(--color-primary)',
+                                        width: '100%',
+                                        justifyContent: 'center'
+                                    }}>
+                                        <FileText size={16} />
+                                        {submitting ? 'جاري الرفع...' : 'اضغط لرفع ملف PDF'}
+                                        <input
+                                            type="file"
+                                            accept=".pdf"
+                                            style={{ display: 'none' }}
+                                            onChange={async (e) => {
+                                                const file = e.target.files?.[0];
+                                                if (!file) return;
+
+                                                try {
+                                                    setSubmitting(true);
+                                                    const fileExt = file.name.split('.').pop();
+                                                    const fileName = `${Math.random()}.${fileExt}`;
+                                                    const filePath = `works/${fileName}`;
+
+                                                    const { error: uploadError } = await supabase.storage
+                                                        .from('works')
+                                                        .upload(filePath, file);
+
+                                                    if (uploadError) throw uploadError;
+
+                                                    const { data: { publicUrl } } = supabase.storage
+                                                        .from('works')
+                                                        .getPublicUrl(filePath);
+
+                                                    setPdfUrl(publicUrl);
+                                                    alert('تم رفع الملف بنجاح!');
+                                                } catch (error: any) {
+                                                    alert('فشل رفع الملف: ' + error.message);
+                                                } finally {
+                                                    setSubmitting(false);
+                                                }
+                                            }}
+                                        />
+                                    </label>
+                                </div>
+                            </div>
                         </div>
+
                         <div>
                             <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>رابط الغلاف (اختياري)</label>
                             <input
@@ -192,8 +272,8 @@ const AddWorkModal = ({ isOpen, onClose, onSuccess }: AddWorkModalProps) => {
                         </button>
                     </div>
                 </form>
-            </div>
-        </div>
+            </div >
+        </div >
     );
 };
 

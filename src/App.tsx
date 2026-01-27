@@ -17,6 +17,7 @@ import RegisterStudentPage from './pages/RegisterStudentPage';
 import CommunityPage from './pages/CommunityPage';
 import TopicDetail from './pages/TopicDetail';
 import AdminConsole from './pages/AdminConsole';
+import SearchPage from './pages/SearchPage';
 
 import { useAuth } from './context/AuthContext';
 
@@ -59,6 +60,7 @@ function App() {
           <Route path="professors/:id" element={<ProfessorProfilePage />} />
           <Route path="works" element={<ScientificWorksPage />} />
           <Route path="works/:id" element={<WorkDetailPage />} />
+          <Route path="search" element={<SearchPage />} />
 
           <Route
             path="dashboard"
