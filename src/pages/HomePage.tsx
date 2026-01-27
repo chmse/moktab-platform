@@ -143,6 +143,114 @@ const HomePage = () => {
     <>
       <HeroSection stats={stats} onSearch={setSearchTerm} />
 
+      {/* Entrance Hub Section */}
+      <div style={{ backgroundColor: '#0a0a0a', padding: '4rem 0', color: 'white' }}>
+        <div className="container">
+          <h2 style={{ fontSize: '2rem', fontWeight: '900', textAlign: 'center', marginBottom: '3rem', color: '#c5a059' }}>
+            بوابة الدخول
+          </h2>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
+            <div className="card-hover" style={{
+              backgroundColor: '#1a1a1a',
+              padding: '2.5rem',
+              borderRadius: 'var(--radius-lg)',
+              border: '2px solid #c5a059',
+              textAlign: 'center',
+              transition: 'all 0.3s ease',
+              cursor: 'pointer'
+            }}>
+              <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>📚</div>
+              <h3 style={{ fontSize: '1.5rem', fontWeight: '800', marginBottom: '0.5rem', color: '#c5a059' }}>المكتبة الرقمية</h3>
+              <p style={{ color: '#ccc', fontSize: '0.95rem' }}>مجموعة شاملة من الأبحاث والمراجع العلمية</p>
+            </div>
+            <div className="card-hover" style={{
+              backgroundColor: '#1a1a1a',
+              padding: '2.5rem',
+              borderRadius: 'var(--radius-lg)',
+              border: '2px solid #c5a059',
+              textAlign: 'center',
+              transition: 'all 0.3s ease',
+              cursor: 'pointer'
+            }}>
+              <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🎓</div>
+              <h3 style={{ fontSize: '1.5rem', fontWeight: '800', marginBottom: '0.5rem', color: '#c5a059' }}>بيت الخبرة</h3>
+              <p style={{ color: '#ccc', fontSize: '0.95rem' }}>استشارات علمية من نخبة الأساتذة</p>
+            </div>
+            <div className="card-hover" style={{
+              backgroundColor: '#1a1a1a',
+              padding: '2.5rem',
+              borderRadius: 'var(--radius-lg)',
+              border: '2px solid #c5a059',
+              textAlign: 'center',
+              transition: 'all 0.3s ease',
+              cursor: 'pointer'
+            }}>
+              <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>💬</div>
+              <h3 style={{ fontSize: '1.5rem', fontWeight: '800', marginBottom: '0.5rem', color: '#c5a059' }}>رواق الحوار</h3>
+              <p style={{ color: '#ccc', fontSize: '0.95rem' }}>منصة للنقاش العلمي والتبادل المعرفي</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Research Cloud Section */}
+      <div style={{ backgroundColor: '#f8f9fa', padding: '3rem 0' }}>
+        <div className="container">
+          <h2 style={{ fontSize: '1.75rem', fontWeight: '900', textAlign: 'center', marginBottom: '2rem', color: '#1a1a1a' }}>
+            التخصصات البارزة
+          </h2>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', justifyContent: 'center' }}>
+            {['القانون', 'الأدب', 'الذكاء_الاصطناعي', 'الفقه', 'التاريخ', 'اللغة_العربية'].map((tag, idx) => (
+              <div key={idx} className="card-hover" style={{
+                padding: '0.75rem 1.5rem',
+                backgroundColor: 'white',
+                border: '2px solid #c5a059',
+                borderRadius: '100px',
+                color: '#1a1a1a',
+                fontWeight: '700',
+                fontSize: '0.95rem',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease'
+              }}>
+                #{tag}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* About Section - Institutional Mission */}
+      <div style={{ backgroundColor: 'white', padding: '4rem 0' }}>
+        <div className="container">
+          <h2 style={{ fontSize: '2rem', fontWeight: '900', textAlign: 'center', marginBottom: '3rem', color: '#1a1a1a' }}>
+            رسالتنا المؤسسية
+          </h2>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '2.5rem' }}>
+            <div style={{ textAlign: 'center', padding: '2rem' }}>
+              <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>📖</div>
+              <h3 style={{ fontSize: '1.3rem', fontWeight: '800', marginBottom: '1rem', color: '#c5a059' }}>التوثيق العلمي</h3>
+              <p style={{ color: '#666', lineHeight: '1.8', fontSize: '0.95rem' }}>
+                نوفر منصة موثوقة لحفظ ونشر الأبحاث والأعمال العلمية بأعلى معايير الجودة
+              </p>
+            </div>
+            <div style={{ textAlign: 'center', padding: '2rem' }}>
+              <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🤖</div>
+              <h3 style={{ fontSize: '1.3rem', fontWeight: '800', marginBottom: '1rem', color: '#c5a059' }}>الذكاء الاصطناعي</h3>
+              <p style={{ color: '#666', lineHeight: '1.8', fontSize: '0.95rem' }}>
+                نستخدم أحدث تقنيات الذكاء الاصطناعي لتحليل المحتوى وتقديم توصيات ذكية
+              </p>
+            </div>
+            <div style={{ textAlign: 'center', padding: '2rem' }}>
+              <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🤝</div>
+              <h3 style={{ fontSize: '1.3rem', fontWeight: '800', marginBottom: '1rem', color: '#c5a059' }}>التفاعل العلمي</h3>
+              <p style={{ color: '#666', lineHeight: '1.8', fontSize: '0.95rem' }}>
+                نشجع الحوار البناء والتعاون بين الباحثين والأساتذة في مختلف التخصصات
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div style={{ backgroundColor: '#F8FAFC', padding: '4rem 0' }}>
         <div className="container">
           <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '4rem' }}>
