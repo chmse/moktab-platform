@@ -19,13 +19,13 @@ const WorkCard = ({ work, variant = 'default' }: WorkCardProps) => {
 
     return (
         <div className="card-hover" style={{
-            padding: isMini ? '1rem' : '1.25rem',
+            padding: isMini ? '0.75rem' : '1.25rem',
             backgroundColor: 'white',
             border: '1px solid var(--color-border)',
             borderRadius: 'var(--radius-md)',
             display: 'flex',
             flexDirection: 'column',
-            gap: isMini ? '0.5rem' : '0.75rem',
+            gap: isMini ? '0.4rem' : '0.75rem',
             height: '100%',
             transition: 'all 0.3s ease'
         }}>

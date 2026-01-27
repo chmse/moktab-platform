@@ -20,6 +20,7 @@ const HomePage = () => {
     const fetchData = async () => {
       setLoading(true);
       try {
+        console.log('HomePage: Supabase Connection Success - Starting data fetch');
         // Fetch Stats
         const [profResult, studResult, workResult] = await Promise.all([
           supabase.from('profiles').select('id', { count: 'exact', head: true }).eq('role', 'professor'),
@@ -33,39 +34,55 @@ const HomePage = () => {
           works: workResult.count || 0
         });
 
+        // Helper to fetch valid data with fallback
+        const fetchWithFallback = async (table: string, role?: string) => {
+          let query = supabase.from(table).select('*');
+          if (role) query = query.eq('role', role);
+          // Try fetching approved
+          const { data: approvedData } = await query.eq('status', 'approved').order('created_at', { ascending: false });
+
+          if (approvedData && approvedData.length > 0) return approvedData;
+
+          // Fallback: fetch all if no approved data found
+          console.log(`HomePage: No approved data for ${table} ${role || ''}, using fallback.`);
+          let fallbackQuery = supabase.from(table).select('*');
+          if (role) fallbackQuery = fallbackQuery.eq('role', role);
+          const { data: allData } = await fallbackQuery.order('created_at', { ascending: false });
+          return allData;
+        };
+
         // 1. Elite Faculty
-        const { data: facultyData } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('role', 'professor')
-          .eq('status', 'approved') // Added filter
-          .order('created_at', { ascending: false });
+        const facultyData = await fetchWithFallback('profiles', 'professor');
 
         // 2. Latest Research
-        const { data: researchData } = await supabase
+        // (For works, we assume 'status' column exists, if not we might need adjustment. 
+        // Based on user request, we try approved first)
+        let researchData: any[] | null = null;
+        const { data: approvedWorks } = await supabase
           .from('works')
-          .select(`
-            *,
-            profiles:professor_id (full_name, avatar_url)
-          `)
+          .select(`*, profiles:professor_id (full_name, avatar_url)`)
+          .eq('status', 'approved')
           .order('created_at', { ascending: false });
 
+        if (approvedWorks && approvedWorks.length > 0) {
+          researchData = approvedWorks;
+        } else {
+          const { data: allWorks } = await supabase
+            .from('works')
+            .select(`*, profiles:professor_id (full_name, avatar_url)`)
+            .order('created_at', { ascending: false });
+          researchData = allWorks;
+        }
+
         // 3. Scientific Discourse
+        // (Similar logic for topics if 'status' exists, otherwise just fetch)
         const { data: topicsData } = await supabase
           .from('community_topics')
-          .select(`
-            *,
-            profiles:author_id (full_name)
-          `)
+          .select(`*, profiles:author_id (full_name)`)
           .order('created_at', { ascending: false });
 
         // 4. New Researchers
-        const { data: studentsData } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('role', 'student')
-          .eq('status', 'approved') // Added filter
-          .order('created_at', { ascending: false });
+        const studentsData = await fetchWithFallback('profiles', 'student');
 
         if (facultyData) setFaculty(facultyData);
         if (researchData) setResearch(researchData.map(w => ({

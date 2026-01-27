@@ -21,11 +21,10 @@ const Navbar = () => {
 
     return (
         <nav style={{
-            background: '#000033 !important',
+            backgroundColor: '#000033',
+            color: 'white',
             backdropFilter: 'blur(10px)',
             WebkitBackdropFilter: 'blur(10px)',
-            backgroundColor: '#000033 !important',
-            color: 'white',
             padding: '1rem 0',
             position: 'sticky',
             top: 0,
