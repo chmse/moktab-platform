@@ -143,11 +143,11 @@ const HomePage = () => {
                         <WorkCard key={work.id} work={work} variant="mini" />
                       ))}
                     </div>
-                  ) : <EmptyState message="سيتم إضافة المحتوى قريباً" />}
+                  ) : <EmptyState message="لا توجد أبحاث منشورة حالياً" />}
                 </section>
 
                 <section>
-                  <SectionHeader title="المجالس العلمية" link="/community" icon={MessageSquare} />
+                  <SectionHeader title="النقاش العلمي" link="/community" icon={MessageSquare} />
                   {loading ? (
                     <div className="animate-pulse" style={{ height: '200px', backgroundColor: 'white', borderRadius: 'var(--radius-md)' }}></div>
                   ) : filteredTopics.length > 0 ? (
@@ -156,7 +156,7 @@ const HomePage = () => {
                         <TopicCard key={topic.id} topic={topic} />
                       ))}
                     </div>
-                  ) : <EmptyState message="سيتم إضافة المحتوى قريباً" />}
+                  ) : <EmptyState message="لا توجد نقاشات علمية حالياً" />}
                 </section>
               </div>
 
@@ -176,7 +176,7 @@ const HomePage = () => {
                         <ProfessorCard key={professor.id} professor={professor} variant="mini" />
                       ))}
                     </div>
-                  ) : <EmptyState message="سيتم إضافة المحتوى قريباً" />}
+                  ) : <EmptyState message="لا يوجد أساتذة مضافون حالياً" />}
                 </section>
 
                 <section>
@@ -193,7 +193,7 @@ const HomePage = () => {
                         <StudentCard key={student.id} student={student} />
                       ))}
                     </div>
-                  ) : <EmptyState message="سيتم إضافة المحتوى قريباً" />}
+                  ) : <EmptyState message="لا يوجد باحثون مضافون حالياً" />}
                 </section>
               </div>
             </div>

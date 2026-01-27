@@ -55,6 +55,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     useEffect(() => {
         console.log('AuthContext: Initializing auth state...');
+
+        // Safety timeout to ensure loading doesn't get stuck
+        const safetyTimeout = setTimeout(() => {
+            if (loading) {
+                console.warn('AuthContext: Safety timeout triggered, forcing loading to false');
+                setLoading(false);
+            }
+        }, 2000);
+
         // 1. Check current session
         supabase.auth.getSession().then(({ data: { session }, error }) => {
             if (error) {
@@ -92,6 +101,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return () => {
             console.log('AuthContext: Cleaning up subscription');
             subscription.unsubscribe();
+            clearTimeout(safetyTimeout);
         };
     }, []);
 
