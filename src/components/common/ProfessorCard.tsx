@@ -1,6 +1,6 @@
 import type { Professor } from '../../data/mockData';
 import { Link } from 'react-router-dom';
-import { BookOpen, GraduationCap } from 'lucide-react';
+import { GraduationCap } from 'lucide-react';
 
 interface ProfessorCardProps {
     professor: Professor;
