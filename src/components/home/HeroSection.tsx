@@ -1,4 +1,5 @@
 import { Search, Users, BookOpen, GraduationCap } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 interface HeroSectionProps {
     stats: {
@@ -10,6 +11,13 @@ interface HeroSectionProps {
 }
 
 const HeroSection = ({ stats, onSearch }: HeroSectionProps) => {
+    const navigate = useNavigate();
+
+    const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+            navigate(`/search?q=${(e.target as HTMLInputElement).value}`);
+        }
+    };
     return (
         <div style={{
             backgroundColor: '#0F172A',
@@ -48,6 +56,7 @@ const HeroSection = ({ stats, onSearch }: HeroSectionProps) => {
                         type="text"
                         placeholder="ابحث عن اسم أستاذ، عنوان بحث، أو كلمة مفتاحية..."
                         onChange={(e) => onSearch(e.target.value)}
+                        onKeyDown={handleSearch}
                         style={{
                             width: '100%',
                             padding: '1.25rem 3.5rem 1.25rem 1.5rem',

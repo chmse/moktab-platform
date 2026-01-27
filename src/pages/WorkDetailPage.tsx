@@ -3,7 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { supabase } from '../lib/supabaseClient';
 import AISidebar from '../components/works/AISidebar';
 import DiscussionSection from '../components/works/DiscussionSection';
-import { ChevronRight, Calendar, User, Bot, X, Bookmark } from 'lucide-react';
+import { ChevronRight, Calendar, User, Bot, X, Bookmark, BookOpen } from 'lucide-react';
 
 const WorkDetailPage = () => {
     const { id } = useParams<{ id: string }>();
@@ -167,20 +167,58 @@ const WorkDetailPage = () => {
                     <div style={{ marginBottom: '3rem' }}>
                         <h3 style={{ fontSize: '1.25rem', marginBottom: '1rem', color: 'var(--color-primary)' }}>الملخص</h3>
                         <div style={{
-                            backgroundColor: 'var(--color-surface)',
+                            backgroundColor: 'white',
                             padding: '1.5rem',
                             borderRadius: 'var(--radius-md)',
                             borderRight: '4px solid var(--color-accent)',
                             fontStyle: 'italic',
-                            lineHeight: '1.8'
+                            lineHeight: '1.8',
+                            boxShadow: 'var(--shadow-sm)'
                         }}>
                             {work?.abstract || 'لا يوجد ملخص متاح لهذا العمل.'}
                         </div>
                     </div>
 
-                    <article className="text-journal">
-                        {work?.content || 'عذراً، محتوى هذا العمل غير متوفر حالياً للقراءة المباشرة.'}
-                    </article>
+                    <div style={{ marginBottom: '3rem' }}>
+                        {work?.pdf_url && (
+                            <div style={{ marginTop: '2rem' }}>
+                                <a
+                                    href={work.pdf_url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="btn-premium"
+                                    style={{
+                                        display: 'inline-flex',
+                                        alignItems: 'center',
+                                        gap: '0.5rem',
+                                        textDecoration: 'none',
+                                        padding: '0.75rem 1.5rem'
+                                    }}
+                                >
+                                    <BookOpen size={20} />
+                                    قراءة الملف الكامل (PDF)
+                                </a>
+
+                                {work.pdf_url.endsWith('.pdf') && (
+                                    <div style={{ marginTop: '1.5rem', height: '600px', backgroundColor: '#f1f5f9', borderRadius: 'var(--radius-md)', overflow: 'hidden' }}>
+                                        <iframe
+                                            src={work.pdf_url}
+                                            width="100%"
+                                            height="100%"
+                                            style={{ border: 'none' }}
+                                            title="PDF Preview"
+                                        />
+                                    </div>
+                                )}
+                            </div>
+                        )}
+
+                        {work?.content && (
+                            <article className="text-journal" style={{ marginTop: '2rem' }}>
+                                {work.content}
+                            </article>
+                        )}
+                    </div>
 
                     <DiscussionSection workId={id} />
                 </div>

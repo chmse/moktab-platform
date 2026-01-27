@@ -41,14 +41,20 @@ const AdminConsole = () => {
     }, []);
 
     const handleUserAction = async (id: string, newStatus: 'approved' | 'rejected') => {
+        // Optimistic update
+        setPendingUsers(prev => prev.filter(u => u.id !== id));
+
         const { error } = await supabase
             .from('profiles')
             .update({ status: newStatus })
             .eq('id', id);
 
-        if (!error) {
+        if (error) {
+            // Revert if error (optional, but good practice usually, here keeping simple for speed)
+            alert('حدث خطأ أثناء معالجة الطلب');
+            fetchData(); // Refetch to sync truth
+        } else {
             alert(newStatus === 'approved' ? 'تمت الموافقة على المستخدم بنجاح' : 'تم رفض المستخدم');
-            fetchData();
         }
     };
 

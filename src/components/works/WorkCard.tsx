@@ -11,44 +11,47 @@ interface WorkCardProps {
         professorName: string;
         professorImageUrl: string;
     };
+    variant?: 'default' | 'mini';
 }
 
-const WorkCard = ({ work }: WorkCardProps) => {
+const WorkCard = ({ work, variant = 'default' }: WorkCardProps) => {
+    const isMini = variant === 'mini';
+
     return (
         <div className="card-hover" style={{
-            padding: '1.25rem',
+            padding: isMini ? '1rem' : '1.25rem',
             backgroundColor: 'white',
             border: '1px solid var(--color-border)',
             borderRadius: 'var(--radius-md)',
             display: 'flex',
             flexDirection: 'column',
-            gap: '0.75rem',
+            gap: isMini ? '0.5rem' : '0.75rem',
             height: '100%',
             transition: 'all 0.3s ease'
         }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                 <span style={{
-                    fontSize: '0.75rem',
+                    fontSize: isMini ? '0.7rem' : '0.75rem',
                     color: 'var(--color-accent)',
                     fontWeight: 'bold',
                     letterSpacing: '0.5px'
                 }}>
                     {work.type === 'Article' ? 'بحث' : 'كتاب'}
                 </span>
-                <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--color-text-secondary)', fontSize: '0.8rem' }}>
-                    <Calendar size={14} />
+                <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--color-text-secondary)', fontSize: isMini ? '0.75rem' : '0.8rem' }}>
+                    <Calendar size={isMini ? 12 : 14} />
                     {work.publishDate}
                 </span>
             </div>
 
             <Link to={`/works/${work.id}`}>
-                <h3 style={{ fontSize: '1.1rem', color: 'var(--color-primary)', fontWeight: '700', lineHeight: '1.4' }}>
+                <h3 style={{ fontSize: isMini ? '1rem' : '1.1rem', color: 'var(--color-primary)', fontWeight: '700', lineHeight: '1.4' }}>
                     {work.title}
                 </h3>
             </Link>
 
             <p style={{ color: 'var(--color-text-secondary)', lineHeight: '1.5', fontSize: '0.85rem', flex: 1 }}>
-                {work.abstract.length > 100 ? `${work.abstract.substring(0, 100)}...` : work.abstract}
+                {work.abstract.length > (isMini ? 60 : 100) ? `${work.abstract.substring(0, isMini ? 60 : 100)}...` : work.abstract}
             </p>
 
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.5rem', paddingTop: '0.75rem', borderTop: '1px solid var(--color-surface-alt)' }}>

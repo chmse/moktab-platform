@@ -38,6 +38,7 @@ const HomePage = () => {
           .from('profiles')
           .select('*')
           .eq('role', 'professor')
+          .eq('status', 'approved') // Added filter
           .order('created_at', { ascending: false });
 
         // 2. Latest Research
@@ -63,6 +64,7 @@ const HomePage = () => {
           .from('profiles')
           .select('*')
           .eq('role', 'student')
+          .eq('status', 'approved') // Added filter
           .order('created_at', { ascending: false });
 
         if (facultyData) setFaculty(facultyData);
@@ -136,9 +138,9 @@ const HomePage = () => {
                   {loading ? (
                     <div className="animate-pulse" style={{ height: '300px', backgroundColor: 'white', borderRadius: 'var(--radius-md)' }}></div>
                   ) : filteredResearch.length > 0 ? (
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '1.5rem' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '1.5rem' }}>
                       {filteredResearch.map((work) => (
-                        <WorkCard key={work.id} work={work} />
+                        <WorkCard key={work.id} work={work} variant="mini" />
                       ))}
                     </div>
                   ) : <EmptyState message="سيتم إضافة المحتوى قريباً" />}
@@ -171,7 +173,7 @@ const HomePage = () => {
                       gap: '1.25rem'
                     }}>
                       {filteredFaculty.map((professor) => (
-                        <ProfessorCard key={professor.id} professor={professor} />
+                        <ProfessorCard key={professor.id} professor={professor} variant="mini" />
                       ))}
                     </div>
                   ) : <EmptyState message="سيتم إضافة المحتوى قريباً" />}
