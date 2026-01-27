@@ -15,73 +15,88 @@ const ProfessorCard = ({ professor, variant = 'default' }: ProfessorCardProps) =
             backgroundColor: 'white',
             borderRadius: 'var(--radius-md)',
             overflow: 'hidden',
-            border: '1px solid var(--color-border)',
+            border: 'none',
             display: 'flex',
             flexDirection: 'column',
             transition: 'all 0.3s ease',
-            height: '100%'
+            height: '100%',
+            boxShadow: '0 4px 15px rgba(0,0,0,0.05)'
         }}>
-            <div style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem', borderBottom: '1px solid var(--color-surface-alt)' }}>
+            {/* Top Image Section with Overlay */}
+            <div style={{
+                height: isMini ? '160px' : '200px',
+                position: 'relative',
+                overflow: 'hidden'
+            }}>
+                <img
+                    src={professor.imageUrl}
+                    alt={professor.name}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                />
                 <div style={{
-                    width: isMini ? '80px' : '100px',
-                    height: isMini ? '80px' : '100px',
-                    borderRadius: '50%',
-                    overflow: 'hidden',
-                    border: '3px solid white',
-                    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-                    marginBottom: '0.5rem'
+                    position: 'absolute',
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    padding: '2rem 1rem 0.75rem',
+                    background: 'linear-gradient(to top, rgba(0,0,0,0.9), transparent)',
+                    display: 'flex',
+                    alignItems: 'flex-end',
+                    justifyContent: 'flex-start'
                 }}>
-                    <img
-                        src={professor.imageUrl}
-                        alt={professor.name}
-                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                    />
-                </div>
-
-                <div style={{ textAlign: 'center' }}>
-                    <h3 style={{ margin: '0 0 0.5rem 0', fontSize: isMini ? '1rem' : '1.2rem', color: '#1a1a1a', fontWeight: '800', letterSpacing: '-0.5px' }}>{professor.name}</h3>
-                    <p style={{ color: '#666', fontSize: isMini ? '0.8rem' : '0.9rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem', fontWeight: '500' }}>
-                        <GraduationCap size={isMini ? 14 : 16} color="#734822" />
-                        {professor.title}
-                    </p>
+                    <h3 style={{
+                        margin: 0,
+                        fontSize: isMini ? '1rem' : '1.25rem',
+                        color: 'white',
+                        fontWeight: '800',
+                        textShadow: '0 2px 4px rgba(0,0,0,0.3)',
+                        textAlign: 'right'
+                    }}>
+                        {professor.name}
+                    </h3>
                 </div>
             </div>
 
-            <div style={{ padding: isMini ? '1rem' : '1.25rem', flex: 1, display: 'flex', flexDirection: 'column', gap: isMini ? '0.5rem' : '0.75rem', backgroundColor: '#fafafa' }}>
-                {!isMini && (
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem', justifyContent: 'center', marginBottom: '0.5rem' }}>
-                        {professor.interests.slice(0, 2).map((interest, idx) => (
-                            <span key={idx} style={{
-                                fontSize: '0.75rem',
-                                color: '#666',
-                                backgroundColor: '#fff',
-                                padding: '2px 8px',
-                                borderRadius: '12px',
-                                border: '1px solid #eee'
-                            }}>
-                                {interest}
-                            </span>
-                        ))}
+            {/* Middle Content Section */}
+            <div style={{ padding: '1rem', flex: 1, display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', alignItems: 'flex-start' }}>
+                    <span style={{
+                        backgroundColor: '#e0f2fe',
+                        color: '#0369a1',
+                        padding: '0.25rem 0.75rem',
+                        borderRadius: '100px',
+                        fontSize: '0.75rem',
+                        fontWeight: '600'
+                    }}>
+                        {professor.department || 'قسم غير محدد'}
+                    </span>
+
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#4b5563', fontSize: '0.9rem', fontWeight: '500' }}>
+                        <GraduationCap size={16} color="#c5a059" />
+                        <span>{professor.title}</span>
                     </div>
-                )}
-
-                <Link to={`/professors/${professor.id}`} style={{
-                    marginTop: 'auto',
-                    textAlign: 'center',
-                    padding: '0.6rem',
-                    backgroundColor: '#734822',
-                    borderRadius: 'var(--radius-sm)',
-                    color: 'white',
-                    fontSize: '0.85rem',
-                    fontWeight: '600',
-                    transition: 'all 0.2s ease',
-                    textDecoration: 'none',
-                    border: 'none',
-                    display: 'block'
-                }} className="hover-opacity">
-                    {isMini ? 'الملف' : 'الملف الأكاديمي'}
-                </Link>
+                </div>
             </div>
+
+            {/* Bottom Button Section */}
+            <Link to={`/professors/${professor.id}`} style={{
+                backgroundColor: '#c5a059',
+                color: '#1a1a1a',
+                padding: '0.9rem',
+                textAlign: 'center',
+                textDecoration: 'none',
+                fontWeight: 'bold',
+                fontSize: '0.9rem',
+                transition: 'background-color 0.2s ease',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.5rem'
+            }}
+                className="hover-opacity"
+            >
+                <span>عرض الملف الأكاديمي</span>
+            </Link>
         </div>
     );
 };

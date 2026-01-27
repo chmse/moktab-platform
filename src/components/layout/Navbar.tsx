@@ -21,10 +21,10 @@ const Navbar = () => {
 
     return (
         <nav style={{
-            background: '#0a0a0a !important',
+            background: '#000033 !important',
             backdropFilter: 'blur(10px)',
             WebkitBackdropFilter: 'blur(10px)',
-            backgroundColor: '#0a0a0a !important',
+            backgroundColor: '#000033 !important',
             color: 'white',
             padding: '1rem 0',
             position: 'sticky',
@@ -134,7 +134,16 @@ const Navbar = () => {
                                 )}
                             </div>
                         ) : (
-                            <Link to="/login" className="btn-premium" style={{ textDecoration: 'none' }}>
+                            <Link to="/login" style={{
+                                textDecoration: 'none',
+                                backgroundColor: '#c5a059',
+                                color: '#1a1a1a',
+                                padding: '0.5rem 1.5rem',
+                                borderRadius: 'var(--radius-md)',
+                                fontWeight: 'bold',
+                                fontSize: '0.9rem',
+                                transition: 'all 0.2s ease'
+                            }} className="hover-bright">
                                 تسجيل الدخول
                             </Link>
                         )
