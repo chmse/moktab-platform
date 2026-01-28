@@ -234,7 +234,7 @@ const WorkDetailPage = () => {
                 .desktop-sidebar { display: none !important; }
              }
            `}</style>
-                    <AISidebar />
+                    <AISidebar pdfUrl={work?.pdf_url} />
                 </aside>
             </div>
 
@@ -286,7 +286,7 @@ const WorkDetailPage = () => {
                         <button onClick={() => setShowMobileSidebar(false)} style={{ marginBottom: '1rem', color: 'var(--color-text-secondary)' }}>
                             <X size={24} />
                         </button>
-                        <AISidebar />
+                        <AISidebar pdfUrl={work?.pdf_url} />
                     </div>
                 </div>
             )}
