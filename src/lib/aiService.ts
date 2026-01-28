@@ -12,8 +12,15 @@ const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY || '');
  */
 export async function extractPDFText(pdfUrl: string): Promise<string> {
     try {
+        // Determine if we need to use a CORS proxy
+        // Supabase URLs usually support CORS if configured correctly, but external ones (like univ-bechar) definitely don't.
+        const isSupabase = pdfUrl.includes('supabase.co');
+        const fetchUrl = isSupabase
+            ? pdfUrl
+            : `https://api.allorigins.win/raw?url=${encodeURIComponent(pdfUrl)}`;
+
         // Fetch the PDF
-        const response = await fetch(pdfUrl);
+        const response = await fetch(fetchUrl);
         if (!response.ok) {
             throw new Error(`فشل في تحميل ملف PDF: ${response.status} ${response.statusText}`);
         }
