@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabaseClient';
-import { Calendar, ArrowRight } from 'lucide-react';
+import { Calendar, ArrowRight, Search } from 'lucide-react';
 
 const ScientificWorksPage = () => {
     const [worksList, setWorksList] = useState<any[]>([]);
+    const [searchTerm, setSearchTerm] = useState('');
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -31,6 +32,12 @@ const ScientificWorksPage = () => {
         fetchWorks();
     }, []);
 
+    const filteredWorks = worksList.filter(work =>
+        work.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        work.abstract?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        work.professorName.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
     return (
         <div className="container" style={{ padding: '4rem 1rem' }}>
             <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
@@ -38,6 +45,47 @@ const ScientificWorksPage = () => {
                 <p style={{ color: 'var(--color-text-secondary)', maxWidth: '600px', margin: '0 auto', fontSize: '1.1rem' }}>
                     استعرض أحدث الأبحاث والدراسات والمؤلفات العلمية لنخبة من الأكاديميين.
                 </p>
+            </div>
+
+            {/* Search Bar */}
+            <div style={{ marginBottom: '3rem', maxWidth: '600px', margin: '0 auto 3rem' }}>
+                <div style={{ position: 'relative' }}>
+                    <Search style={{
+                        position: 'absolute',
+                        top: '50%',
+                        right: '1.5rem',
+                        transform: 'translateY(-50%)',
+                        color: 'var(--color-primary)',
+                        opacity: 0.7
+                    }} size={20} />
+                    <input
+                        type="text"
+                        placeholder="ابحث عن عنوان بحث، كلمة مفتاحية، أو اسم أستاذ..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        style={{
+                            width: '100%',
+                            padding: '1.2rem 3.5rem 1.2rem 1.5rem',
+                            borderRadius: '999px',
+                            border: '2px solid var(--color-surface-alt)',
+                            fontSize: '1.1rem',
+                            outline: 'none',
+                            transition: 'all 0.3s',
+                            backgroundColor: 'var(--color-surface-alt)',
+                            color: 'var(--color-primary)'
+                        }}
+                        onFocus={(e) => {
+                            e.currentTarget.style.borderColor = 'var(--color-accent)';
+                            e.currentTarget.style.backgroundColor = 'white';
+                            e.currentTarget.style.boxShadow = '0 0 0 4px rgba(212, 175, 55, 0.1)';
+                        }}
+                        onBlur={(e) => {
+                            e.currentTarget.style.borderColor = 'var(--color-surface-alt)';
+                            e.currentTarget.style.backgroundColor = 'var(--color-surface-alt)';
+                            e.currentTarget.style.boxShadow = 'none';
+                        }}
+                    />
+                </div>
             </div>
 
             {loading ? (
@@ -48,8 +96,8 @@ const ScientificWorksPage = () => {
                 </div>
             ) : (
                 <div className="animate-fade-in" style={{ display: 'grid', gap: '1.5rem' }}>
-                    {worksList.length > 0 ? (
-                        worksList.map((work) => (
+                    {filteredWorks.length > 0 ? (
+                        filteredWorks.map((work) => (
                             <div key={work.id} className="card-hover" style={{
                                 padding: '2rem',
                                 backgroundColor: 'white',
@@ -110,7 +158,7 @@ const ScientificWorksPage = () => {
                         ))
                     ) : (
                         <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '2rem', color: 'var(--color-text-secondary)' }}>
-                            لا توجد أعمال علمية متاحة حالياً.
+                            لا توجد نتائج مطابقة للبحث.
                         </div>
                     )}
                 </div>

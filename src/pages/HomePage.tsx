@@ -35,69 +35,114 @@ const HomePage = () => {
     <>
       <HeroSection stats={stats} onSearch={() => { }} />
 
-      {/* Entrance Hub Section - Institutional Minimalist */}
-      <div style={{ backgroundColor: '#f8f9fa', padding: '4rem 0' }}>
+      {/* Entrance Hub Section - 3D Glassmorphism */}
+      <div style={{
+        background: 'linear-gradient(135deg, #e0f2fe 0%, #ffffff 100%)',
+        padding: '5rem 0',
+        position: 'relative'
+      }}>
         <div className="container">
-          <h2 style={{ fontSize: '2rem', fontWeight: '900', textAlign: 'center', marginBottom: '3rem', color: '#1a1a1a' }}>
+          <h2 style={{ fontSize: '2.2rem', fontWeight: '900', textAlign: 'center', marginBottom: '3.5rem', color: '#1a1a1a' }}>
             بوابة الدخول
           </h2>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '2rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '2rem' }}>
             <Link to="/works" style={{ textDecoration: 'none' }}>
               <div className="card-hover" style={{
-                backgroundColor: 'white',
+                background: 'rgba(255, 255, 255, 0.4)',
+                backdropFilter: 'blur(12px)',
+                WebkitBackdropFilter: 'blur(12px)',
                 padding: '2.5rem',
-                borderRadius: 'var(--radius-lg)',
+                borderRadius: '20px',
                 border: '1px solid #c5a059',
                 textAlign: 'center',
-                transition: 'all 0.3s ease',
+                transition: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
                 cursor: 'pointer',
-                height: '100%'
+                height: '100%',
+                boxShadow: '0 20px 40px rgba(0,0,0,0.1)',
+                transform: 'translateY(0)',
               }}>
-                <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>📚</div>
+                <div style={{ fontSize: '3.5rem', marginBottom: '1.2rem' }}>📚</div>
                 <h3 style={{ fontSize: '1.4rem', fontWeight: '800', marginBottom: '1rem', color: '#1a1a1a' }}>المكتبة الرقمية</h3>
-                <p style={{ color: '#666', fontSize: '0.95rem', lineHeight: '1.7' }}>
+                <p style={{ color: '#555', fontSize: '0.95rem', lineHeight: '1.7' }}>
                   تصفح أحدث المقالات والكتب الأكاديمية لأساتذة معهد الآداب واللغات
                 </p>
               </div>
             </Link>
             <Link to="/professors" style={{ textDecoration: 'none' }}>
               <div className="card-hover" style={{
-                backgroundColor: 'white',
+                background: 'rgba(255, 255, 255, 0.4)',
+                backdropFilter: 'blur(12px)',
+                WebkitBackdropFilter: 'blur(12px)',
                 padding: '2.5rem',
-                borderRadius: 'var(--radius-lg)',
+                borderRadius: '20px',
                 border: '1px solid #c5a059',
                 textAlign: 'center',
-                transition: 'all 0.3s ease',
+                transition: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
                 cursor: 'pointer',
-                height: '100%'
+                height: '100%',
+                boxShadow: '0 20px 40px rgba(0,0,0,0.1)',
+                transform: 'translateY(0)',
               }}>
-                <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🎓</div>
+                <div style={{ fontSize: '3.5rem', marginBottom: '1.2rem' }}>🎓</div>
                 <h3 style={{ fontSize: '1.4rem', fontWeight: '800', marginBottom: '1rem', color: '#1a1a1a' }}>هيئة التدريس</h3>
-                <p style={{ color: '#666', fontSize: '0.95rem', lineHeight: '1.7' }}>
+                <p style={{ color: '#555', fontSize: '0.95rem', lineHeight: '1.7' }}>
                   تعرف على القامات العلمية والأساتذة الباحثين بمعهد الآداب واللغات
                 </p>
               </div>
             </Link>
             <Link to="/community" style={{ textDecoration: 'none' }}>
               <div className="card-hover" style={{
-                backgroundColor: 'white',
+                background: 'rgba(255, 255, 255, 0.4)',
+                backdropFilter: 'blur(12px)',
+                WebkitBackdropFilter: 'blur(12px)',
                 padding: '2.5rem',
-                borderRadius: 'var(--radius-lg)',
+                borderRadius: '20px',
                 border: '1px solid #c5a059',
                 textAlign: 'center',
-                transition: 'all 0.3s ease',
+                transition: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
                 cursor: 'pointer',
-                height: '100%'
+                height: '100%',
+                boxShadow: '0 20px 40px rgba(0,0,0,0.1)',
+                transform: 'translateY(0)',
               }}>
-                <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>💬</div>
+                <div style={{ fontSize: '3.5rem', marginBottom: '1.2rem' }}>💬</div>
                 <h3 style={{ fontSize: '1.4rem', fontWeight: '800', marginBottom: '1rem', color: '#1a1a1a' }}>رواق الحوار</h3>
-                <p style={{ color: '#666', fontSize: '0.95rem', lineHeight: '1.7' }}>
+                <p style={{ color: '#555', fontSize: '0.95rem', lineHeight: '1.7' }}>
                   ملتقى طلبة وأساتذة معهد الآداب واللغات للنقاش العلمي المرقّى
+                </p>
+              </div>
+            </Link>
+            <Link to="/students" style={{ textDecoration: 'none' }}>
+              <div className="card-hover" style={{
+                background: 'rgba(255, 255, 255, 0.4)',
+                backdropFilter: 'blur(12px)',
+                WebkitBackdropFilter: 'blur(12px)',
+                padding: '2.5rem',
+                borderRadius: '20px',
+                border: '1px solid #c5a059',
+                textAlign: 'center',
+                transition: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+                cursor: 'pointer',
+                height: '100%',
+                boxShadow: '0 20px 40px rgba(0,0,0,0.1)',
+                transform: 'translateY(0)',
+              }}>
+                <div style={{ fontSize: '3.5rem', marginBottom: '1.2rem' }}>👨‍🎓</div>
+                <h3 style={{ fontSize: '1.4rem', fontWeight: '800', marginBottom: '1rem', color: '#1a1a1a' }}>نخبة الطلبة</h3>
+                <p style={{ color: '#555', fontSize: '0.95rem', lineHeight: '1.7' }}>
+                  استكشف مشاريع واهتمامات طلبة الدراسات العليا والباحثين بالمعهد
                 </p>
               </div>
             </Link>
           </div>
         </div>
+
+        <style>{`
+          .card-hover:hover {
+            transform: translateY(-12px) !important;
+            box-shadow: 0 25px 50px rgba(197, 160, 89, 0.3) !important;
+          }
+        `}</style>
       </div>
 
       {/* Research Cloud Section */}
