@@ -50,26 +50,15 @@ const Navbar = () => {
                 padding: '0 1rem'
             }}>
 
-                {/* FAR LEFT: Controls (Hamburger + User/Login) */}
+                {/* LEFT SIDE: User Profile / Login (Absolute Left) */}
                 <div style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.75rem',
-                    zIndex: 1003,
                     position: 'absolute',
                     left: '1rem',
+                    zIndex: 1003,
+                    display: 'flex',
+                    alignItems: 'center',
                     height: '100%'
                 }}>
-                    {/* Hamburger Menu (Visible ONLY on Mobile/Tablet < 1024px) */}
-                    <button
-                        className="mobile-hamburger"
-                        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                        style={{ color: 'white', padding: '0.25rem', display: 'flex', alignItems: 'center', cursor: 'pointer' }}
-                    >
-                        {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
-                    </button>
-
-                    {/* User Profile / Login */}
                     <div ref={menuRef} style={{ position: 'relative' }}>
                         {!loading && (
                             user ? (
@@ -173,7 +162,7 @@ const Navbar = () => {
                     </div>
                 </div>
 
-                {/* CENTER: Logo (Absolutely Centered) */}
+                {/* CENTER: Logo (Absolute Center) */}
                 <div style={{
                     position: 'absolute',
                     left: '50%',
@@ -187,17 +176,36 @@ const Navbar = () => {
                     </Link>
                 </div>
 
-                {/* RIGHT SIDE: Desktop Navigation (HIDDEN ON MOBILE < 1024px) */}
-                <div style={{ marginLeft: 'auto', display: 'flex' }} className="desktop-nav-container">
-                    <ul className="nav-links" style={{ display: 'flex', gap: '1.25rem', margin: 0, padding: 0, listStyle: 'none' }}>
-                        <li><Link to="/" className="nav-link">الرئيسية</Link></li>
-                        <li><Link to="/professors" className="nav-link">الأساتذة</Link></li>
-                        <li><Link to="/students" className="nav-link">الطلاب</Link></li>
-                        <li><Link to="/community" className="nav-link">المجتمع العلمي</Link></li>
-                        <li><Link to="/ai-tools" className="nav-link">أدوات الذكاء الاصطناعي</Link></li>
-                        <li><Link to="/works" className="nav-link">الأعمال العلمية</Link></li>
-                        <li><Link to="/about" className="nav-link">عن المنصة</Link></li>
-                    </ul>
+                {/* RIGHT SIDE: Hamburger (Mobile) OR Links (Desktop) */}
+                <div style={{
+                    position: 'absolute',
+                    right: '1rem',
+                    zIndex: 1003,
+                    display: 'flex',
+                    alignItems: 'center',
+                    height: '100%'
+                }}>
+                    {/* Hamburger Menu (Visible ONLY on Mobile/Tablet < 1024px) */}
+                    <button
+                        className="mobile-hamburger"
+                        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                        style={{ color: 'white', padding: '0.25rem', display: 'flex', alignItems: 'center', cursor: 'pointer' }}
+                    >
+                        {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
+                    </button>
+
+                    {/* Desktop Links (Visible ONLY on Desktop > 1024px) */}
+                    <div className="desktop-nav-container">
+                        <ul className="nav-links" style={{ display: 'flex', gap: '1.25rem', margin: 0, padding: 0, listStyle: 'none' }}>
+                            <li><Link to="/" className="nav-link">الرئيسية</Link></li>
+                            <li><Link to="/professors" className="nav-link">الأساتذة</Link></li>
+                            <li><Link to="/students" className="nav-link">الطلاب</Link></li>
+                            <li><Link to="/community" className="nav-link">المجتمع العلمي</Link></li>
+                            <li><Link to="/ai-tools" className="nav-link">أدوات الذكاء الاصطناعي</Link></li>
+                            <li><Link to="/works" className="nav-link">الأعمال العلمية</Link></li>
+                            <li><Link to="/about" className="nav-link">عن المنصة</Link></li>
+                        </ul>
+                    </div>
                 </div>
 
             </div>

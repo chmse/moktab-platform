@@ -101,7 +101,7 @@ const WorkDetailPage = () => {
     const professorName = work?.professorName || work?.profiles?.full_name || 'أستاذ غير معروف';
 
     return (
-        <div className="container" style={{ padding: '3rem 1rem', position: 'relative' }}>
+        <div className="container" style={{ padding: '3rem 1rem', paddingTop: '100px', position: 'relative' }}>
             <div style={{ marginBottom: '2rem' }}>
                 <Link to="/works" style={{ display: 'flex', alignItems: 'center', color: 'var(--color-text-secondary)', fontSize: '0.9rem', width: 'fit-content' }}>
                     <ChevronRight size={16} />

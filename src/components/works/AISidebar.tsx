@@ -1,12 +1,13 @@
 import { useState } from 'react';
-import { Bot, Sparkles, Lightbulb, Loader2, AlertCircle } from 'lucide-react';
+import { Bot, Sparkles, Lightbulb, Loader2, AlertCircle, X } from 'lucide-react';
 import { extractPDFText, generateSummary, generateInsights } from '../../lib/aiService';
 
 interface AISidebarProps {
     pdfUrl?: string;
+    onClose?: () => void;
 }
 
-const AISidebar = ({ pdfUrl }: AISidebarProps) => {
+const AISidebar = ({ pdfUrl, onClose }: AISidebarProps) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [summary, setSummary] = useState<string | null>(null);
@@ -61,9 +62,16 @@ const AISidebar = ({ pdfUrl }: AISidebarProps) => {
 
     return (
         <div className="glass-panel" style={{ padding: '1.5rem', position: 'sticky', top: '2rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.5rem', color: 'var(--color-primary)' }}>
-                <Bot size={24} />
-                <h3 style={{ margin: 0, fontSize: '1.1rem' }}>الذكاء الاصطناعي</h3>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--color-primary)' }}>
+                    <Bot size={24} />
+                    <h3 style={{ margin: 0, fontSize: '1.1rem' }}>الذكاء الاصطناعي</h3>
+                </div>
+                {onClose && (
+                    <button onClick={onClose} style={{ color: 'var(--color-text-secondary)', cursor: 'pointer', padding: '0.25rem' }}>
+                        <X size={24} />
+                    </button>
+                )}
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>

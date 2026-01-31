@@ -68,7 +68,7 @@ const ProfessorProfilePage = () => {
 
     if (loading) {
         return (
-            <div className="container" style={{ padding: '8rem 1rem', textAlign: 'center' }}>
+            <div className="container" style={{ padding: '3rem 1rem', paddingTop: '100px', textAlign: 'center' }}>
                 <div className="animate-pulse" style={{ color: 'var(--color-primary)', fontSize: '1.5rem', fontWeight: 'bold' }}>
                     جاري تحميل ملف الأستاذ...
                 </div>
