@@ -19,6 +19,7 @@ import CommunityPage from './pages/CommunityPage';
 import TopicDetail from './pages/TopicDetail';
 import AdminConsole from './pages/AdminConsole';
 import SearchPage from './pages/SearchPage';
+import UnitHubPage from './pages/UnitHubPage';
 
 import { useAuth } from './context/AuthContext';
 
@@ -84,6 +85,7 @@ function App() {
           <Route path="community" element={<CommunityPage />} />
           <Route path="community/:id" element={<TopicDetail />} />
           <Route path="about" element={<AboutPage />} />
+          <Route path="hub/:unitId" element={<UnitHubPage />} />
           <Route path="coming-soon" element={<ComingSoon />} />
 
           <Route

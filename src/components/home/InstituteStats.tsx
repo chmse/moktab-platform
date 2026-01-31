@@ -1,10 +1,11 @@
-import { Users, FlaskConical, Library, Calendar } from 'lucide-react';
+import { Users, FlaskConical, Library, Calendar, Briefcase } from 'lucide-react';
 
 const InstituteStats = () => {
     const stats = [
         { number: '+50', label: 'عضو هيئة تدريس' },
         { number: '+200', label: 'طالب باحث' },
         { number: '+500', label: 'نتاج علمي محكّم' },
+        { number: '+15', label: 'مشاريع علمية', icon: <Briefcase size={32} /> },
         { number: '+5', label: 'مجلات علمية', icon: <Library size={32} /> },
         { number: '+12', label: 'مخابر بحث', icon: <FlaskConical size={32} /> },
         { number: '+8', label: 'نوادي طلابية', icon: <Users size={32} /> },

@@ -90,7 +90,7 @@ const ProfessorProfilePage = () => {
         : professorWorks.filter(w => w.category === activeCategory);
 
     return (
-        <div style={{ paddingBottom: '4rem', paddingTop: '70px' }}>
+        <div style={{ paddingBottom: '4rem', paddingTop: '120px' }}>
             {/* Premium Cover Section */}
             <div className="bg-pattern" style={{
                 height: '200px',
@@ -175,7 +175,8 @@ const ProfessorProfilePage = () => {
                         .profile-meta {
                             font-size: 0.8rem !important;
                             gap: 0.5rem !important;
-                            flex-direction: column; 
+                            flex-direction: row !important; /* Force Row */
+                            flex-wrap: wrap !important;
                         }
                         .profile-meta span {
                             gap: 0.25rem !important;
