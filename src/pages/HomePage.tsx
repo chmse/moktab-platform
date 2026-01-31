@@ -12,9 +12,9 @@ const HomePage = () => {
         console.log('HomePage: Supabase Connection Success - Starting data fetch');
         // Fetch Stats
         const [profResult, studResult, workResult] = await Promise.all([
-          supabase.from('profiles').select('id', { count: 'exact', head: true }).eq('role', 'professor'),
-          supabase.from('profiles').select('id', { count: 'exact', head: true }).eq('role', 'student'),
-          supabase.from('works').select('id', { count: 'exact', head: true })
+          supabase.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'professor'),
+          supabase.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'student'),
+          supabase.from('works').select('*', { count: 'exact', head: true })
         ]);
 
         setStats({
