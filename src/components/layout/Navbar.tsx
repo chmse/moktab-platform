@@ -43,24 +43,33 @@ const Navbar = () => {
         }}>
             <div className="container" style={{
                 display: 'flex',
-                justifyContent: 'space-between',
                 alignItems: 'center',
                 height: '100%',
-                width: '100%'
+                width: '100%',
+                position: 'relative', // Crucial for absolute centering
+                padding: '0 1rem'
             }}>
 
-                {/* LEFT SIDE: Controls (Hamburger + User/Login) */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                    {/* Hamburger Menu (Visible ONLY on Mobile) */}
+                {/* FAR LEFT: Controls (Hamburger + User/Login) */}
+                <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.75rem',
+                    zIndex: 1003,
+                    position: 'absolute',
+                    left: '1rem',
+                    height: '100%'
+                }}>
+                    {/* Hamburger Menu (Visible ONLY on Mobile/Tablet < 1024px) */}
                     <button
-                        className="mobile-only"
+                        className="mobile-hamburger"
                         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                        style={{ color: 'white', padding: '0.5rem', display: 'flex', alignItems: 'center' }}
+                        style={{ color: 'white', padding: '0.25rem', display: 'flex', alignItems: 'center', cursor: 'pointer' }}
                     >
                         {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
                     </button>
 
-                    {/* User Profile / Login (Visible on Mobile & Desktop) */}
+                    {/* User Profile / Login */}
                     <div ref={menuRef} style={{ position: 'relative' }}>
                         {!loading && (
                             user ? (
@@ -98,7 +107,7 @@ const Navbar = () => {
                                         <ChevronDown size={14} className="desktop-only" />
                                     </button>
 
-                                    {/* Desktop User Dropdown */}
+                                    {/* User Dropdown */}
                                     {isMenuOpen && (
                                         <div className="animate-fade-in" style={{
                                             position: 'absolute',
@@ -164,23 +173,32 @@ const Navbar = () => {
                     </div>
                 </div>
 
-                {/* CENTER: Desktop Navigation (HIDDEN ON MOBILE) */}
-                <ul className="nav-links desktop-only" style={{ display: 'flex', gap: '1.5rem', margin: 0, padding: 0, listStyle: 'none' }}>
-                    <li><Link to="/" className="nav-link">الرئيسية</Link></li>
-                    <li><Link to="/professors" className="nav-link">الأساتذة</Link></li>
-                    <li><Link to="/students" className="nav-link">الطلاب</Link></li>
-                    <li><Link to="/community" className="nav-link">المجتمع العلمي</Link></li>
-                    <li><Link to="/works" className="nav-link">الأعمال العلمية</Link></li>
-                    <li><Link to="/about" className="nav-link">عن المنصة</Link></li>
-                </ul>
+                {/* CENTER: Logo (Absolutely Centered) */}
+                <div style={{
+                    position: 'absolute',
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    zIndex: 1002,
+                    textAlign: 'center'
+                }}>
+                    <Link to="/" style={{ textDecoration: 'none', color: 'white' }}>
+                        <div className="navbar-logo-text" style={{ fontSize: '1.25rem', fontWeight: '900', color: '#c5a059', lineHeight: '1.1' }}>مَنْصَة مَكْتَب</div>
+                        <div className="navbar-logo-sub" style={{ fontSize: '0.8rem', opacity: 0.8, letterSpacing: '1px' }}>الأكاديمية</div>
+                    </Link>
+                </div>
 
-                {/* RIGHT SIDE: Logo */}
-                <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', textDecoration: 'none', color: 'white' }}>
-                    <div style={{ textAlign: 'right', lineHeight: '1.1' }}>
-                        <div style={{ fontSize: '1.25rem', fontWeight: '900', color: '#c5a059' }}>مَنْصَة مَكْتَب</div>
-                        <div style={{ fontSize: '0.8rem', opacity: 0.8, letterSpacing: '1px' }}>الأكاديمية</div>
-                    </div>
-                </Link>
+                {/* RIGHT SIDE: Desktop Navigation (HIDDEN ON MOBILE < 1024px) */}
+                <div style={{ marginLeft: 'auto', display: 'flex' }} className="desktop-nav-container">
+                    <ul className="nav-links" style={{ display: 'flex', gap: '1.25rem', margin: 0, padding: 0, listStyle: 'none' }}>
+                        <li><Link to="/" className="nav-link">الرئيسية</Link></li>
+                        <li><Link to="/professors" className="nav-link">الأساتذة</Link></li>
+                        <li><Link to="/students" className="nav-link">الطلاب</Link></li>
+                        <li><Link to="/community" className="nav-link">المجتمع العلمي</Link></li>
+                        <li><Link to="/ai-tools" className="nav-link">أدوات الذكاء الاصطناعي</Link></li>
+                        <li><Link to="/works" className="nav-link">الأعمال العلمية</Link></li>
+                        <li><Link to="/about" className="nav-link">عن المنصة</Link></li>
+                    </ul>
+                </div>
 
             </div>
 
@@ -191,29 +209,40 @@ const Navbar = () => {
                     <Link to="/professors" onClick={() => setIsMobileMenuOpen(false)} className="mobile-link">الأساتذة</Link>
                     <Link to="/students" onClick={() => setIsMobileMenuOpen(false)} className="mobile-link">الطلاب</Link>
                     <Link to="/community" onClick={() => setIsMobileMenuOpen(false)} className="mobile-link">المجتمع العلمي</Link>
+                    <Link to="/ai-tools" onClick={() => setIsMobileMenuOpen(false)} className="mobile-link" style={{ color: '#c5a059' }}>أدوات الذكاء الاصطناعي</Link>
                     <Link to="/works" onClick={() => setIsMobileMenuOpen(false)} className="mobile-link">الأعمال العلمية</Link>
                     <Link to="/about" onClick={() => setIsMobileMenuOpen(false)} className="mobile-link">عن المنصة</Link>
                 </div>
             </div>
 
             <style>{`
-                .desktop-only { display: flex; }
-                .mobile-only { display: none; }
-                
                 .nav-link {
                     color: rgba(255,255,255,0.8);
                     font-weight: 500;
                     transition: color 0.2s;
+                    font-size: 0.9rem;
+                    white-space: nowrap;
                 }
                 .nav-link:hover { color: #c5a059; }
 
                 .dropdown-item:hover { background-color: var(--color-surface-alt); }
                 
-                /* Mobile Styles */
-                @media (max-width: 768px) {
-                    .desktop-only { display: none !important; }
-                    .mobile-only { display: flex !important; }
-                    
+                /* Large Screens (> 1024px) */
+                @media (min-width: 1025px) {
+                    .mobile-hamburger { display: none !important; }
+                    .desktop-nav-container { display: flex !important; }
+                    .desktop-only { display: block; }
+                }
+
+                /* Mobile/Tablets (< 1024px) */
+                @media (max-width: 1024px) {
+                     .mobile-hamburger { display: flex !important; }
+                     .desktop-nav-container { display: none !important; }
+                     .desktop-only { display: none !important; }
+
+                    .navbar-logo-text { font-size: 1.1rem !important; }
+                    .navbar-logo-sub { font-size: 0.75rem !important; }
+
                     .mobile-menu-overlay {
                         position: fixed;
                         top: 70px; /* Below Navbar */

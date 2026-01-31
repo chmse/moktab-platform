@@ -39,11 +39,12 @@ const ProfessorCard = ({ professor, variant = 'default' }: ProfessorCardProps) =
                     bottom: 0,
                     left: 0,
                     right: 0,
-                    padding: '3rem 1rem 0.75rem',
-                    background: 'linear-gradient(to top, rgba(0,0,30,0.95) 0%, rgba(0,0,30,0.6) 50%, transparent 100%)',
+                    padding: '2rem 1rem 0.5rem',
+                    background: 'linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.5) 60%, transparent 100%)',
                     display: 'flex',
                     alignItems: 'flex-end',
-                    justifyContent: 'flex-end'
+                    justifyContent: 'flex-end',
+                    zIndex: 10
                 }}>
                     <h3 style={{
                         margin: 0,

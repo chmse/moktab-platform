@@ -235,9 +235,9 @@ const WorkDetailPage = () => {
                 onClick={() => setShowMobileSidebar(true)}
                 style={{
                     position: 'fixed',
-                    bottom: '2rem',
-                    left: '2rem',
-                    zIndex: 90,
+                    bottom: '30px',
+                    left: '30px',
+                    zIndex: 9999,
                     borderRadius: '50%',
                     width: '60px',
                     height: '60px',
@@ -246,7 +246,7 @@ const WorkDetailPage = () => {
                     alignItems: 'center',
                     justifyContent: 'center',
                     boxShadow: '0 0 20px rgba(197, 160, 89, 0.4)',
-                    animation: 'pulse 2s infinite'
+                    animation: 'aiPulse 2s infinite'
                 }}
             >
                 <Bot size={24} />

@@ -26,10 +26,10 @@ const HomePage = () => {
         studCount = studResult.count || 0;
         workCount = workResult.count || 0;
 
-        // Fallback: If 0, fetch total headers (maybe 'role' is missing or different)
+        // Fallback: If 0, fetch total headers (Absolute truth)
         if (profCount === 0) {
           const { count } = await supabase.from('profiles').select('*', { count: 'exact', head: true });
-          if (count && count > 0) profCount = Math.floor(count / 2); // Estimate if roles missing
+          if (count) profCount = count; // Show TOTAL profiles if filtered is 0
         }
         if (workCount === 0) {
           const { count } = await supabase.from('works').select('*', { count: 'exact', head: true });
