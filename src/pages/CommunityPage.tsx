@@ -123,11 +123,7 @@ const CommunityPage = () => {
                     </div>
                 </div>
             ) : filteredTopics.length > 0 ? (
-                <div style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))',
-                    gap: '2rem'
-                }}>
+                <div className="community-grid">
                     {filteredTopics.map(topic => (
                         <TopicCard key={topic.id} topic={topic} />
                     ))}
@@ -144,6 +140,20 @@ const CommunityPage = () => {
                 onClose={() => setIsModalOpen(false)}
                 onSuccess={fetchTopics}
             />
+
+            <style>{`
+                .community-grid {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+                    gap: 2rem;
+                }
+                @media (max-width: 768px) {
+                    .community-grid {
+                        grid-template-columns: repeat(2, 1fr) !important;
+                        gap: 1rem !important;
+                    }
+                }
+            `}</style>
         </div>
     );
 };

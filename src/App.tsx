@@ -10,6 +10,7 @@ import ProfessorDashboard from './pages/ProfessorDashboard';
 import StudentDashboard from './pages/StudentDashboard';
 import StudentsPage from './pages/StudentsPage';
 import AboutPage from './pages/AboutPage';
+import ComingSoon from './pages/ComingSoon';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import RegisterProfessorPage from './pages/RegisterProfessorPage';
@@ -83,6 +84,7 @@ function App() {
           <Route path="community" element={<CommunityPage />} />
           <Route path="community/:id" element={<TopicDetail />} />
           <Route path="about" element={<AboutPage />} />
+          <Route path="coming-soon" element={<ComingSoon />} />
 
           <Route
             path="admin"

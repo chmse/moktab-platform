@@ -109,48 +109,96 @@ const ProfessorProfilePage = () => {
 
             <div className="container animate-fade-in" style={{ padding: '0 1rem', position: 'relative' }}>
                 {/* Profile Header */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem', marginTop: '-80px', marginBottom: '3rem' }}>
-                    <div style={{ display: 'flex', alignItems: 'flex-end', gap: '2rem', flexWrap: 'wrap' }}>
-                        <div style={{
-                            width: '180px',
-                            height: '180px',
-                            borderRadius: 'var(--radius-lg)',
-                            overflow: 'hidden',
-                            border: '4px solid white',
-                            boxShadow: 'var(--shadow-lg)',
-                            backgroundColor: 'white'
-                        }}>
-                            <img src={professor.imageUrl} alt={professor.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                        </div>
+                <div className="profile-header-container" style={{ display: 'flex', alignItems: 'flex-end', gap: '2rem', marginTop: '-80px', marginBottom: '3rem', flexWrap: 'wrap' }}>
+                    <div className="profile-avatar" style={{
+                        width: '180px',
+                        height: '180px',
+                        borderRadius: 'var(--radius-lg)',
+                        overflow: 'hidden',
+                        border: '4px solid white',
+                        boxShadow: 'var(--shadow-lg)',
+                        backgroundColor: 'white',
+                        flexShrink: 0
+                    }}>
+                        <img src={professor.imageUrl} alt={professor.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    </div>
 
-                        <div style={{ paddingBottom: '0.5rem', flex: 1 }}>
-                            <h1 style={{ fontSize: '2.5rem', color: 'var(--color-primary)', marginBottom: '0.5rem', fontWeight: 'bold' }}>
-                                {professor.name}
-                            </h1>
-                            <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap', color: 'var(--color-text-secondary)', fontSize: '1rem' }}>
-                                <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                                    <GraduationCap size={20} color="var(--color-accent)" />
-                                    {professor.role === 'student' ? (
-                                        professor.level === 'licence' ? 'طالب ليسانس' :
-                                            professor.level === 'master' ? 'طالب ماجستير' :
-                                                professor.level === 'phd' ? 'طالب دكتوراه' : professor.level || 'طالب علم'
-                                    ) : professor.title}
-                                </span>
-                                <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                                    <Building2 size={20} color="var(--color-accent)" />
-                                    {professor.department}
-                                </span>
-                            </div>
-                        </div>
-
-                        <div style={{ paddingBottom: '1rem' }}>
-                            <button className="btn-premium" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                                <Mail size={18} />
-                                تواصل مع {professor.role === 'student' ? 'الطالب' : 'الأستاذ'}
-                            </button>
+                    <div className="profile-info" style={{ paddingBottom: '0.5rem', flex: 1 }}>
+                        <h1 style={{ fontSize: '2.5rem', color: 'var(--color-primary)', marginBottom: '0.5rem', fontWeight: 'bold' }}>
+                            {professor.name}
+                        </h1>
+                        <div className="profile-meta" style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap', color: 'var(--color-text-secondary)', fontSize: '1rem' }}>
+                            <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                <GraduationCap size={20} color="var(--color-accent)" />
+                                {professor.role === 'student' ? (
+                                    professor.level === 'licence' ? 'طالب ليسانس' :
+                                        professor.level === 'master' ? 'طالب ماجستير' :
+                                            professor.level === 'phd' ? 'طالب دكتوراه' : professor.level || 'طالب علم'
+                                ) : professor.title}
+                            </span>
+                            <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                <Building2 size={20} color="var(--color-accent)" />
+                                {professor.department}
+                            </span>
                         </div>
                     </div>
+
+                    <div className="profile-actions" style={{ paddingBottom: '1rem' }}>
+                        <button className="btn-premium" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                            <Mail size={18} />
+                            تواصل مع {professor.role === 'student' ? 'الطالب' : 'الأستاذ'}
+                        </button>
+                    </div>
                 </div>
+
+                <style>{`
+                    @media (max-width: 768px) {
+                        .profile-header-container {
+                            flex-direction: row !important;
+                            align-items: flex-end !important;
+                            gap: 1rem !important;
+                            margin-top: -60px !important;
+                            flex-wrap: nowrap !important;
+                        }
+                        .profile-avatar {
+                            width: 100px !important;
+                            height: 100px !important;
+                            border-width: 3px !important;
+                        }
+                        .profile-info {
+                            padding-bottom: 0 !important;
+                        }
+                        .profile-info h1 {
+                            font-size: 1.25rem !important;
+                            line-height: 1.2;
+                        }
+                        .profile-meta {
+                            font-size: 0.8rem !important;
+                            gap: 0.5rem !important;
+                            flex-direction: column; 
+                        }
+                        .profile-meta span {
+                            gap: 0.25rem !important;
+                        } 
+                        .profile-actions {
+                            width: 100%;
+                            padding-bottom: 0 !important;
+                            margin-top: 1rem;
+                        }
+                        /* Make contact button full width on mobile */
+                        .profile-actions .btn-premium {
+                            width: 100%;
+                            justify-content: center;
+                        }
+                        /* Change the main container to column so actions go below? */
+                         .profile-header-container {
+                            flex-wrap: wrap !important;
+                         }
+                         /* Actually user asked: "Position the Professor's Name next to the Avatar (Flex-row)" */
+                         /* So Avatar | Name+Info */
+                         /* The button might default to below or next to it depending on space. */
+                    }
+                `}</style>
 
                 {/* Content */}
                 <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 2fr) 1fr', gap: '3rem', alignItems: 'start' }}>

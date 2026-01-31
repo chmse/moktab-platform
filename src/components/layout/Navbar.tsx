@@ -196,13 +196,15 @@ const Navbar = () => {
 
                     {/* Desktop Links (Visible ONLY on Desktop > 1024px) */}
                     <div className="desktop-nav-container">
-                        <ul className="nav-links" style={{ display: 'flex', gap: '1.25rem', margin: 0, padding: 0, listStyle: 'none' }}>
+                        <ul className="nav-links" style={{ display: 'flex', gap: '1rem', margin: 0, padding: 0, listStyle: 'none', fontSize: '0.85rem' }}>
                             <li><Link to="/" className="nav-link">الرئيسية</Link></li>
                             <li><Link to="/professors" className="nav-link">الأساتذة</Link></li>
                             <li><Link to="/students" className="nav-link">الطلاب</Link></li>
-                            <li><Link to="/community" className="nav-link">المجتمع العلمي</Link></li>
-                            <li><Link to="/ai-tools" className="nav-link">أدوات الذكاء الاصطناعي</Link></li>
-                            <li><Link to="/works" className="nav-link">الأعمال العلمية</Link></li>
+                            <li><Link to="/works" className="nav-link">الأعمال</Link></li>
+                            <li><Link to="/community" className="nav-link">المجتمع</Link></li>
+                            <li><Link to="/coming-soon" className="nav-link">المجلات</Link></li>
+                            <li><Link to="/coming-soon" className="nav-link">المخابر</Link></li>
+                            <li><Link to="/coming-soon" className="nav-link" style={{ color: '#c5a059' }}>الذكاء الاصطناعي</Link></li>
                             <li><Link to="/about" className="nav-link">عن المنصة</Link></li>
                         </ul>
                     </div>
@@ -212,13 +214,15 @@ const Navbar = () => {
 
             {/* Mobile Menu Overlay */}
             <div className={`mobile-menu-overlay ${isMobileMenuOpen ? 'open' : ''}`}>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem', textAlign: 'center' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', textAlign: 'center' }}>
                     <Link to="/" onClick={() => setIsMobileMenuOpen(false)} className="mobile-link">الرئيسية</Link>
                     <Link to="/professors" onClick={() => setIsMobileMenuOpen(false)} className="mobile-link">الأساتذة</Link>
                     <Link to="/students" onClick={() => setIsMobileMenuOpen(false)} className="mobile-link">الطلاب</Link>
-                    <Link to="/community" onClick={() => setIsMobileMenuOpen(false)} className="mobile-link">المجتمع العلمي</Link>
-                    <Link to="/ai-tools" onClick={() => setIsMobileMenuOpen(false)} className="mobile-link" style={{ color: '#c5a059' }}>أدوات الذكاء الاصطناعي</Link>
                     <Link to="/works" onClick={() => setIsMobileMenuOpen(false)} className="mobile-link">الأعمال العلمية</Link>
+                    <Link to="/community" onClick={() => setIsMobileMenuOpen(false)} className="mobile-link">المجتمع العلمي</Link>
+                    <Link to="/coming-soon" onClick={() => setIsMobileMenuOpen(false)} className="mobile-link">قائمة المجلات</Link>
+                    <Link to="/coming-soon" onClick={() => setIsMobileMenuOpen(false)} className="mobile-link">المخابر العلمية</Link>
+                    <Link to="/coming-soon" onClick={() => setIsMobileMenuOpen(false)} className="mobile-link" style={{ color: '#c5a059' }}>أدوات الذكاء الاصطناعي</Link>
                     <Link to="/about" onClick={() => setIsMobileMenuOpen(false)} className="mobile-link">عن المنصة</Link>
                 </div>
             </div>

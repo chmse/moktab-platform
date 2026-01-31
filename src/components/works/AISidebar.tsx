@@ -68,7 +68,20 @@ const AISidebar = ({ pdfUrl, onClose }: AISidebarProps) => {
                     <h3 style={{ margin: 0, fontSize: '1.1rem' }}>الذكاء الاصطناعي</h3>
                 </div>
                 {onClose && (
-                    <button onClick={onClose} style={{ color: 'var(--color-text-secondary)', cursor: 'pointer', padding: '0.25rem' }}>
+                    <button
+                        onClick={onClose}
+                        style={{
+                            position: 'absolute',
+                            top: '1rem',
+                            left: '1rem', // RTL: Left is the "end" or "start"? standard is corner.
+                            zIndex: 100,
+                            color: 'var(--color-text-secondary)',
+                            cursor: 'pointer',
+                            padding: '0.25rem',
+                            background: 'rgba(255,255,255,0.8)',
+                            borderRadius: '50%'
+                        }}
+                    >
                         <X size={24} />
                     </button>
                 )}
