@@ -196,12 +196,14 @@ const Navbar = () => {
 
                     {/* Desktop Links (Visible ONLY on Desktop > 1024px) */}
                     <div className="desktop-nav-container">
-                        <ul className="nav-links" style={{ display: 'flex', gap: '1rem', margin: 0, padding: 0, listStyle: 'none', fontSize: '0.85rem' }}>
+                        <ul className="nav-links" style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around', gap: '0.8rem', margin: 0, padding: 0, listStyle: 'none', fontSize: '0.85rem', flexWrap: 'nowrap' }}>
                             <li><Link to="/" className="nav-link">الرئيسية</Link></li>
                             <li><Link to="/professors" className="nav-link">الأساتذة</Link></li>
                             <li><Link to="/students" className="nav-link">الطلاب</Link></li>
                             <li><Link to="/works" className="nav-link">الأعمال</Link></li>
                             <li><Link to="/community" className="nav-link">المجتمع</Link></li>
+                            <li><Link to="/coming-soon" className="nav-link">النوادي</Link></li>
+                            <li><Link to="/coming-soon" className="nav-link">الفعاليات</Link></li>
                             <li><Link to="/coming-soon" className="nav-link">المجلات</Link></li>
                             <li><Link to="/coming-soon" className="nav-link">المخابر</Link></li>
                             <li><Link to="/coming-soon" className="nav-link" style={{ color: '#c5a059' }}>الذكاء الاصطناعي</Link></li>
@@ -220,6 +222,8 @@ const Navbar = () => {
                     <Link to="/students" onClick={() => setIsMobileMenuOpen(false)} className="mobile-link">الطلاب</Link>
                     <Link to="/works" onClick={() => setIsMobileMenuOpen(false)} className="mobile-link">الأعمال العلمية</Link>
                     <Link to="/community" onClick={() => setIsMobileMenuOpen(false)} className="mobile-link">المجتمع العلمي</Link>
+                    <Link to="/coming-soon" onClick={() => setIsMobileMenuOpen(false)} className="mobile-link">النوادي</Link>
+                    <Link to="/coming-soon" onClick={() => setIsMobileMenuOpen(false)} className="mobile-link">الملتقيات والفعاليات</Link>
                     <Link to="/coming-soon" onClick={() => setIsMobileMenuOpen(false)} className="mobile-link">قائمة المجلات</Link>
                     <Link to="/coming-soon" onClick={() => setIsMobileMenuOpen(false)} className="mobile-link">المخابر العلمية</Link>
                     <Link to="/coming-soon" onClick={() => setIsMobileMenuOpen(false)} className="mobile-link" style={{ color: '#c5a059' }}>أدوات الذكاء الاصطناعي</Link>

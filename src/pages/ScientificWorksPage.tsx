@@ -173,12 +173,16 @@ const ScientificWorksPage = () => {
                 @media (max-width: 768px) {
                     .grid-responsive-cards {
                         grid-template-columns: repeat(2, 1fr) !important;
-                        gap: 0.75rem !important;
+                        gap: 0.5rem !important;
                     }
                     /* Reduce font size for 2-col mobile cards */
-                    .grid-responsive-cards h3 { font-size: 1rem !important; }
-                    .grid-responsive-cards p { font-size: 0.8rem !important; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-                    .grid-responsive-cards .card-hover { padding: 1rem !important; }
+                    .grid-responsive-cards h3 { font-size: 0.9rem !important; line-height: 1.3; }
+                    .grid-responsive-cards p { display: none !important; } /* Hide Abstract on Mobile 2-col to save space? Or just clamp? User said "Shrink simple". */
+                    /* Reverting hide, just clamp */
+                    /*.grid-responsive-cards p { font-size: 0.75rem !important; -webkit-line-clamp: 2; }*/ 
+                    /* Actually, hiding abstract is a good "Shrink" strategy for 2-col small cards. */
+                    .grid-responsive-cards .card-hover { padding: 0.75rem !important; }
+                    .grid-responsive-cards button, .grid-responsive-cards a { font-size: 0.8rem !important; padding: 0.4rem !important; }
                 }
             `}</style>
         </div>
