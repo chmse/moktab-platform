@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { User as UserIcon, LogOut, LayoutDashboard, Shield, UserCircle, ChevronDown, Menu, X } from 'lucide-react';
+import { User as UserIcon, LogOut, LayoutDashboard, Shield, UserCircle, ChevronDown, Menu, X, Home, Users as UsersIcon, BookOpen, GraduationCap, Calendar, Library, FlaskConical, Cpu, Info } from 'lucide-react';
 
 const Navbar = () => {
     const { user, profile, loading, signOut } = useAuth();
@@ -217,17 +217,17 @@ const Navbar = () => {
             {/* Mobile Menu Overlay */}
             <div className={`mobile-menu-overlay ${isMobileMenuOpen ? 'open' : ''}`}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', textAlign: 'center' }}>
-                    <Link to="/" onClick={() => setIsMobileMenuOpen(false)} className="mobile-link">الرئيسية</Link>
-                    <Link to="/professors" onClick={() => setIsMobileMenuOpen(false)} className="mobile-link">الأساتذة</Link>
-                    <Link to="/students" onClick={() => setIsMobileMenuOpen(false)} className="mobile-link">الطلاب</Link>
-                    <Link to="/works" onClick={() => setIsMobileMenuOpen(false)} className="mobile-link">الأعمال العلمية</Link>
-                    <Link to="/community" onClick={() => setIsMobileMenuOpen(false)} className="mobile-link">المجتمع العلمي</Link>
-                    <Link to="/coming-soon" onClick={() => setIsMobileMenuOpen(false)} className="mobile-link">النوادي</Link>
-                    <Link to="/coming-soon" onClick={() => setIsMobileMenuOpen(false)} className="mobile-link">الملتقيات والفعاليات</Link>
-                    <Link to="/coming-soon" onClick={() => setIsMobileMenuOpen(false)} className="mobile-link">قائمة المجلات</Link>
-                    <Link to="/coming-soon" onClick={() => setIsMobileMenuOpen(false)} className="mobile-link">المخابر العلمية</Link>
-                    <Link to="/coming-soon" onClick={() => setIsMobileMenuOpen(false)} className="mobile-link" style={{ color: '#c5a059' }}>أدوات الذكاء الاصطناعي</Link>
-                    <Link to="/about" onClick={() => setIsMobileMenuOpen(false)} className="mobile-link">عن المنصة</Link>
+                    <Link to="/" onClick={() => setIsMobileMenuOpen(false)} className="mobile-link"><Home size={20} /> الرئيسية</Link>
+                    <Link to="/professors" onClick={() => setIsMobileMenuOpen(false)} className="mobile-link"><GraduationCap size={20} /> الأساتذة</Link>
+                    <Link to="/students" onClick={() => setIsMobileMenuOpen(false)} className="mobile-link"><UsersIcon size={20} /> الطلاب</Link>
+                    <Link to="/works" onClick={() => setIsMobileMenuOpen(false)} className="mobile-link"><BookOpen size={20} /> الأعمال العلمية</Link>
+                    <Link to="/community" onClick={() => setIsMobileMenuOpen(false)} className="mobile-link"><UsersIcon size={20} /> المجتمع العلمي</Link>
+                    <Link to="/coming-soon" onClick={() => setIsMobileMenuOpen(false)} className="mobile-link"><UsersIcon size={20} /> النوادي</Link>
+                    <Link to="/coming-soon" onClick={() => setIsMobileMenuOpen(false)} className="mobile-link"><Calendar size={20} /> الملتقيات والفعاليات</Link>
+                    <Link to="/coming-soon" onClick={() => setIsMobileMenuOpen(false)} className="mobile-link"><Library size={20} /> قائمة المجلات</Link>
+                    <Link to="/coming-soon" onClick={() => setIsMobileMenuOpen(false)} className="mobile-link"><FlaskConical size={20} /> المخابر العلمية</Link>
+                    <Link to="/coming-soon" onClick={() => setIsMobileMenuOpen(false)} className="mobile-link" style={{ color: '#c5a059' }}><Cpu size={20} /> أدوات الذكاء الاصطناعي</Link>
+                    <Link to="/about" onClick={() => setIsMobileMenuOpen(false)} className="mobile-link"><Info size={20} /> عن المنصة</Link>
                 </div>
             </div>
 
@@ -284,11 +284,24 @@ const Navbar = () => {
                     }
                     
                     .mobile-link {
-                        font-size: 1.5rem;
+                        font-size: 1.25rem;
                         font-weight: 700;
                         color: white;
                         text-decoration: none;
+                        display: flex;
+                        align-items: center;
+                        gap: 0.75rem;
+                        justify-content: center;
                     }
+                }
+                
+                /* Super Large Screen Tweak for Desktop Menu spacing */
+                @media (max-width: 1200px) and (min-width: 1025px) {
+                    .nav-links {
+                         gap: 0.5rem !important;
+                         font-size: 0.75rem !important;
+                    }
+                }
                 }
             `}</style>
         </nav>

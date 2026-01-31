@@ -90,7 +90,7 @@ const ProfessorProfilePage = () => {
         : professorWorks.filter(w => w.category === activeCategory);
 
     return (
-        <div style={{ paddingBottom: '4rem' }}>
+        <div style={{ paddingBottom: '4rem', paddingTop: '70px' }}>
             {/* Premium Cover Section */}
             <div className="bg-pattern" style={{
                 height: '200px',
@@ -157,7 +157,7 @@ const ProfessorProfilePage = () => {
                             flex-direction: row !important;
                             align-items: flex-end !important;
                             gap: 1rem !important;
-                            margin-top: -60px !important;
+                            margin-top: -40px !important; /* Less overlap to ensure visibility */
                             flex-wrap: nowrap !important;
                         }
                         .profile-avatar {
