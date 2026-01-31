@@ -245,7 +245,8 @@ const WorkDetailPage = () => {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    boxShadow: 'var(--shadow-lg)'
+                    boxShadow: '0 0 20px rgba(197, 160, 89, 0.4)',
+                    animation: 'pulse 2s infinite'
                 }}
             >
                 <Bot size={24} />
@@ -262,7 +263,8 @@ const WorkDetailPage = () => {
                     backgroundColor: 'rgba(0,0,0,0.5)',
                     zIndex: 100,
                     display: 'flex',
-                    justifyContent: 'flex-end'
+                    justifyContent: 'flex-end',
+                    backdropFilter: 'blur(4px)'
                 }}>
                     <div className="glass-panel" style={{
                         width: '85%',
@@ -272,15 +274,44 @@ const WorkDetailPage = () => {
                         borderRadius: '20px 0 0 20px',
                         backgroundColor: 'white',
                         overflowY: 'auto',
-                        animation: 'fadeIn 0.3s ease-out'
+                        animation: 'fadeIn 0.3s ease-out',
+                        position: 'relative'
                     }}>
-                        <button onClick={() => setShowMobileSidebar(false)} style={{ marginBottom: '1rem', color: 'var(--color-text-secondary)' }}>
+                        <button
+                            onClick={() => setShowMobileSidebar(false)}
+                            style={{
+                                position: 'absolute',
+                                top: '1rem',
+                                left: '1rem',
+                                width: '40px',
+                                height: '40px',
+                                borderRadius: '50%',
+                                backgroundColor: '#f1f5f9',
+                                border: 'none',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                color: '#1a1a1a',
+                                boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
+                                cursor: 'pointer'
+                            }}
+                        >
                             <X size={24} />
                         </button>
-                        <AISidebar pdfUrl={work?.pdf_url} />
+                        <div style={{ marginTop: '2rem' }}>
+                            <AISidebar pdfUrl={work?.pdf_url} />
+                        </div>
                     </div>
                 </div>
             )}
+
+            <style>{`
+                @keyframes pulse {
+                    0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(197, 160, 89, 0.7); }
+                    70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(197, 160, 89, 0); }
+                    100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(197, 160, 89, 0); }
+                }
+            `}</style>
         </div>
     );
 };
