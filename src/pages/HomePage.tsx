@@ -1,58 +1,10 @@
-import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { supabase } from '../lib/supabaseClient';
 import HeroSection from '../components/home/HeroSection';
+import { Link } from 'react-router-dom';
 
 const HomePage = () => {
-  const [stats, setStats] = useState({ professors: 0, students: 0, works: 0 });
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        console.log('HomePage: Supabase Connection Success - Starting data fetch');
-        // Fetch Stats (with fallback)
-        let profCount = 0;
-        let studCount = 0;
-        let workCount = 0;
-
-        // Try exact filters first
-        const [profResult, studResult, workResult] = await Promise.all([
-          supabase.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'professor'),
-          supabase.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'student'),
-          supabase.from('works').select('*', { count: 'exact', head: true })
-        ]);
-
-        profCount = profResult.count || 0;
-        studCount = studResult.count || 0;
-        workCount = workResult.count || 0;
-
-        // Fallback: If 0, fetch total headers (Absolute truth)
-        if (profCount === 0) {
-          const { count } = await supabase.from('profiles').select('*', { count: 'exact', head: true });
-          if (count) profCount = count; // Show TOTAL profiles if filtered is 0
-        }
-        if (workCount === 0) {
-          const { count } = await supabase.from('works').select('*', { count: 'exact', head: true });
-          if (count) workCount = count;
-        }
-
-        setStats({
-          professors: profCount,
-          students: studCount,
-          works: workCount
-        });
-
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
   return (
     <>
-      <HeroSection stats={stats} onSearch={() => { }} />
+      <HeroSection onSearch={() => { }} />
 
       {/* Entrance Hub Section - 3D Glassmorphism */}
       <div style={{
@@ -65,7 +17,7 @@ const HomePage = () => {
             بوابة الدخول
           </h2>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '2rem' }}>
-            <Link to="/works" style={{ textDecoration: 'none' }}>
+            <Link to="/hub/production" style={{ textDecoration: 'none' }}>
               <div className="card-hover" style={{
                 background: 'rgba(255, 255, 255, 0.4)',
                 backdropFilter: 'blur(12px)',
@@ -81,13 +33,13 @@ const HomePage = () => {
                 transform: 'translateY(0)',
               }}>
                 <div style={{ fontSize: '3.5rem', marginBottom: '1.2rem' }}>📚</div>
-                <h3 style={{ fontSize: '1.4rem', fontWeight: '800', marginBottom: '1rem', color: '#1a1a1a' }}>المكتبة الرقمية</h3>
+                <h3 style={{ fontSize: '1.4rem', fontWeight: '800', marginBottom: '1rem', color: '#1a1a1a' }}>الإنتاج العلمي</h3>
                 <p style={{ color: '#555', fontSize: '0.95rem', lineHeight: '1.7' }}>
-                  تصفح أحدث المقالات والكتب الأكاديمية لأساتذة معهد الآداب واللغات
+                  تصفح أحدث المقالات والكتب الأكاديمية لأساتذة المعهد
                 </p>
               </div>
             </Link>
-            <Link to="/professors" style={{ textDecoration: 'none' }}>
+            <Link to="/hub/environment" style={{ textDecoration: 'none' }}>
               <div className="card-hover" style={{
                 background: 'rgba(255, 255, 255, 0.4)',
                 backdropFilter: 'blur(12px)',
@@ -103,13 +55,13 @@ const HomePage = () => {
                 transform: 'translateY(0)',
               }}>
                 <div style={{ fontSize: '3.5rem', marginBottom: '1.2rem' }}>🎓</div>
-                <h3 style={{ fontSize: '1.4rem', fontWeight: '800', marginBottom: '1rem', color: '#1a1a1a' }}>هيئة التدريس</h3>
+                <h3 style={{ fontSize: '1.4rem', fontWeight: '800', marginBottom: '1rem', color: '#1a1a1a' }}>البيئة الأكاديمية</h3>
                 <p style={{ color: '#555', fontSize: '0.95rem', lineHeight: '1.7' }}>
-                  تعرف على القامات العلمية والأساتذة الباحثين بمعهد الآداب واللغات
+                  تعرف على القامات العلمية والأساتذة الباحثين بالمعهد
                 </p>
               </div>
             </Link>
-            <Link to="/community" style={{ textDecoration: 'none' }}>
+            <Link to="/hub/research" style={{ textDecoration: 'none' }}>
               <div className="card-hover" style={{
                 background: 'rgba(255, 255, 255, 0.4)',
                 backdropFilter: 'blur(12px)',
@@ -124,14 +76,14 @@ const HomePage = () => {
                 boxShadow: '0 20px 40px rgba(0,0,0,0.1)',
                 transform: 'translateY(0)',
               }}>
-                <div style={{ fontSize: '3.5rem', marginBottom: '1.2rem' }}>💬</div>
-                <h3 style={{ fontSize: '1.4rem', fontWeight: '800', marginBottom: '1rem', color: '#1a1a1a' }}>رواق الحوار</h3>
+                <div style={{ fontSize: '3.5rem', marginBottom: '1.2rem' }}>🔬</div>
+                <h3 style={{ fontSize: '1.4rem', fontWeight: '800', marginBottom: '1rem', color: '#1a1a1a' }}>البحث والتطوير</h3>
                 <p style={{ color: '#555', fontSize: '0.95rem', lineHeight: '1.7' }}>
-                  ملتقى طلبة وأساتذة معهد الآداب واللغات للنقاش العلمي المرقّى
+                  استكشف المخابر العلمية والمشاريع البحثية المبتكرة
                 </p>
               </div>
             </Link>
-            <Link to="/students" style={{ textDecoration: 'none' }}>
+            <Link to="/hub/ai" style={{ textDecoration: 'none' }}>
               <div className="card-hover" style={{
                 background: 'rgba(255, 255, 255, 0.4)',
                 backdropFilter: 'blur(12px)',
@@ -146,10 +98,54 @@ const HomePage = () => {
                 boxShadow: '0 20px 40px rgba(0,0,0,0.1)',
                 transform: 'translateY(0)',
               }}>
-                <div style={{ fontSize: '3.5rem', marginBottom: '1.2rem' }}>👨‍🎓</div>
-                <h3 style={{ fontSize: '1.4rem', fontWeight: '800', marginBottom: '1rem', color: '#1a1a1a' }}>نخبة الطلبة</h3>
+                <div style={{ fontSize: '3.5rem', marginBottom: '1.2rem' }}>🤖</div>
+                <h3 style={{ fontSize: '1.4rem', fontWeight: '800', marginBottom: '1rem', color: '#1a1a1a' }}>الذكاء الاصطناعي</h3>
                 <p style={{ color: '#555', fontSize: '0.95rem', lineHeight: '1.7' }}>
-                  استكشف مشاريع واهتمامات طلبة الدراسات العليا والباحثين بالمعهد
+                  أدوات التحليل الذكي ومعالجة اللغة العربية آلياً
+                </p>
+              </div>
+            </Link>
+            <Link to="/hub/activities" style={{ textDecoration: 'none' }}>
+              <div className="card-hover" style={{
+                background: 'rgba(255, 255, 255, 0.4)',
+                backdropFilter: 'blur(12px)',
+                WebkitBackdropFilter: 'blur(12px)',
+                padding: '2.5rem',
+                borderRadius: '20px',
+                border: '1px solid #c5a059',
+                textAlign: 'center',
+                transition: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+                cursor: 'pointer',
+                height: '100%',
+                boxShadow: '0 20px 40px rgba(0,0,0,0.1)',
+                transform: 'translateY(0)',
+              }}>
+                <div style={{ fontSize: '3.5rem', marginBottom: '1.2rem' }}>📅</div>
+                <h3 style={{ fontSize: '1.4rem', fontWeight: '800', marginBottom: '1rem', color: '#1a1a1a' }}>الأنشطة</h3>
+                <p style={{ color: '#555', fontSize: '0.95rem', lineHeight: '1.7' }}>
+                  متابعة أجندة الفعاليات والملتقيات العلمية بالمعهد
+                </p>
+              </div>
+            </Link>
+            <Link to="/hub/about" style={{ textDecoration: 'none' }}>
+              <div className="card-hover" style={{
+                background: 'rgba(255, 255, 255, 0.4)',
+                backdropFilter: 'blur(12px)',
+                WebkitBackdropFilter: 'blur(12px)',
+                padding: '2.5rem',
+                borderRadius: '20px',
+                border: '1px solid #c5a059',
+                textAlign: 'center',
+                transition: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+                cursor: 'pointer',
+                height: '100%',
+                boxShadow: '0 20px 40px rgba(0,0,0,0.1)',
+                transform: 'translateY(0)',
+              }}>
+                <div style={{ fontSize: '3.5rem', marginBottom: '1.2rem' }}>🏛️</div>
+                <h3 style={{ fontSize: '1.4rem', fontWeight: '800', marginBottom: '1rem', color: '#1a1a1a' }}>عن المنصة</h3>
+                <p style={{ color: '#555', fontSize: '0.95rem', lineHeight: '1.7' }}>
+                  تعرف على رؤية مَنْصَة مَكْتَب وأهدافها الاستراتيجية
                 </p>
               </div>
             </Link>

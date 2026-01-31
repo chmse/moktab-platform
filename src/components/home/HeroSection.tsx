@@ -1,16 +1,11 @@
-import { Search, Users, BookOpen, GraduationCap } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 interface HeroSectionProps {
-    stats: {
-        professors: number;
-        students: number;
-        works: number;
-    };
     onSearch: (term: string) => void;
 }
 
-const HeroSection = ({ stats, onSearch }: HeroSectionProps) => {
+const HeroSection = ({ onSearch }: HeroSectionProps) => {
     const navigate = useNavigate();
 
     const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -32,17 +27,37 @@ const HeroSection = ({ stats, onSearch }: HeroSectionProps) => {
             overflow: 'hidden'
         }}>
             <div className="container" style={{ position: 'relative', zIndex: 10, width: '100%' }}>
-                <div style={{ marginBottom: '2rem' }}>
-                    <h1 className="hero-title text-responsive-title" style={{
+                {/* Centered Logo & Title */}
+                <div style={{ marginBottom: '3rem' }}>
+                    <div style={{
+                        fontSize: '1.5rem',
                         fontWeight: '900',
-                        marginBottom: '0.5rem',
-                        lineHeight: 1.2,
-                        letterSpacing: '-1px'
+                        color: '#c5a059',
+                        marginBottom: '1rem',
+                        letterSpacing: '2px',
+                        textTransform: 'uppercase'
+                    }}>
+                        MOKTAB ACADEMIC
+                    </div>
+                    <h1 className="hero-title text-responsive-title" style={{
+                        fontSize: '3.5rem',
+                        fontWeight: '900',
+                        marginBottom: '1rem',
+                        lineHeight: 1.1,
+                        color: 'white',
+                        textShadow: '0 10px 30px rgba(0,0,0,0.4)'
                     }}>
                         مَنْصَة مَكْتَب الأكاديمية
                     </h1>
-                    <p style={{ fontSize: '1.1rem', opacity: 0.85, maxWidth: '600px', margin: '0 auto' }}>
-                        الأرشيف الجامعي الشامل للنتاج العلمي والمعالجات الأكاديمية
+                    <p style={{
+                        fontSize: '1.25rem',
+                        opacity: 0.9,
+                        maxWidth: '700px',
+                        margin: '0 auto',
+                        fontWeight: '500',
+                        color: 'rgba(255,255,255,0.7)'
+                    }}>
+                        قاعدة البيانات المركزية للنتاج العلمي والبحثي المحكم
                     </p>
                 </div>
 
@@ -84,71 +99,6 @@ const HeroSection = ({ stats, onSearch }: HeroSectionProps) => {
                     <Search style={{ position: 'absolute', right: '1.25rem', top: '50%', transform: 'translateY(-50%)', opacity: 0.7, color: '#c5a059' }} size={20} />
                 </div>
 
-                {/* Minimalist Stats Cards */}
-                <div style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    gap: '2rem',
-                    padding: '0',
-                    maxWidth: '700px',
-                    margin: '0 auto',
-                    flexWrap: 'wrap'
-                }}>
-                    <div style={{
-                        background: 'rgba(255, 255, 255, 0.08)',
-                        backdropFilter: 'blur(10px)',
-                        padding: '1rem 1.5rem',
-                        borderRadius: '12px',
-                        border: '1px solid rgba(197, 160, 89, 0.3)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.75rem',
-                        minWidth: '140px',
-                        flex: '1 1 140px', /* Allow flex shrink/grow */
-                    }}>
-                        <Users size={20} color="#c5a059" />
-                        <div style={{ textAlign: 'right' }}>
-                            <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#c5a059' }}>{stats.professors}</div>
-                            <div style={{ fontSize: '0.75rem', opacity: 0.8 }}>أستاذ</div>
-                        </div>
-                    </div>
-                    <div style={{
-                        background: 'rgba(255, 255, 255, 0.08)',
-                        backdropFilter: 'blur(10px)',
-                        padding: '1rem 1.5rem',
-                        borderRadius: '12px',
-                        border: '1px solid rgba(197, 160, 89, 0.3)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.75rem',
-                        minWidth: '140px',
-                        flex: '1 1 140px'
-                    }}>
-                        <BookOpen size={20} color="#c5a059" />
-                        <div style={{ textAlign: 'right' }}>
-                            <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#c5a059' }}>{stats.works}</div>
-                            <div style={{ fontSize: '0.75rem', opacity: 0.8 }}>بحث وكتاب</div>
-                        </div>
-                    </div>
-                    <div style={{
-                        background: 'rgba(255, 255, 255, 0.08)',
-                        backdropFilter: 'blur(10px)',
-                        padding: '1rem 1.5rem',
-                        borderRadius: '12px',
-                        border: '1px solid rgba(197, 160, 89, 0.3)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.75rem',
-                        minWidth: '140px',
-                        flex: '1 1 140px'
-                    }}>
-                        <GraduationCap size={20} color="#c5a059" />
-                        <div style={{ textAlign: 'right' }}>
-                            <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#c5a059' }}>{stats.students}</div>
-                            <div style={{ fontSize: '0.75rem', opacity: 0.8 }}>باحث</div>
-                        </div>
-                    </div>
-                </div>
             </div>
 
             {/* Subtle texture overlay */}

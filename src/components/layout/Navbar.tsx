@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { User as UserIcon, LogOut, LayoutDashboard, Shield, UserCircle, ChevronDown, Menu, X, BookOpen, GraduationCap, Calendar, FlaskConical, Info } from 'lucide-react';
+import { User as UserIcon, LogOut, LayoutDashboard, Shield, UserCircle, ChevronDown, Menu, X, BookOpen, GraduationCap, Calendar, FlaskConical, Info, Cpu } from 'lucide-react';
 
 const Navbar = () => {
     const { user, profile, loading, signOut } = useAuth();
@@ -143,57 +143,31 @@ const Navbar = () => {
             {/* Universal Side Drawer (RTL) */}
             <div className={`drawer-backdrop ${isMobileMenuOpen ? 'open' : ''}`} onClick={() => setIsMobileMenuOpen(false)}>
                 <div className="drawer-panel" onClick={e => e.stopPropagation()}>
-                    <div style={{ marginBottom: '2rem', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '1rem' }}>
-                        <h3 style={{ color: '#c5a059', margin: 0, fontSize: '1.2rem' }}>القائمة الرئيسية</h3>
-                    </div>
-
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-
-                        {/* Unit A: Production */}
-                        <div className="menu-group">
-                            <span className="group-title">الإنتاج العلمي</span>
-                            <div className="group-links">
-                                <Link to="/hub/production" onClick={() => setIsMobileMenuOpen(false)} className="drawer-link"><BookOpen size={18} /> نظرة عامة</Link>
-                                <Link to="/works" onClick={() => setIsMobileMenuOpen(false)} className="drawer-link sub-link">الأعمال العلمية</Link>
-                                <Link to="/community" onClick={() => setIsMobileMenuOpen(false)} className="drawer-link sub-link">المجتمع العلمي</Link>
-                            </div>
-                        </div>
-
-                        {/* Unit B: Environment */}
-                        <div className="menu-group">
-                            <span className="group-title">البيئة الأكاديمية</span>
-                            <div className="group-links">
-                                <Link to="/hub/environment" onClick={() => setIsMobileMenuOpen(false)} className="drawer-link"><GraduationCap size={18} /> نظرة عامة</Link>
-                                <Link to="/professors" onClick={() => setIsMobileMenuOpen(false)} className="drawer-link sub-link">الأساتذة</Link>
-                                <Link to="/students" onClick={() => setIsMobileMenuOpen(false)} className="drawer-link sub-link">الطلاب</Link>
-                            </div>
-                        </div>
-
-                        {/* Unit C: R&D */}
-                        <div className="menu-group">
-                            <span className="group-title">البحث والتطوير</span>
-                            <div className="group-links">
-                                <Link to="/hub/research" onClick={() => setIsMobileMenuOpen(false)} className="drawer-link"><FlaskConical size={18} /> نظرة عامة</Link>
-                            </div>
-                        </div>
-
-                        {/* Unit D: Activities */}
-                        <div className="menu-group">
-                            <span className="group-title">الأنشطة</span>
-                            <div className="group-links">
-                                <Link to="/hub/activities" onClick={() => setIsMobileMenuOpen(false)} className="drawer-link"><Calendar size={18} /> نظرة عامة</Link>
-                            </div>
-                        </div>
-
-                        {/* Unit E: About */}
-                        <div className="menu-group">
-                            <span className="group-title">عن المنصة</span>
-                            <div className="group-links">
-                                <Link to="/hub/about" onClick={() => setIsMobileMenuOpen(false)} className="drawer-link"><Info size={18} /> نظرة عامة</Link>
-                                <Link to="/" onClick={() => setIsMobileMenuOpen(false)} className="drawer-link sub-link">الرئيسية</Link>
-                            </div>
-                        </div>
-
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', marginTop: '1rem' }}>
+                        <Link to="/hub/production" onClick={() => setIsMobileMenuOpen(false)} className="drawer-link">
+                            <BookOpen size={22} color="#c5a059" />
+                            <span>الإنتاج العلمي</span>
+                        </Link>
+                        <Link to="/hub/environment" onClick={() => setIsMobileMenuOpen(false)} className="drawer-link">
+                            <GraduationCap size={22} color="#c5a059" />
+                            <span>البيئة الأكاديمية</span>
+                        </Link>
+                        <Link to="/hub/research" onClick={() => setIsMobileMenuOpen(false)} className="drawer-link">
+                            <FlaskConical size={22} color="#c5a059" />
+                            <span>البحث والتطوير</span>
+                        </Link>
+                        <Link to="/hub/ai" onClick={() => setIsMobileMenuOpen(false)} className="drawer-link">
+                            <Cpu size={22} color="#c5a059" />
+                            <span>الذكاء الاصطناعي</span>
+                        </Link>
+                        <Link to="/hub/activities" onClick={() => setIsMobileMenuOpen(false)} className="drawer-link">
+                            <Calendar size={22} color="#c5a059" />
+                            <span>الأنشطة والفعاليات</span>
+                        </Link>
+                        <Link to="/hub/about" onClick={() => setIsMobileMenuOpen(false)} className="drawer-link">
+                            <Info size={22} color="#c5a059" />
+                            <span>عن المنصة</span>
+                        </Link>
                     </div>
                 </div>
             </div>
@@ -243,16 +217,6 @@ const Navbar = () => {
                     transform: translateX(0); /* Visible */
                 }
 
-                /* Menu Styles */
-                .group-title {
-                    display: block;
-                    font-size: 0.85rem;
-                    text-transform: uppercase;
-                    letter-spacing: 1px;
-                    color: rgba(255,255,255,0.5);
-                    margin-bottom: 0.5rem;
-                    font-weight: bold;
-                }
                 .drawer-link {
                     display: flex;
                     align-items: center;
@@ -265,11 +229,6 @@ const Navbar = () => {
                     transition: color 0.2s;
                 }
                 .drawer-link:hover { color: #c5a059; }
-                .sub-link {
-                    padding-right: 2rem; /* Indent */
-                    font-size: 0.95rem;
-                    opacity: 0.8;
-                }
 
                 /* Ensure Hamburger is ALWAYS Visible */
                 .mobile-hamburger { display: flex !important; }
