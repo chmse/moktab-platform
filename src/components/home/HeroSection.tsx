@@ -33,8 +33,7 @@ const HeroSection = ({ stats, onSearch }: HeroSectionProps) => {
         }}>
             <div className="container" style={{ position: 'relative', zIndex: 10, width: '100%' }}>
                 <div style={{ marginBottom: '2rem' }}>
-                    <h1 style={{
-                        fontSize: '2.5rem',
+                    <h1 className="hero-title text-responsive-title" style={{
                         fontWeight: '900',
                         marginBottom: '0.5rem',
                         lineHeight: 1.2,
@@ -47,7 +46,7 @@ const HeroSection = ({ stats, onSearch }: HeroSectionProps) => {
                     </p>
                 </div>
 
-                <div style={{
+                <div className="w-full-mobile" style={{
                     maxWidth: '650px',
                     margin: '0 auto 2.5rem',
                     position: 'relative',
@@ -104,7 +103,8 @@ const HeroSection = ({ stats, onSearch }: HeroSectionProps) => {
                         display: 'flex',
                         alignItems: 'center',
                         gap: '0.75rem',
-                        minWidth: '140px'
+                        minWidth: '140px',
+                        flex: '1 1 140px', /* Allow flex shrink/grow */
                     }}>
                         <Users size={20} color="#c5a059" />
                         <div style={{ textAlign: 'right' }}>
@@ -121,7 +121,8 @@ const HeroSection = ({ stats, onSearch }: HeroSectionProps) => {
                         display: 'flex',
                         alignItems: 'center',
                         gap: '0.75rem',
-                        minWidth: '140px'
+                        minWidth: '140px',
+                        flex: '1 1 140px'
                     }}>
                         <BookOpen size={20} color="#c5a059" />
                         <div style={{ textAlign: 'right' }}>
@@ -138,7 +139,8 @@ const HeroSection = ({ stats, onSearch }: HeroSectionProps) => {
                         display: 'flex',
                         alignItems: 'center',
                         gap: '0.75rem',
-                        minWidth: '140px'
+                        minWidth: '140px',
+                        flex: '1 1 140px'
                     }}>
                         <GraduationCap size={20} color="#c5a059" />
                         <div style={{ textAlign: 'right' }}>
@@ -160,6 +162,12 @@ const HeroSection = ({ stats, onSearch }: HeroSectionProps) => {
                 pointerEvents: 'none',
                 background: 'url("https://www.transparenttextures.com/patterns/carbon-fibre.png")'
             }}></div>
+
+            <style>{`
+                .hero-title {
+                    font-size: 2.5rem;
+                }
+            `}</style>
         </div>
     );
 };

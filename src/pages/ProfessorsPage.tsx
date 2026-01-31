@@ -100,11 +100,7 @@ const ProfessorsPage = () => {
                     </div>
                 </div>
             ) : (
-                <div className="animate-fade-in" style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-                    gap: '2rem'
-                }}>
+                <div className="animate-fade-in grid-responsive-cards">
                     {filteredProfessors.length > 0 ? (
                         filteredProfessors.map((professor) => (
                             <ProfessorCard key={professor.id} professor={professor} />

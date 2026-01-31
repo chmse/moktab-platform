@@ -152,7 +152,7 @@ const StudentsPage = () => {
                     </div>
                 </div>
             ) : filteredStudents.length > 0 ? (
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '2rem' }}>
+                <div className="grid-responsive-cards">
                     {filteredStudents.map(student => (
                         <StudentCard key={student.id} student={student} />
                     ))}

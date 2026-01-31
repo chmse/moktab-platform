@@ -95,7 +95,7 @@ const ScientificWorksPage = () => {
                     </div>
                 </div>
             ) : (
-                <div className="animate-fade-in" style={{ display: 'grid', gap: '1.5rem' }}>
+                <div className="animate-fade-in grid-responsive-cards">
                     {filteredWorks.length > 0 ? (
                         filteredWorks.map((work) => (
                             <div key={work.id} className="card-hover" style={{

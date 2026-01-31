@@ -1,12 +1,14 @@
 import { useState, useRef, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { User as UserIcon, LogOut, LayoutDashboard, Shield, UserCircle, ChevronDown } from 'lucide-react';
+import { User as UserIcon, LogOut, LayoutDashboard, Shield, UserCircle, ChevronDown, Menu, X } from 'lucide-react';
 
 const Navbar = () => {
     const { user, profile, loading, signOut } = useAuth();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
+    const location = useLocation();
 
     // Close menu when clicking outside
     useEffect(() => {
@@ -18,6 +20,11 @@ const Navbar = () => {
         document.addEventListener('mousedown', handleClickOutside);
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
+
+    // Close mobile menu on route change
+    useEffect(() => {
+        setIsMobileMenuOpen(false);
+    }, [location]);
 
     return (
         <nav style={{
@@ -34,133 +41,151 @@ const Navbar = () => {
         }}>
             <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
 
-                {/* User Menu Area (Left - RTL) */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }} ref={menuRef}>
-                    {!loading && (
-                        user ? (
-                            <div style={{ position: 'relative' }}>
-                                <button
-                                    onClick={() => setIsMenuOpen(!isMenuOpen)}
-                                    style={{
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        gap: '0.75rem',
-                                        background: 'rgba(255,255,255,0.1)',
-                                        border: '1px solid rgba(255,255,255,0.2)',
-                                        padding: '0.5rem 1rem',
-                                        borderRadius: 'var(--radius-full)',
-                                        color: 'white',
-                                        cursor: 'pointer',
-                                        transition: 'all 0.2s ease'
-                                    }}
-                                    className="hover-bright"
-                                >
-                                    <div style={{
-                                        width: '32px',
-                                        height: '32px',
-                                        borderRadius: '50%',
-                                        backgroundColor: 'var(--color-accent)',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        overflow: 'hidden'
-                                    }}>
-                                        {profile?.avatar_url ? (
-                                            <img src={profile.avatar_url} alt={profile.full_name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                                        ) : (
-                                            <UserIcon size={18} color="white" />
-                                        )}
-                                    </div>
-                                    <span style={{ fontWeight: '500', fontSize: '0.9rem' }}>{profile?.full_name}</span>
-                                    <ChevronDown size={16} style={{ transform: isMenuOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
-                                </button>
+                {/* Mobile Menu Toggle (Left on Desktop, Right on Mobile due to RTL?) No, Left on RTL layout means right visually usually. 
+                    Let's stick to flex order. 
+                    Structure: [User Menu/Toggle] [Links] [Logo]
+                */}
 
-                                {/* Dropdown Menu */}
-                                {isMenuOpen && (
-                                    <div className="animate-fade-in" style={{
-                                        position: 'absolute',
-                                        top: 'calc(100% + 10px)',
-                                        left: 0,
-                                        width: '220px',
-                                        backgroundColor: 'white',
-                                        borderRadius: 'var(--radius-lg)',
-                                        boxShadow: 'var(--shadow-lg)',
-                                        padding: '0.5rem',
-                                        zIndex: 1001,
-                                        border: '1px solid var(--color-border)',
-                                        color: 'var(--color-text-primary)'
-                                    }}>
-                                        <div style={{ padding: '0.75rem 1rem', borderBottom: '1px solid var(--color-border)', marginBottom: '0.5rem' }}>
-                                            <p style={{ fontWeight: 'bold', fontSize: '0.9rem', marginBottom: '0.1rem' }}>{profile?.full_name}</p>
-                                            <p style={{ fontSize: '0.8rem', color: 'var(--color-text-secondary)' }}>
-                                                {profile?.role === 'professor' ? profile.rank : 'طالب علم'}
-                                            </p>
+                {/* Mobile Toggle Button */}
+                <button
+                    className="mobile-only"
+                    onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                    style={{ color: 'white', padding: '0.5rem' }}
+                >
+                    {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+                </button>
+
+                {/* Desktop: User Menu (Left) | Mobile: Inside Menu */}
+                <div className={`nav-content ${isMobileMenuOpen ? 'mobile-open' : ''}`} style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
+
+                    {/* User Menu Area */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }} ref={menuRef}>
+                        {!loading && (
+                            user ? (
+                                <div style={{ position: 'relative' }}>
+                                    <button
+                                        onClick={() => setIsMenuOpen(!isMenuOpen)}
+                                        style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: '0.75rem',
+                                            background: 'rgba(255,255,255,0.1)',
+                                            border: '1px solid rgba(255,255,255,0.2)',
+                                            padding: '0.5rem 1rem',
+                                            borderRadius: 'var(--radius-full)',
+                                            color: 'white',
+                                            cursor: 'pointer',
+                                            transition: 'all 0.2s ease'
+                                        }}
+                                        className="hover-bright"
+                                    >
+                                        <div style={{
+                                            width: '32px',
+                                            height: '32px',
+                                            borderRadius: '50%',
+                                            backgroundColor: 'var(--color-accent)',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            overflow: 'hidden'
+                                        }}>
+                                            {profile?.avatar_url ? (
+                                                <img src={profile.avatar_url} alt={profile.full_name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                            ) : (
+                                                <UserIcon size={18} color="white" />
+                                            )}
                                         </div>
+                                        <span className="desktop-only" style={{ fontWeight: '500', fontSize: '0.9rem' }}>{profile?.full_name}</span>
+                                        <ChevronDown size={16} style={{ transform: isMenuOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
+                                    </button>
 
-                                        <Link to={`/professors/${user.id}`} onClick={() => setIsMenuOpen(false)} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.75rem 1rem', textDecoration: 'none', color: 'inherit', borderRadius: 'var(--radius-md)' }} className="dropdown-item">
-                                            <UserCircle size={18} color="var(--color-primary)" />
-                                            <span>الملف الشخصي</span>
-                                        </Link>
+                                    {/* Dropdown Menu */}
+                                    {isMenuOpen && (
+                                        <div className="animate-fade-in" style={{
+                                            position: 'absolute',
+                                            top: 'calc(100% + 10px)',
+                                            left: 0,
+                                            width: '220px',
+                                            backgroundColor: 'white',
+                                            borderRadius: 'var(--radius-lg)',
+                                            boxShadow: 'var(--shadow-lg)',
+                                            padding: '0.5rem',
+                                            zIndex: 1001,
+                                            border: '1px solid var(--color-border)',
+                                            color: 'var(--color-text-primary)'
+                                        }}>
+                                            <div style={{ padding: '0.75rem 1rem', borderBottom: '1px solid var(--color-border)', marginBottom: '0.5rem' }}>
+                                                <p style={{ fontWeight: 'bold', fontSize: '0.9rem', marginBottom: '0.1rem' }}>{profile?.full_name}</p>
+                                                <p style={{ fontSize: '0.8rem', color: 'var(--color-text-secondary)' }}>
+                                                    {profile?.role === 'professor' ? profile.rank : 'طالب علم'}
+                                                </p>
+                                            </div>
 
-                                        <Link
-                                            to={profile?.role === 'professor' ? "/dashboard" : "/student-dashboard"}
-                                            onClick={() => setIsMenuOpen(false)}
-                                            style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.75rem 1rem', textDecoration: 'none', color: 'inherit', borderRadius: 'var(--radius-md)' }}
-                                            className="dropdown-item"
-                                        >
-                                            <LayoutDashboard size={18} color="var(--color-primary)" />
-                                            <span>لوحة التحكم</span>
-                                        </Link>
-
-                                        {profile?.is_admin && (
-                                            <Link to="/admin" onClick={() => setIsMenuOpen(false)} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.75rem 1rem', textDecoration: 'none', color: '#C5A059', fontWeight: 'bold', borderRadius: 'var(--radius-md)' }} className="dropdown-item">
-                                                <Shield size={18} color="#C5A059" />
-                                                <span>لوحة الإدارة</span>
+                                            <Link to={`/professors/${user.id}`} onClick={() => setIsMenuOpen(false)} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.75rem 1rem', textDecoration: 'none', color: 'inherit', borderRadius: 'var(--radius-md)' }} className="dropdown-item">
+                                                <UserCircle size={18} color="var(--color-primary)" />
+                                                <span>الملف الشخصي</span>
                                             </Link>
-                                        )}
 
-                                        <div style={{ borderTop: '1px solid var(--color-border)', marginTop: '0.5rem', paddingTop: '0.5rem' }}>
-                                            <button
-                                                onClick={() => { signOut(); setIsMenuOpen(false); }}
-                                                style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.75rem 1rem', width: '100%', background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', textAlign: 'right', borderRadius: 'var(--radius-md)' }}
-                                                className="dropdown-item text-danger"
+                                            <Link
+                                                to={profile?.role === 'professor' ? "/dashboard" : "/student-dashboard"}
+                                                onClick={() => setIsMenuOpen(false)}
+                                                style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.75rem 1rem', textDecoration: 'none', color: 'inherit', borderRadius: 'var(--radius-md)' }}
+                                                className="dropdown-item"
                                             >
-                                                <LogOut size={18} />
-                                                <span>تسجيل الخروج</span>
-                                            </button>
+                                                <LayoutDashboard size={18} color="var(--color-primary)" />
+                                                <span>لوحة التحكم</span>
+                                            </Link>
+
+                                            {profile?.is_admin && (
+                                                <Link to="/admin" onClick={() => setIsMenuOpen(false)} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.75rem 1rem', textDecoration: 'none', color: '#C5A059', fontWeight: 'bold', borderRadius: 'var(--radius-md)' }} className="dropdown-item">
+                                                    <Shield size={18} color="#C5A059" />
+                                                    <span>لوحة الإدارة</span>
+                                                </Link>
+                                            )}
+
+                                            <div style={{ borderTop: '1px solid var(--color-border)', marginTop: '0.5rem', paddingTop: '0.5rem' }}>
+                                                <button
+                                                    onClick={() => { signOut(); setIsMenuOpen(false); }}
+                                                    style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.75rem 1rem', width: '100%', background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', textAlign: 'right', borderRadius: 'var(--radius-md)' }}
+                                                    className="dropdown-item text-danger"
+                                                >
+                                                    <LogOut size={18} />
+                                                    <span>تسجيل الخروج</span>
+                                                </button>
+                                            </div>
                                         </div>
-                                    </div>
-                                )}
-                            </div>
-                        ) : (
-                            <Link to="/login" style={{
-                                textDecoration: 'none',
-                                backgroundColor: '#c5a059',
-                                color: '#1a1a1a',
-                                padding: '0.5rem 1.5rem',
-                                borderRadius: 'var(--radius-md)',
-                                fontWeight: 'bold',
-                                fontSize: '0.9rem',
-                                transition: 'all 0.2s ease'
-                            }} className="hover-bright">
-                                تسجيل الدخول
-                            </Link>
-                        )
-                    )}
+                                    )}
+                                </div>
+                            ) : (
+                                <Link to="/login" style={{
+                                    textDecoration: 'none',
+                                    backgroundColor: '#c5a059',
+                                    color: '#1a1a1a',
+                                    padding: '0.5rem 1.5rem',
+                                    borderRadius: 'var(--radius-md)',
+                                    fontWeight: 'bold',
+                                    fontSize: '0.9rem',
+                                    transition: 'all 0.2s ease'
+                                }} className="hover-bright">
+                                    تسجيل الدخول
+                                </Link>
+                            )
+                        )}
+                    </div>
+
+                    {/* Primary Nav Links */}
+                    <ul className="nav-links" style={{ display: 'flex', gap: '2rem', margin: 0, alignItems: 'center', listStyle: 'none' }}>
+                        <li><Link to="/" className="nav-link">الرئيسية</Link></li>
+                        <li><Link to="/professors" className="nav-link">الأساتذة</Link></li>
+                        <li><Link to="/students" className="nav-link">الطلاب</Link></li>
+                        <li><Link to="/community" className="nav-link">المجتمع العلمي</Link></li>
+                        <li><Link to="/works" className="nav-link">الأعمال العلمية</Link></li>
+                        <li><Link to="/about" className="nav-link">عن المنصة</Link></li>
+                    </ul>
                 </div>
 
-                {/* Primary Nav Links */}
-                <ul style={{ display: 'flex', gap: '2rem', margin: 0, alignItems: 'center', listStyle: 'none' }}>
-                    <li><Link to="/" className="nav-link">الرئيسية</Link></li>
-                    <li><Link to="/professors" className="nav-link">الأساتذة</Link></li>
-                    <li><Link to="/students" className="nav-link">الطلاب</Link></li>
-                    <li><Link to="/community" className="nav-link">المجتمع العلمي</Link></li>
-                    <li><Link to="/works" className="nav-link">الأعمال العلمية</Link></li>
-                    <li><Link to="/about" className="nav-link">عن المنصة</Link></li>
-                </ul>
-
                 {/* Logo (Right - RTL) */}
-                <div style={{ fontSize: '1.5rem', fontWeight: '800', letterSpacing: '0.5px' }}>
+                <div style={{ fontSize: '1.5rem', fontWeight: '800', letterSpacing: '0.5px', zIndex: 1002 }}>
                     <Link to="/" style={{ color: 'white', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                         <span style={{ color: 'var(--color-accent)' }}>مَنْصَة</span>
                         <span>مَكْتَب</span>
@@ -178,6 +203,44 @@ const Navbar = () => {
                 }
                 .hover-bright:hover {
                     filter: brightness(1.1);
+                }
+                
+                /* Mobile Menu Styles */
+                @media (max-width: 768px) {
+                    .nav-content {
+                        position: fixed;
+                        top: 0;
+                        left: 0;
+                        right: 0;
+                        bottom: 0;
+                        background-color: #000033;
+                        flex-direction: column-reverse; /* Stack links then user menu */
+                        justify-content: center;
+                        padding: 2rem;
+                        transform: translateY(-100%);
+                        transition: transform 0.3s ease-in-out;
+                        z-index: 999;
+                    }
+                    
+                    .nav-content.mobile-open {
+                        transform: translateY(0);
+                    }
+                    
+                    .nav-links {
+                        flex-direction: column;
+                        gap: 1.5rem !important;
+                        text-align: center;
+                    }
+                    
+                    .nav-link {
+                        font-size: 1.25rem;
+                    }
+                }
+                
+                @media (min-width: 769px) {
+                    .mobile-only {
+                        display: none !important;
+                    }
                 }
             `}</style>
         </nav>

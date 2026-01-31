@@ -109,7 +109,7 @@ const WorkDetailPage = () => {
                 </Link>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) 300px', gap: '3rem', alignItems: 'start', position: 'relative' }}>
+            <div className="work-detail-grid">
                 {/* Main Content */}
                 <div style={{ minWidth: 0 }}>
                     <header style={{ marginBottom: '3rem', borderBottom: '1px solid var(--color-border)', paddingBottom: '2rem' }}>
@@ -224,16 +224,7 @@ const WorkDetailPage = () => {
                 </div>
 
                 {/* Desktop Sidebar */}
-                <aside className="desktop-sidebar" style={{ display: 'none' }}> {/* Handled by CSS media query ideally, but inline styles force logic here */}
-                    <style>{`
-             @media (min-width: 900px) {
-               .desktop-sidebar { display: block !important; }
-               .mobile-toggle { display: none !important; }
-             }
-             @media (max-width: 899px) {
-                .desktop-sidebar { display: none !important; }
-             }
-           `}</style>
+                <aside className="desktop-sidebar">
                     <AISidebar pdfUrl={work?.pdf_url} />
                 </aside>
             </div>
