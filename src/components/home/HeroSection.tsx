@@ -19,7 +19,7 @@ const HeroSection = ({ stats, onSearch }: HeroSectionProps) => {
         }
     };
     return (
-        <div style={{
+        <div className="hero-section-container" style={{
             backgroundColor: '#000033',
             backgroundImage: 'radial-gradient(circle at 50% 50%, rgba(197, 160, 89, 0.05) 0%, transparent 100%)',
             color: 'white',
@@ -166,6 +166,14 @@ const HeroSection = ({ stats, onSearch }: HeroSectionProps) => {
             <style>{`
                 .hero-title {
                     font-size: 2.5rem;
+                }
+                @media (max-width: 768px) {
+                    .hero-section-container {
+                        padding-top: 80px !important;
+                    }
+                    .hero-title {
+                        font-size: 2rem !important;
+                    }
                 }
             `}</style>
         </div>
