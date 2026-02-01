@@ -38,10 +38,10 @@ const LoginPage = () => {
             if (authError) throw authError;
 
             if (authData.user) {
-                // Fetch profile to get role immediately
+                // Fetch profile to get role and completeness
                 const { data: profileData, error: profileError } = await supabase
                     .from('profiles')
-                    .select('role')
+                    .select('role, specialty, avatar_url')
                     .eq('id', authData.user.id)
                     .single();
 
@@ -50,15 +50,19 @@ const LoginPage = () => {
                     throw profileError;
                 }
 
-                console.log('LoginPage: Login successful, navigating to dashboard...');
+                console.log('LoginPage: Login successful, checking profile completeness...');
                 if (profileData?.role === 'professor') {
                     navigate('/dashboard');
                 } else if (profileData?.role === 'student') {
-                    navigate('/student-dashboard');
+                    // Redirect to settings if incomplete
+                    if (!profileData.specialty || !profileData.avatar_url) {
+                        navigate('/student-dashboard?tab=settings');
+                    } else {
+                        navigate('/student-dashboard');
+                    }
                 } else {
                     navigate('/');
                 }
-                // We DON'T set loading to false here to keep the button state until transition
             }
         } catch (err: any) {
             console.error('LoginPage: Login process failed:', err);

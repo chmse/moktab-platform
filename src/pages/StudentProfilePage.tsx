@@ -1,13 +1,15 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { supabase } from '../lib/supabaseClient';
-import { Building2, Mail, ExternalLink, Calendar, BookOpen, Target, Award, User, ChevronRight } from 'lucide-react';
+import { Building2, Mail, ExternalLink, Calendar, BookOpen, Target, Award, User, ChevronRight, HelpCircle } from 'lucide-react';
 import type { Student, Professor } from '../data/mockData';
 
 const StudentProfilePage = () => {
     const { id } = useParams<{ id: string }>();
     const [student, setStudent] = useState<Student | null>(null);
     const [supervisor, setSupervisor] = useState<Professor | null>(null);
+    const [myQuestions, setMyQuestions] = useState<any[]>([]);
+    const [myTopics, setMyTopics] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -28,6 +30,7 @@ const StudentProfilePage = () => {
                     name: data.full_name || 'طالب مجهول',
                     level: (data.level?.charAt(0).toUpperCase() + data.level?.slice(1)) as any || 'Master',
                     department: data.department || 'القسم العلمي',
+                    specialty: data.specialty,
                     imageUrl: data.avatar_url || 'https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&q=80&w=400',
                     interests: Array.isArray(data.interests) ? data.interests : [],
                     bio: data.bio || '',
@@ -36,6 +39,22 @@ const StudentProfilePage = () => {
                     supervisorId: data.supervisor_id
                 };
                 setStudent(mappedStudent);
+
+                // Fetch My Questions (Comments)
+                const { data: questions } = await supabase
+                    .from('comments')
+                    .select('*, community_topics(title)')
+                    .eq('user_id', id)
+                    .limit(5);
+                if (questions) setMyQuestions(questions);
+
+                // Fetch My Topics
+                const { data: topics } = await supabase
+                    .from('community_topics')
+                    .select('*')
+                    .eq('author_id', id)
+                    .limit(5);
+                if (topics) setMyTopics(topics);
 
                 // Fetch Supervisor if exists
                 if (data.supervisor_id) {
@@ -117,12 +136,19 @@ const StudentProfilePage = () => {
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '0.5rem' }}>
                                         <h1 style={{ fontSize: '2.8rem', fontWeight: '900', color: 'var(--color-primary)', margin: 0 }}>{student.name}</h1>
                                         <span style={{ backgroundColor: 'rgba(197, 160, 89, 0.1)', color: '#c5a059', padding: '0.5rem 1.25rem', borderRadius: '999px', fontSize: '1rem', fontWeight: '800', border: '1px solid rgba(197,160,89,0.3)' }}>
-                                            {student.level === 'PhD' ? 'باحث دكتوراه' : student.level === 'Master' ? 'طالب ماجستير' : 'طالب ليسانس'}
+                                            {student.level.toString().toLowerCase() === 'phd' ? 'باحث دكتوراه' : student.level.toString().toLowerCase() === 'master' ? 'طالب ماجستير' : 'طالب ليسانس'}
                                         </span>
                                     </div>
-                                    <p style={{ fontSize: '1.2rem', color: 'var(--color-text-secondary)', display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.5rem' }}>
-                                        <Building2 size={20} /> {student.department}
-                                    </p>
+                                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1.5rem', marginBottom: '1.5rem' }}>
+                                        <p style={{ fontSize: '1.1rem', color: 'var(--color-text-secondary)', display: 'flex', alignItems: 'center', gap: '0.5rem', margin: 0 }}>
+                                            <Building2 size={20} /> {student.department}
+                                        </p>
+                                        {student.specialty && (
+                                            <p style={{ fontSize: '1.1rem', color: 'var(--color-accent)', display: 'flex', alignItems: 'center', gap: '0.5rem', margin: 0, fontWeight: '700' }}>
+                                                <Target size={20} /> تخصص: {student.specialty}
+                                            </p>
+                                        )}
+                                    </div>
                                     <div style={{ display: 'flex', gap: '1rem' }}>
                                         <button className="btn-premium" style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', padding: '0.8rem 1.8rem' }}>
                                             <Mail size={18} /> مراسلة الطالب
@@ -130,6 +156,43 @@ const StudentProfilePage = () => {
                                     </div>
                                 </div>
                             </div>
+                        </div>
+
+                        {/* Activity Section */}
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '2.5rem' }}>
+                            <section className="glass-panel" style={{ backgroundColor: 'white', padding: '2rem', borderRadius: '24px', boxShadow: '0 10px 30px rgba(0,0,0,0.03)' }}>
+                                <h2 style={{ fontSize: '1.3rem', fontWeight: '800', color: 'var(--color-primary)', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                                    <BookOpen size={20} color="var(--color-accent)" /> مواضيعي المنشورة
+                                </h2>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                                    {myTopics.length > 0 ? myTopics.map(topic => (
+                                        <Link key={topic.id} to={`/community/topic/${topic.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                                            <div style={{ padding: '1rem', backgroundColor: 'var(--color-surface)', borderRadius: '12px', border: '1px solid var(--color-border)' }} className="card-hover">
+                                                <h4 style={{ margin: 0, fontSize: '0.95rem', fontWeight: '700' }}>{topic.title}</h4>
+                                                <span style={{ fontSize: '0.75rem', color: 'var(--color-text-secondary)' }}>{new Date(topic.created_at).toLocaleDateString('ar-EG')}</span>
+                                            </div>
+                                        </Link>
+                                    )) : (
+                                        <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.9rem', textAlign: 'center' }}>لم يتم نشر مواضيع بعد.</p>
+                                    )}
+                                </div>
+                            </section>
+
+                            <section className="glass-panel" style={{ backgroundColor: 'white', padding: '2rem', borderRadius: '24px', boxShadow: '0 10px 30px rgba(0,0,0,0.03)' }}>
+                                <h2 style={{ fontSize: '1.3rem', fontWeight: '800', color: 'var(--color-primary)', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                                    <HelpCircle size={20} color="var(--color-accent)" /> أسئلتي ونقاشاتي
+                                </h2>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                                    {myQuestions.length > 0 ? myQuestions.map(q => (
+                                        <div key={q.id} style={{ padding: '1rem', backgroundColor: 'var(--color-surface)', borderRadius: '12px', border: '1px solid var(--color-border)' }}>
+                                            <p style={{ margin: '0 0 0.5rem 0', fontSize: '0.9rem', fontWeight: '600' }}>{q.content}</p>
+                                            <span style={{ fontSize: '0.75rem', color: 'var(--color-text-secondary)' }}>في: {q.community_topics?.title}</span>
+                                        </div>
+                                    )) : (
+                                        <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.9rem', textAlign: 'center' }}>لا توجد أسئلة مسجلة.</p>
+                                    )}
+                                </div>
+                            </section>
                         </div>
 
                         {/* Academic Journey Timeline */}
@@ -205,23 +268,27 @@ const StudentProfilePage = () => {
                         </div>
 
                         {/* Supervision */}
-                        {supervisor && (
-                            <div className="glass-panel" style={{ backgroundColor: '#1a237e', color: 'white', padding: '1.8rem', borderRadius: '20px', boxShadow: '0 15px 30px rgba(26, 35, 126, 0.2)' }}>
-                                <h3 style={{ fontSize: '1.1rem', fontWeight: '800', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#c5a059' }}>
-                                    <BookOpen size={20} /> تحت إشراف
+                        {supervisor ? (
+                            <div className="glass-panel" style={{ backgroundColor: '#c5a059', color: 'var(--color-primary)', padding: '1.8rem', borderRadius: '20px', boxShadow: '0 15px 30px rgba(197, 160, 89, 0.2)', marginBottom: '2rem' }}>
+                                <h3 style={{ fontSize: '1.1rem', fontWeight: '900', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                    <BookOpen size={20} /> تحت إشراف الأستاذ
                                 </h3>
-                                <Link to={`/professors/${supervisor.id}`} style={{ textDecoration: 'none', color: 'white' }}>
+                                <Link to={`/professors/${supervisor.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }} className="card-hover">
-                                        <div style={{ width: '50px', height: '50px', borderRadius: '12px', overflow: 'hidden', border: '2px solid rgba(255,255,255,0.2)' }}>
+                                        <div style={{ width: '60px', height: '60px', borderRadius: '15px', overflow: 'hidden', border: '3px solid rgba(26,35,126,0.1)' }}>
                                             <img src={supervisor.imageUrl} alt={supervisor.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                                         </div>
                                         <div>
-                                            <h4 style={{ margin: 0, fontSize: '1rem', fontWeight: '800' }}>{supervisor.name}</h4>
-                                            <p style={{ margin: 0, fontSize: '0.8rem', opacity: 0.7 }}>{supervisor.title}</p>
+                                            <h4 style={{ margin: 0, fontSize: '1.1rem', fontWeight: '900' }}>{supervisor.name}</h4>
+                                            <p style={{ margin: 0, fontSize: '0.85rem', fontWeight: '700' }}>{supervisor.title}</p>
                                         </div>
-                                        <ExternalLink size={16} style={{ marginRight: 'auto', opacity: 0.5 }} />
+                                        <ExternalLink size={18} style={{ marginRight: 'auto' }} />
                                     </div>
                                 </Link>
+                            </div>
+                        ) : (
+                            <div className="glass-panel" style={{ backgroundColor: '#1a237e', color: 'white', padding: '1.8rem', borderRadius: '20px', boxShadow: '0 15px 30px rgba(26, 35, 126, 0.2)', marginBottom: '2rem' }}>
+                                <p style={{ margin: 0, fontSize: '0.95rem', textAlign: 'center', opacity: 0.8 }}>لم يتم تحديد الأستاذ المشرف بعد.</p>
                             </div>
                         )}
                     </aside>

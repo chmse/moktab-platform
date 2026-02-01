@@ -11,6 +11,9 @@ interface AuthProfile {
     rank?: string;
     department?: string;
     level?: string;
+    specialty?: string;
+    bio?: string;
+    skills?: string[];
 }
 
 interface AuthContextType {

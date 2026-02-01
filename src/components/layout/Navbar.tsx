@@ -67,12 +67,13 @@ const Navbar = () => {
                                         }}
                                     >
                                         <div style={{
-                                            width: '28px', height: '28px', borderRadius: '50%', backgroundColor: 'var(--color-accent)',
-                                            display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden'
+                                            width: '32px', height: '32px', borderRadius: '50%', backgroundColor: 'transparent',
+                                            display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden',
+                                            border: '2px solid #c5a059' // GOLD BORDER
                                         }}>
-                                            {profile?.avatar_url ? <img src={profile.avatar_url} alt={profile.full_name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <UserIcon size={16} color="white" />}
+                                            {profile?.avatar_url ? <img src={profile.avatar_url} alt={profile.full_name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <UserIcon size={24} color="#c5a059" />}
                                         </div>
-                                        <ChevronDown size={14} className="desktop-only" />
+                                        <ChevronDown size={18} color="#c5a059" className="desktop-only" />
                                     </button>
 
                                     {/* User Dropdown */}
@@ -107,9 +108,12 @@ const Navbar = () => {
                                 </div>
                             ) : (
                                 <Link to="/login" style={{
-                                    textDecoration: 'none', backgroundColor: '#c5a059', color: '#1a1a1a', padding: '0.5rem 1rem',
-                                    borderRadius: '8px', fontWeight: 'bold', fontSize: '0.85rem', whiteSpace: 'nowrap'
-                                }}>تسجيل الدخول</Link>
+                                    textDecoration: 'none', backgroundColor: 'transparent', border: '2px solid #c5a059', color: '#c5a059', padding: '0.4rem 1.25rem',
+                                    borderRadius: '8px', fontWeight: 'bold', fontSize: '0.85rem', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: '0.5rem'
+                                }}>
+                                    <UserIcon size={20} />
+                                    <span>تسجيل الدخول</span>
+                                </Link>
                             )
                         )}
                     </div>
@@ -132,9 +136,9 @@ const Navbar = () => {
                     <button
                         className="mobile-hamburger"
                         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                        style={{ color: 'white', padding: '0.25rem', display: 'flex', alignItems: 'center', cursor: 'pointer' }}
+                        style={{ color: '#c5a059', padding: '0.25rem', display: 'flex', alignItems: 'center', cursor: 'pointer', background: 'none', border: 'none' }}
                     >
-                        {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
+                        {isMobileMenuOpen ? <X size={32} /> : <Menu size={32} />}
                     </button>
                 </div>
 

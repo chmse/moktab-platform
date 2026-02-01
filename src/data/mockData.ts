@@ -38,6 +38,7 @@ export interface Student {
     name: string;
     level: 'PhD' | 'Master' | 'Bachelor';
     department: string;
+    specialty?: string;
     imageUrl: string;
     interests: string[];
     bio?: string;
