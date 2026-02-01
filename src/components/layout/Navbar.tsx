@@ -144,6 +144,10 @@ const Navbar = () => {
             <div className={`drawer-backdrop ${isMobileMenuOpen ? 'open' : ''}`} onClick={() => setIsMobileMenuOpen(false)}>
                 <div className="drawer-panel" onClick={e => e.stopPropagation()}>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', marginTop: '1rem' }}>
+                        <Link to="/" onClick={() => setIsMobileMenuOpen(false)} className="drawer-link">
+                            <LayoutDashboard size={22} color="#c5a059" />
+                            <span>الرئيسية</span>
+                        </Link>
                         <Link to="/hub/production" onClick={() => setIsMobileMenuOpen(false)} className="drawer-link">
                             <BookOpen size={22} color="#c5a059" />
                             <span>الإنتاج العلمي</span>

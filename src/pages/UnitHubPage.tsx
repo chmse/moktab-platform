@@ -6,7 +6,7 @@ import { supabase } from '../lib/supabaseClient';
 const unitData = {
     'production': {
         title: 'الإنتاج العلمي',
-        description: 'بوابة نشر المعرفة والأبحاث العلمية المحكمة بمعهد الآداب واللغات.',
+        description: 'بوابة نشر المعرفة',
         color: '#c5a059',
         stats: [
             { id: 'works', label: 'الأبحاث والكتب', value: '+520', icon: <BookOpen size={24} /> },
@@ -113,7 +113,7 @@ const UnitHubPage = () => {
         <div className="hub-container animate-fade-in" style={{
             backgroundColor: '#f8fafc',
             minHeight: '100vh',
-            paddingTop: '140px', // Increased top padding to ensure content starts BELOW fixed navbar
+            paddingTop: '140px', // EXACTLY 140px as requested
             paddingBottom: '6rem',
             color: '#1a1a1a',
             backgroundImage: 'radial-gradient(circle at top right, rgba(197, 160, 89, 0.1) 0%, transparent 600px)'
@@ -136,7 +136,7 @@ const UnitHubPage = () => {
                         letterSpacing: '1px',
                         textTransform: 'uppercase'
                     }}>
-                        <Shield size={14} /> وحدة معتمدة - معهد الآداب واللغات
+                        <Shield size={14} /> وحدة معتمدة
                     </div>
                     <h1 style={{
                         fontSize: '4rem',
@@ -151,7 +151,7 @@ const UnitHubPage = () => {
                         maxWidth: '850px',
                         margin: '0 auto',
                         lineHeight: '1.7',
-                        fontWeight: '500'
+                        fontWeight: '600' // Bit bolder for precision
                     }}>{unit.description}</p>
                 </header>
 
@@ -159,35 +159,35 @@ const UnitHubPage = () => {
                 <div className="hub-stats-grid" style={{
                     display: 'flex',
                     justifyContent: 'center',
-                    gap: '1.5rem',
+                    gap: '1rem',
                     flexWrap: 'wrap',
-                    marginBottom: '5rem'
+                    marginBottom: '4rem'
                 }}>
                     {unit.stats.map(stat => (
                         <div key={stat.id} className="hub-stat-card" style={{
                             background: 'white',
-                            padding: '1.25rem 2rem',
-                            borderRadius: '16px',
-                            border: '1px solid rgba(0, 0, 0, 0.05)',
+                            padding: '0.75rem 1.25rem', // SLIMMER PADDING
+                            borderRadius: '8px',       // SHARPER RADIUS
+                            border: '1px solid rgba(197, 160, 89, 0.25)', // SLIGHTLY BOLDER BORDER
                             display: 'flex',
                             alignItems: 'center',
-                            gap: '1.5rem',
-                            minWidth: '280px',
-                            boxShadow: '0 4px 20px rgba(0,0,0,0.03)',
+                            gap: '1rem',
+                            minWidth: '220px',         // SLIMMER MIN WIDTH
+                            boxShadow: '0 2px 8px rgba(0,0,0,0.02)', // SUBTLE SHADOW
                             position: 'relative'
                         }}>
                             <div style={{
-                                width: '48px', height: '48px', borderRadius: '12px',
-                                backgroundColor: 'rgba(197, 160, 89, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                width: '36px', height: '36px', borderRadius: '8px', // SLIMMER ICON BOX
+                                backgroundColor: 'rgba(197, 160, 89, 0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center',
                                 color: '#c5a059'
                             }}>
                                 {stat.icon}
                             </div>
                             <div style={{ textAlign: 'right' }}>
-                                <div style={{ fontSize: '1.75rem', fontWeight: '900', color: 'var(--color-primary)', lineHeight: '1', marginBottom: '0.2rem', fontFamily: 'monospace' }}>
+                                <div style={{ fontSize: '1.4rem', fontWeight: '900', color: 'var(--color-primary)', lineHeight: '1', marginBottom: '0.1rem', fontFamily: 'monospace' }}>
                                     {counts[stat.id] !== undefined ? counts[stat.id] : stat.value}
                                 </div>
-                                <div style={{ fontSize: '0.75rem', color: '#c5a059', fontWeight: '800', letterSpacing: '0.5px' }}>{stat.label.toUpperCase()}</div>
+                                <div style={{ fontSize: '0.65rem', color: '#c5a059', fontWeight: '800', letterSpacing: '0.5px' }}>{stat.label.toUpperCase()}</div>
                             </div>
                         </div>
                     ))}
@@ -205,17 +205,17 @@ const UnitHubPage = () => {
                         <Link key={card.id} to={card.link} className="card-hover-premium" style={{
                             display: 'flex',
                             alignItems: 'center',
-                            padding: '1.25rem 1.75rem',
+                            padding: '1.5rem 2rem', // GENEROUS BUT ALIGNED
                             backgroundColor: 'white',
-                            borderRadius: '16px',
-                            border: '1px solid rgba(0, 0, 0, 0.05)',
+                            borderRadius: '12px',
+                            border: '1px solid rgba(0, 0, 0, 0.08)', // PRECISE BORDER
                             textDecoration: 'none',
-                            gap: '1.25rem',
-                            transition: 'all 0.3s ease',
+                            gap: '1.5rem',
+                            transition: 'all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1)',
                             position: 'relative',
                             overflow: 'hidden',
-                            boxShadow: '0 4px 15px rgba(0,0,0,0.02)',
-                            borderRight: '4px solid #c5a059'
+                            boxShadow: '0 4px 12px rgba(0,0,0,0.03)', // SUBTLE BASE SHADOW
+                            borderRight: '5px solid #c5a059'
                         }}>
                             <div style={{
                                 width: '54px', height: '54px', borderRadius: '12px',
@@ -242,31 +242,31 @@ const UnitHubPage = () => {
 
             <style>{`
                 .card-hover-premium:hover {
-                    background-color: white !important;
                     border-color: #c5a059 !important;
-                    transform: translateX(-5px);
-                    box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+                    transform: translateY(-4px);
+                    box-shadow: 0 10px 25px rgba(0,0,0,0.06);
                 }
                 .card-hover-premium:hover h2 { color: #c5a059 !important; }
                 
                 @media (max-width: 768px) {
-                    h1 { font-size: 2.5rem !important; }
-                    .hub-container { padding-top: 110px !important; }
+                    h1 { font-size: 2.25rem !important; }
+                    .hub-container { padding-top: 140px !important; }
                     .hub-stats-grid {
                         display: grid !important;
                         grid-template-columns: repeat(2, 1fr) !important;
-                        gap: 0.75rem !important;
-                        padding: 0 1rem;
+                        gap: 0.5rem !important; // VERY COMPACT
+                        padding: 0 0.5rem;
                     }
                     .hub-stat-card {
                         min-width: 0 !important;
-                        padding: 1rem !important;
-                        gap: 0.75rem !important;
-                        border-radius: 12px !important;
+                        padding: 0.6rem !important; // VERY COMPACT
+                        gap: 0.4rem !important;
+                        border-radius: 6px !important; // SHARPER
                     }
-                    .hub-stat-card div:first-child { width: 36px !important; height: 36px !important; }
-                    .hub-stat-card div:nth-child(2) div:first-child { font-size: 1.4rem !important; }
-                    .hub-stat-card div:nth-child(2) div:last-child { font-size: 0.65rem !important; }
+                    .hub-stat-card div:first-child { width: 30px !important; height: 30px !important; }
+                    .hub-stat-card svg { width: 14px !important; height: 14px !important; }
+                    .hub-stat-card div:nth-child(2) div:first-child { font-size: 1.1rem !important; }
+                    .hub-stat-card div:nth-child(2) div:last-child { font-size: 0.55rem !important; }
                 }
             `}</style>
         </div>
