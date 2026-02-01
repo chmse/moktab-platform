@@ -6,15 +6,15 @@ import { supabase } from '../lib/supabaseClient';
 const unitData = {
     'production': {
         title: 'الإنتاج العلمي',
-        description: 'المركز السيادي لنشر المعرفة والأبحاث العلمية المحكمة بمعهد الآداب واللغات.',
+        description: 'بوابة نشر المعرفة والأبحاث العلمية المحكمة بمعهد الآداب واللغات.',
         color: '#c5a059',
         stats: [
-            { id: 'works', label: 'الأبحاث والكتب', value: '+520', icon: <BookOpen size={28} /> },
-            { id: 'citations', label: 'معدل الاستشهاد', value: '85%', icon: <Sparkles size={28} /> }
+            { id: 'works', label: 'الأبحاث والكتب', value: '+520', icon: <BookOpen size={24} /> },
+            { id: 'citations', label: 'معدل الاستشهاد', value: '85%', icon: <Sparkles size={24} /> }
         ],
         cards: [
-            { id: 'works', title: 'الأرشيف العلمي', icon: <BookOpen size={32} />, link: '/works', desc: 'شامل للأبحاث والكتب الأكاديمية' },
-            { id: 'community', title: 'المنتدى البحثي', icon: <MessageSquare size={32} />, link: '/community', desc: 'فضاء للتفاعل العلمي والحوار حول المستجدات البحثية' }
+            { id: 'works', title: 'الأرشيف العلمي', icon: <BookOpen size={28} />, link: '/works', desc: 'شامل للأبحاث والكتب الأكاديمية' },
+            { id: 'community', title: 'المنتدى البحثي', icon: <MessageSquare size={28} />, link: '/community', desc: 'فضاء للتفاعل العلمي والحوار حول المستجدات البحثية' }
         ]
     },
     'environment': {
@@ -22,12 +22,12 @@ const unitData = {
         description: 'النخبة الأكاديمية والكفاءات العلمية في المعهد.',
         color: '#c5a059',
         stats: [
-            { id: 'professors', label: 'القامات العلمية', value: '+54', icon: <GraduationCap size={28} /> },
-            { id: 'students', label: 'الباحثين الناشئين', value: '+215', icon: <Users size={28} /> }
+            { id: 'professors', label: 'القامات العلمية', value: '+54', icon: <GraduationCap size={24} /> },
+            { id: 'students', label: 'الباحثين الناشئين', value: '+215', icon: <Users size={24} /> }
         ],
         cards: [
-            { id: 'professors', title: 'هيئة التدريس والباحثين', icon: <GraduationCap size={32} />, link: '/professors', desc: 'ملفات تعريفية مفصلة للأساتذة الباحثين وتخصصاتهم' },
-            { id: 'students', title: 'نادي الطلبة', icon: <Users size={32} />, link: '/students', desc: 'مشاريع وطموحات طلبة الدراسات العليا' }
+            { id: 'professors', title: 'هيئة التدريس والباحثين', icon: <GraduationCap size={28} />, link: '/professors', desc: 'ملفات تعريفية مفصلة للأساتذة الباحثين وتخصصاتهم' },
+            { id: 'students', title: 'نادي الطلبة', icon: <Users size={28} />, link: '/students', desc: 'مشاريع وطموحات طلبة الدراسات العليا' }
         ]
     },
     'research': {
@@ -35,12 +35,12 @@ const unitData = {
         description: 'قاطرة الابتكار وتطوير المناهج البحثية والمخابر العلمية.',
         color: '#c5a059',
         stats: [
-            { id: 'journals', label: 'المجلات المحكمة', value: '06', icon: <Library size={28} /> },
-            { id: 'labs', label: 'وحدات البحث', value: '12', icon: <FlaskConical size={28} /> }
+            { id: 'journals', label: 'المجلات المحكمة', value: '06', icon: <Library size={24} /> },
+            { id: 'labs', label: 'وحدات البحث', value: '12', icon: <FlaskConical size={24} /> }
         ],
         cards: [
-            { id: 'journals', title: 'المجلات العلمية', icon: <Library size={32} />, link: '/coming-soon', desc: 'منصة تصفح أحدث أعداد المجلات العلمية الدورية' },
-            { id: 'labs', title: 'المخابر البحثية', icon: <FlaskConical size={32} />, link: '/coming-soon', desc: 'استكشف وحدات البحث والمختبرات المتخصصة بالمعهد' }
+            { id: 'journals', title: 'المجلات العلمية', icon: <Library size={28} />, link: '/coming-soon', desc: 'منصة تصفح أحدث أعداد المجلات العلمية الدورية' },
+            { id: 'labs', title: 'المخابر البحثية', icon: <FlaskConical size={28} />, link: '/coming-soon', desc: 'استكشف وحدات البحث والمختبرات المتخصصة بالمعهد' }
         ]
     },
     'ai': {
@@ -48,12 +48,12 @@ const unitData = {
         description: 'رواق التقنيات المتقدمة لخدمة اللغة العربية وحوسبتها ومعالجتها آلياً بأحدث النماذج الذكية.',
         color: '#c5a059',
         stats: [
-            { id: 'ai-tools', label: 'الأدوات الذكية', value: '04', icon: <Cpu size={28} /> },
-            { id: 'ai-papers', label: 'أوراق محللة', value: '+120', icon: <Sparkles size={28} /> }
+            { id: 'ai-tools', label: 'الأدوات الذكية', value: '04', icon: <Cpu size={24} /> },
+            { id: 'ai-papers', label: 'أوراق محللة', value: '+120', icon: <Sparkles size={24} /> }
         ],
         cards: [
-            { id: 'ai-assistant', title: 'Research AI', icon: <Sparkles size={32} />, link: '/coming-soon', desc: 'المساعد البحثي الذكي لتحليل وتلخيص المحتوى العلمي' },
-            { id: 'nlp-tools', title: 'NLP Tools', icon: <Cpu size={32} />, link: '/coming-soon', desc: 'أدوات المعالجة الآلية للغة العربية والتحليل الصرفي' }
+            { id: 'ai-assistant', title: 'Research AI', icon: <Sparkles size={28} />, link: '/coming-soon', desc: 'المساعد البحثي الذكي لتحليل وتلخيص المحتوى العلمي' },
+            { id: 'nlp-tools', title: 'NLP Tools', icon: <Cpu size={28} />, link: '/coming-soon', desc: 'أدوات المعالجة الآلية للغة العربية والتحليل الصرفي' }
         ]
     },
     'activities': {
@@ -61,12 +61,12 @@ const unitData = {
         description: 'سجل الفعاليات الأكاديمية والملتقيات العلمية في منصة مَكْتَب.',
         color: '#c5a059',
         stats: [
-            { id: 'clubs', label: 'النوادي العلمية', value: '08', icon: <Users size={28} /> },
-            { id: 'events', label: 'ملتقيات سنوية', value: '+22', icon: <Calendar size={28} /> }
+            { id: 'clubs', label: 'النوادي العلمية', value: '08', icon: <Users size={24} /> },
+            { id: 'events', label: 'ملتقيات سنوية', value: '+22', icon: <Calendar size={24} /> }
         ],
         cards: [
-            { id: 'clubs', title: 'النوادي الطلابية', icon: <Users size={32} />, link: '/coming-soon', desc: 'النشاط الطلابي والنوادي العلمية تحت إشراف المعهد' },
-            { id: 'events', title: 'الملتقيات والمؤتمرات', icon: <Calendar size={32} />, link: '/coming-soon', desc: 'مواعيد وتفاصيل الملتقيات والندوات القادمة' }
+            { id: 'clubs', title: 'النوادي الطلابية', icon: <Users size={28} />, link: '/coming-soon', desc: 'النشاط الطلابي والنوادي العلمية تحت إشراف المعهد' },
+            { id: 'events', title: 'الملتقيات والمؤتمرات', icon: <Calendar size={28} />, link: '/coming-soon', desc: 'مواعيد وتفاصيل الملتقيات والندوات القادمة' }
         ]
     },
     'about': {
@@ -74,12 +74,12 @@ const unitData = {
         description: 'الرؤية الاستراتيجية لرقمنة البحث العلمي في معهد الآداب واللغات.',
         color: '#c5a059',
         stats: [
-            { id: 'vision', label: 'محاور الرؤية', value: '05', icon: <Info size={28} /> },
-            { id: 'support', label: 'الاستجابة التقنية', value: '24/7', icon: <Mail size={28} /> }
+            { id: 'vision', label: 'محاور الرؤية', value: '05', icon: <Info size={24} /> },
+            { id: 'support', label: 'الاستجابة التقنية', value: '24/7', icon: <Mail size={24} /> }
         ],
         cards: [
-            { id: 'info', title: 'الهوية المؤسسية', icon: <Info size={32} />, link: '/about', desc: 'تعرف على التوجهات الكبرى والقيم الحاكمة للمنصة' },
-            { id: 'contact', title: 'التواصل الأكاديمي', icon: <Mail size={32} />, link: '/coming-soon', desc: 'قنوات التواصل المباشر مع إدارة المنصة' }
+            { id: 'info', title: 'الهوية المؤسسية', icon: <Info size={28} />, link: '/about', desc: 'تعرف على التوجهات الكبرى والقيم الحاكمة للمنصة' },
+            { id: 'contact', title: 'التواصل الأكاديمي', icon: <Mail size={28} />, link: '/coming-soon', desc: 'قنوات التواصل الم مباشر مع إدارة المنصة' }
         ]
     }
 };
@@ -92,9 +92,7 @@ const UnitHubPage = () => {
     useEffect(() => {
         const fetchCounts = async () => {
             if (!unitId) return;
-
             const newCounts: Record<string, number | string> = {};
-
             if (unitId === 'production') {
                 const { count } = await supabase.from('works').select('*', { count: 'exact', head: true });
                 newCounts['works'] = count || 0;
@@ -104,10 +102,8 @@ const UnitHubPage = () => {
                 newCounts['professors'] = profCount || 0;
                 newCounts['students'] = studCount || 0;
             }
-
             setCounts(newCounts);
         };
-
         fetchCounts();
     }, [unitId]);
 
@@ -117,88 +113,91 @@ const UnitHubPage = () => {
         <div className="hub-container animate-fade-in" style={{
             backgroundColor: '#f8fafc',
             minHeight: '100vh',
-            paddingTop: '120px',
+            paddingTop: '140px', // Increased top padding to ensure content starts BELOW fixed navbar
             paddingBottom: '6rem',
             color: '#1a1a1a',
             backgroundImage: 'radial-gradient(circle at top right, rgba(197, 160, 89, 0.1) 0%, transparent 600px)'
         }}>
             <div className="container">
-                {/* Hub Header - Official Control Center Style */}
-                <header style={{ textAlign: 'center', marginBottom: '5rem' }}>
+                {/* Hub Header - Institutional Refinement */}
+                <header style={{ textAlign: 'center', marginBottom: '4rem' }}>
                     <div style={{
                         display: 'inline-flex',
                         alignItems: 'center',
                         gap: '0.75rem',
-                        padding: '0.6rem 1.5rem',
-                        backgroundColor: 'rgba(197, 160, 89, 0.1)',
-                        borderRadius: '8px',
-                        border: '1px solid #c5a059',
+                        padding: '0.5rem 1.25rem',
+                        backgroundColor: 'rgba(197, 160, 89, 0.08)',
+                        borderRadius: '6px',
+                        border: '1px solid rgba(197, 160, 89, 0.3)',
                         color: '#c5a059',
-                        fontSize: '0.85rem',
-                        fontWeight: '900',
-                        marginBottom: '2rem',
-                        letterSpacing: '2px',
-                        textTransform: 'uppercase',
-                        boxShadow: '0 0 20px rgba(197, 160, 89, 0.1)'
+                        fontSize: '0.8rem',
+                        fontWeight: '800',
+                        marginBottom: '1.5rem',
+                        letterSpacing: '1px',
+                        textTransform: 'uppercase'
                     }}>
-                        <Shield size={16} /> البوابة الأكاديمية للوحدة - مَكْتَب
+                        <Shield size={14} /> وحدة معتمدة - معهد الآداب واللغات
                     </div>
                     <h1 style={{
-                        fontSize: '4.5rem',
+                        fontSize: '4rem',
                         color: 'var(--color-primary)',
-                        marginBottom: '1.5rem',
+                        marginBottom: '2rem', // Breathing space
                         fontWeight: '900',
-                        textShadow: '0 10px 30px rgba(0,0,0,0.05)',
                         lineHeight: '1.1'
                     }}>{unit.title}</h1>
                     <p style={{
-                        fontSize: '1.35rem',
+                        fontSize: '1.25rem',
                         color: '#475569',
-                        maxWidth: '800px',
+                        maxWidth: '850px',
                         margin: '0 auto',
-                        lineHeight: '1.8',
+                        lineHeight: '1.7',
                         fontWeight: '500'
                     }}>{unit.description}</p>
                 </header>
 
-                {/* Hub Stats Section - Prominent Top */}
+                {/* Hub Stats Section - Slim Horizontal Rectangles */}
                 <div className="hub-stats-grid" style={{
                     display: 'flex',
                     justifyContent: 'center',
-                    gap: '2.5rem',
+                    gap: '1.5rem',
                     flexWrap: 'wrap',
-                    marginBottom: '6rem'
+                    marginBottom: '5rem'
                 }}>
                     {unit.stats.map(stat => (
                         <div key={stat.id} className="hub-stat-card" style={{
                             background: 'white',
-                            padding: '2.5rem 3rem',
-                            borderRadius: '24px',
-                            border: '1px solid rgba(197, 160, 89, 0.3)',
-                            textAlign: 'center',
-                            minWidth: '260px',
-                            boxShadow: '0 10px 30px rgba(0,0,0,0.05)',
-                            position: 'relative',
-                            overflow: 'hidden'
+                            padding: '1.25rem 2rem',
+                            borderRadius: '16px',
+                            border: '1px solid rgba(0, 0, 0, 0.05)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '1.5rem',
+                            minWidth: '280px',
+                            boxShadow: '0 4px 20px rgba(0,0,0,0.03)',
+                            position: 'relative'
                         }}>
                             <div style={{
-                                position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)',
-                                width: '40px', height: '2px', background: '#c5a059'
-                            }} />
-                            <div style={{ color: '#c5a059', marginBottom: '1rem', display: 'flex', justifyContent: 'center' }}>{stat.icon}</div>
-                            <div style={{ fontSize: '3rem', fontWeight: '900', color: 'var(--color-primary)', marginBottom: '0.5rem', fontFamily: 'monospace' }}>
-                                {counts[stat.id] !== undefined ? counts[stat.id] : stat.value}
+                                width: '48px', height: '48px', borderRadius: '12px',
+                                backgroundColor: 'rgba(197, 160, 89, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                color: '#c5a059'
+                            }}>
+                                {stat.icon}
                             </div>
-                            <div style={{ fontSize: '1rem', color: '#c5a059', fontWeight: '900', letterSpacing: '1px' }}>{stat.label.toUpperCase()}</div>
+                            <div style={{ textAlign: 'right' }}>
+                                <div style={{ fontSize: '1.75rem', fontWeight: '900', color: 'var(--color-primary)', lineHeight: '1', marginBottom: '0.2rem', fontFamily: 'monospace' }}>
+                                    {counts[stat.id] !== undefined ? counts[stat.id] : stat.value}
+                                </div>
+                                <div style={{ fontSize: '0.75rem', color: '#c5a059', fontWeight: '800', letterSpacing: '0.5px' }}>{stat.label.toUpperCase()}</div>
+                            </div>
                         </div>
                     ))}
                 </div>
 
-                {/* Hub Gateway Cards - Premium Bottom */}
+                {/* Hub Gateway Cards - Perfect Alignment & Shadow Polish */}
                 <div style={{
                     display: 'grid',
                     gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))',
-                    gap: '2rem',
+                    gap: '1.5rem',
                     maxWidth: '1000px',
                     margin: '0 auto'
                 }}>
@@ -206,34 +205,34 @@ const UnitHubPage = () => {
                         <Link key={card.id} to={card.link} className="card-hover-premium" style={{
                             display: 'flex',
                             alignItems: 'center',
-                            padding: '1.5rem 2rem',
+                            padding: '1.25rem 1.75rem',
                             backgroundColor: 'white',
-                            borderRadius: '20px',
+                            borderRadius: '16px',
                             border: '1px solid rgba(0, 0, 0, 0.05)',
                             textDecoration: 'none',
-                            gap: '1.5rem',
-                            transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+                            gap: '1.25rem',
+                            transition: 'all 0.3s ease',
                             position: 'relative',
                             overflow: 'hidden',
-                            boxShadow: '0 4px 20px rgba(0,0,0,0.03)',
+                            boxShadow: '0 4px 15px rgba(0,0,0,0.02)',
                             borderRight: '4px solid #c5a059'
                         }}>
                             <div style={{
-                                width: '60px', height: '60px', borderRadius: '14px',
-                                backgroundColor: 'rgba(197, 160, 89, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                width: '54px', height: '54px', borderRadius: '12px',
+                                backgroundColor: 'rgba(197, 160, 89, 0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center',
                                 color: '#c5a059',
                                 flexShrink: 0
                             }}>
                                 {card.icon}
                             </div>
                             <div style={{ flex: 1 }}>
-                                <h2 style={{ fontSize: '1.35rem', color: 'var(--color-primary)', marginBottom: '0.25rem', fontWeight: '800' }}>{card.title}</h2>
-                                <p style={{ fontSize: '0.9rem', color: '#64748b', marginBottom: '0.75rem', lineHeight: '1.5' }}>{card.desc}</p>
+                                <h2 style={{ fontSize: '1.25rem', color: 'var(--color-primary)', marginBottom: '0.2rem', fontWeight: '800' }}>{card.title}</h2>
+                                <p style={{ fontSize: '0.85rem', color: '#64748b', marginBottom: '0.5rem', lineHeight: '1.4' }}>{card.desc}</p>
                                 <div style={{
-                                    display: 'flex', alignItems: 'center', gap: '0.5rem',
-                                    color: '#c5a059', fontWeight: '800', fontSize: '0.9rem'
+                                    display: 'flex', alignItems: 'center', gap: '0.4rem',
+                                    color: '#c5a059', fontWeight: '800', fontSize: '0.85rem'
                                 }}>
-                                    استعراض القسم العلمي <ArrowRight size={18} />
+                                    استعراض القسم <ArrowRight size={16} />
                                 </div>
                             </div>
                         </Link>
@@ -245,31 +244,29 @@ const UnitHubPage = () => {
                 .card-hover-premium:hover {
                     background-color: white !important;
                     border-color: #c5a059 !important;
-                    transform: translateX(-10px);
-                    box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+                    transform: translateX(-5px);
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.06);
                 }
                 .card-hover-premium:hover h2 { color: #c5a059 !important; }
                 
                 @media (max-width: 768px) {
-                    h1 { font-size: 2.8rem !important; }
-                    .hub-container { padding-top: 100px !important; }
+                    h1 { font-size: 2.5rem !important; }
+                    .hub-container { padding-top: 110px !important; }
                     .hub-stats-grid {
                         display: grid !important;
                         grid-template-columns: repeat(2, 1fr) !important;
-                        gap: 1rem !important;
+                        gap: 0.75rem !important;
                         padding: 0 1rem;
                     }
                     .hub-stat-card {
-                        minWidth: 0 !important;
-                        padding: 1.5rem 1rem !important;
-                        border-radius: 16px !important;
+                        min-width: 0 !important;
+                        padding: 1rem !important;
+                        gap: 0.75rem !important;
+                        border-radius: 12px !important;
                     }
-                    .hub-stat-card div:nth-child(3) {
-                        font-size: 1.75rem !important;
-                    }
-                    .hub-stat-card div:nth-child(4) {
-                        font-size: 0.75rem !important;
-                    }
+                    .hub-stat-card div:first-child { width: 36px !important; height: 36px !important; }
+                    .hub-stat-card div:nth-child(2) div:first-child { font-size: 1.4rem !important; }
+                    .hub-stat-card div:nth-child(2) div:last-child { font-size: 0.65rem !important; }
                 }
             `}</style>
         </div>
