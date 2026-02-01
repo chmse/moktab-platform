@@ -12,14 +12,14 @@ const StudentCard = ({ student }: StudentCardProps) => {
             backgroundColor: 'white',
             borderRadius: 'var(--radius-lg)',
             overflow: 'hidden',
-            border: '1px solid var(--color-border)',
+            border: '1px solid #e5e7eb',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
             textAlign: 'center',
             padding: '2.5rem 1.5rem',
             transition: 'all 0.3s ease-in-out',
-            boxShadow: 'var(--shadow-sm)',
+            boxShadow: '0 10px 25px rgba(0,0,0,0.1)', // PREMIUM ELEVATION
             cursor: 'pointer'
         }}>
             <div style={{ position: 'relative', marginBottom: '1.5rem' }}>
@@ -69,13 +69,13 @@ const StudentCard = ({ student }: StudentCardProps) => {
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.6rem', justifyContent: 'center' }}>
                 {student.interests.map((interest, idx) => (
                     <span key={idx} style={{
-                        backgroundColor: 'var(--color-surface-alt)',
+                        backgroundColor: 'rgba(197, 160, 89, 0.05)', // SUBTLE GOLD TINT
                         padding: '0.4rem 1rem',
                         borderRadius: '999px',
                         fontSize: '0.8rem',
                         color: 'var(--color-primary)',
-                        border: '1px solid var(--color-border)',
-                        fontWeight: '500'
+                        border: '1px solid #c5a059', // GOLD BORDER
+                        fontWeight: '700' // BOLDER
                     }}>
                         {interest}
                     </span>

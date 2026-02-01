@@ -167,17 +167,18 @@ const HomePage = () => {
             التخصصات البارزة
           </h2>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', justifyContent: 'center' }}>
-            {['القانون', 'الأدب', 'الذكاء_الاصطناعي', 'الفقه', 'التاريخ', 'اللغة_العربية'].map((tag, idx) => (
+            {['اللسانيات', 'التداولية', 'البلاغة', 'النقد الأدبي', 'الشعر العربي', 'تعليمية اللغات', 'فقه اللغة'].map((tag, idx) => (
               <div key={idx} className="card-hover" style={{
                 padding: '0.75rem 1.5rem',
-                backgroundColor: '#f8f9fa',
-                border: '2px solid #c5a059',
+                backgroundColor: 'white',
+                border: '1px solid #c5a059',
                 borderRadius: '100px',
-                color: '#1a1a1a',
+                color: 'var(--color-primary)',
                 fontWeight: '700',
                 fontSize: '0.95rem',
                 cursor: 'pointer',
-                transition: 'all 0.3s ease'
+                transition: 'all 0.3s ease',
+                boxShadow: '0 4px 12px rgba(197, 160, 89, 0.1)'
               }}>
                 #{tag}
               </div>

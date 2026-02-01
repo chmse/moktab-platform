@@ -19,12 +19,12 @@ const TopicCard = ({ topic }: TopicCardProps) => {
                 display: 'flex',
                 flexDirection: 'column',
                 gap: '0.75rem',
-                border: topic.isElevated ? '1.5px solid var(--color-accent)' : '1px solid rgba(0,0,0,0.08)',
-                borderRadius: '12px',      // SLIMMER RADIUS
+                border: topic.isElevated ? '1.5px solid var(--color-accent)' : '1px solid #e5e7eb',
+                borderRadius: '12px',
                 position: 'relative',
                 overflow: 'hidden',
                 cursor: 'pointer',
-                boxShadow: '0 4px 20px rgba(0,0,0,0.04)' // SLIGHTLY MORE DEPTH
+                boxShadow: '0 10px 25px rgba(0,0,0,0.1)' // PREMIUM ELEVATION
             }}
         >
             {topic.isElevated && (
@@ -66,7 +66,12 @@ const TopicCard = ({ topic }: TopicCardProps) => {
                     color: 'var(--color-primary)',
                     marginBottom: '0.4rem',
                     fontWeight: '800',
-                    lineHeight: '1.4'
+                    lineHeight: '1.4',
+                    display: '-webkit-box',
+                    WebkitLineClamp: 2,
+                    WebkitBoxOrient: 'vertical',
+                    overflow: 'hidden',
+                    minHeight: '2.8em' // Stabilize height
                 }}>
                     {topic.title}
                 </h3>

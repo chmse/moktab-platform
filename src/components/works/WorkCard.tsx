@@ -20,14 +20,14 @@ const WorkCard = ({ work }: WorkCardProps) => {
         <div className="card-hover" style={{
             padding: '1rem',
             backgroundColor: 'white',
-            border: '1px solid rgba(0,0,0,0.08)',
-            borderRadius: '12px',      // SLIMMER RADIUS
+            border: '1px solid #e5e7eb',
+            borderRadius: '12px',
             display: 'flex',
             flexDirection: 'column',
             gap: '0.6rem',
             height: '100%',
             transition: 'all 0.3s ease',
-            boxShadow: '0 4px 20px rgba(0,0,0,0.04)' // SLIGHTLY MORE DEPTH
+            boxShadow: '0 10px 25px rgba(0,0,0,0.1)' // PREMIUM ELEVATION
         }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <span style={{
@@ -46,7 +46,18 @@ const WorkCard = ({ work }: WorkCardProps) => {
             </div>
 
             <Link to={`/works/${work.id}`}>
-                <h3 style={{ fontSize: '1rem', color: 'var(--color-primary)', fontWeight: '800', lineHeight: '1.4', margin: '0.2rem 0' }}>
+                <h3 style={{
+                    fontSize: '1rem',
+                    color: 'var(--color-primary)',
+                    fontWeight: '800',
+                    lineHeight: '1.4',
+                    margin: '0.2rem 0',
+                    display: '-webkit-box',
+                    WebkitLineClamp: 2,
+                    WebkitBoxOrient: 'vertical',
+                    overflow: 'hidden',
+                    minHeight: '2.8em' // Stabilize height
+                }}>
                     {work.title}
                 </h3>
             </Link>

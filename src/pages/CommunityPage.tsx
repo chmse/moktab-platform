@@ -160,6 +160,8 @@ const CommunityPage = () => {
                         -ms-overflow-style: none;
                         scrollbar-width: none;
                         -webkit-overflow-scrolling: touch;
+                        mask-image: linear-gradient(to right, black 85%, transparent 100%);
+                        -webkit-mask-image: linear-gradient(to right, black 85%, transparent 100%);
                     }
                     .filter-scroll-container::-webkit-scrollbar {
                         display: none;
