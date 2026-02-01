@@ -172,13 +172,23 @@ const ScientificWorksPage = () => {
                 }
                 @media (max-width: 768px) {
                     .grid-responsive-cards {
-                        grid-template-columns: repeat(2, 1fr) !important;
-                        gap: 0.5rem !important;
+                        grid-template-columns: 1fr !important;
+                        gap: 20px !important;
+                        padding: 0 0.5rem;
                     }
-                    /* Compact 2-col style */
-                    .grid-responsive-cards h3 { font-size: 0.95rem !important; line-height: 1.3; }
-                    .grid-responsive-cards p { display: none !important; } 
-                    .grid-responsive-cards .card-hover { padding: 0.75rem !important; }
+                    /* Professional Vertical Flow */
+                    .grid-responsive-cards h3 { font-size: 1.2rem !important; line-height: 1.4; }
+                    .grid-responsive-cards p { 
+                        display: -webkit-box !important;
+                        -webkit-line-clamp: 2;
+                        -webkit-box-orient: vertical;
+                        overflow: hidden;
+                        font-size: 0.9rem !important;
+                    } 
+                    .grid-responsive-cards .card-hover { 
+                        padding: 1.25rem !important;
+                        border-radius: 12px !important;
+                    }
                 }
             `}</style>
         </div>

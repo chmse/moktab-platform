@@ -19,12 +19,12 @@ const TopicCard = ({ topic }: TopicCardProps) => {
                 display: 'flex',
                 flexDirection: 'column',
                 gap: '0.75rem',
-                border: topic.isElevated ? '1.5px solid var(--color-accent)' : '1px solid rgba(0,0,0,0.05)',
-                borderRadius: '16px',
+                border: topic.isElevated ? '1.5px solid var(--color-accent)' : '1px solid rgba(0,0,0,0.08)',
+                borderRadius: '12px',      // SLIMMER RADIUS
                 position: 'relative',
                 overflow: 'hidden',
                 cursor: 'pointer',
-                boxShadow: '0 4px 12px rgba(0,0,0,0.02)'
+                boxShadow: '0 4px 20px rgba(0,0,0,0.04)' // SLIGHTLY MORE DEPTH
             }}
         >
             {topic.isElevated && (

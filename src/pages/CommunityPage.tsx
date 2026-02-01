@@ -68,8 +68,8 @@ const CommunityPage = () => {
             </div>
 
             {/* Controls */}
-            <div className="glass-panel" style={{ padding: '1.5rem', marginBottom: '3rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1.5rem', backgroundColor: 'white' }}>
-                <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+            <div className="glass-panel" style={{ padding: '1.5rem', marginBottom: '3rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1.4rem', backgroundColor: 'white' }}>
+                <div className="filter-scroll-container">
                     {filterButtons.map(filter => (
                         <button
                             key={filter.id}
@@ -85,7 +85,8 @@ const CommunityPage = () => {
                                 backgroundColor: activeFilter === filter.id ? 'var(--color-primary)' : 'var(--color-surface-alt)',
                                 color: activeFilter === filter.id ? 'var(--color-accent)' : 'var(--color-text-secondary)',
                                 transition: 'all 0.3s',
-                                border: 'none'
+                                border: 'none',
+                                whiteSpace: 'nowrap'
                             }}
                             className="card-hover"
                         >
@@ -142,15 +143,31 @@ const CommunityPage = () => {
             />
 
             <style>{`
+                .filter-scroll-container {
+                    display: flex;
+                    gap: 0.75rem;
+                }
                 .community-grid {
                     display: grid;
                     grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
                     gap: 2rem;
                 }
                 @media (max-width: 768px) {
+                    .filter-scroll-container {
+                        width: 100%;
+                        overflow-x: auto;
+                        padding-bottom: 5px;
+                        -ms-overflow-style: none;
+                        scrollbar-width: none;
+                        -webkit-overflow-scrolling: touch;
+                    }
+                    .filter-scroll-container::-webkit-scrollbar {
+                        display: none;
+                    }
                     .community-grid {
-                        grid-template-columns: repeat(2, 1fr) !important;
-                        gap: 1rem !important;
+                        grid-template-columns: 1fr !important;
+                        gap: 20px !important;
+                        padding: 0 0.5rem;
                     }
                 }
             `}</style>
