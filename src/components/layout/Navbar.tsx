@@ -203,13 +203,14 @@ const Navbar = () => {
                     bottom: 0;
                     width: 320px;
                     max-width: 80vw;
-                    background: rgba(0, 0, 51, 0.95);
-                    backdrop-filter: blur(16px);
-                    box-shadow: -4px 0 20px rgba(0,0,0,0.5);
+                    background: rgba(2, 6, 23, 0.85); /* #020617 with opacity */
+                    backdrop-filter: blur(20px) saturate(180%);
+                    -webkit-backdrop-filter: blur(20px) saturate(180%);
+                    box-shadow: -10px 0 40px rgba(0,0,0,0.4);
                     z-index: 9999;
                     transform: translateX(100%); /* Hidden (Right) */
-                    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-                    padding: 2rem;
+                    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+                    padding: 2.5rem 2rem;
                     overflow-y: auto;
                     border-left: 1px solid rgba(197, 160, 89, 0.2);
                 }
@@ -220,15 +221,19 @@ const Navbar = () => {
                 .drawer-link {
                     display: flex;
                     align-items: center;
-                    gap: 0.75rem;
-                    color: white;
+                    gap: 1rem;
+                    color: rgba(255,255,255,0.9);
                     text-decoration: none;
-                    padding: 0.5rem 0;
-                    font-size: 1.1rem;
-                    font-weight: 500;
-                    transition: color 0.2s;
+                    padding: 0.75rem 0;
+                    font-size: 1.15rem;
+                    font-weight: 600;
+                    transition: all 0.3s ease;
+                    border-bottom: 1px solid rgba(255,255,255,0.05);
                 }
-                .drawer-link:hover { color: #c5a059; }
+                .drawer-link:hover { 
+                    color: #c5a059;
+                    transform: translateX(-5px);
+                }
 
                 /* Ensure Hamburger is ALWAYS Visible */
                 .mobile-hamburger { display: flex !important; }
