@@ -26,6 +26,13 @@ export interface Professor {
     level?: string;
 }
 
+export interface TimelineItem {
+    id: string;
+    year: string;
+    description: string;
+    level: string;
+}
+
 export interface Student {
     id: string;
     name: string;
@@ -33,6 +40,10 @@ export interface Student {
     department: string;
     imageUrl: string;
     interests: string[];
+    bio?: string;
+    skills?: string[];
+    timeline?: TimelineItem[];
+    supervisorId?: string;
 }
 
 export interface DiscussionComment {

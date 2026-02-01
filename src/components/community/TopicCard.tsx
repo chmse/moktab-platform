@@ -12,7 +12,7 @@ const TopicCard = ({ topic }: TopicCardProps) => {
     return (
         <div
             onClick={() => navigate(`/community/${topic.id}`)}
-            className="card-hover animate-fade-in"
+            className="card-hover animate-fade-in topic-card-v95"
             style={{
                 padding: '1.25rem',
                 backgroundColor: 'white',
@@ -24,9 +24,16 @@ const TopicCard = ({ topic }: TopicCardProps) => {
                 position: 'relative',
                 overflow: 'hidden',
                 cursor: 'pointer',
-                boxShadow: '0 10px 25px rgba(0,0,0,0.1)' // PREMIUM ELEVATION
+                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                boxShadow: '0 12px 30px rgba(0,0,0,0.12)' // ENHANCED ELEVATION
             }}
         >
+            <style>{`
+                .topic-card-v95:hover {
+                    border-color: #c5a059 !important;
+                    transform: translateY(-4px);
+                }
+            `}</style>
             {topic.isElevated && (
                 <div style={{
                     position: 'absolute',

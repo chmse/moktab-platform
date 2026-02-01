@@ -17,7 +17,7 @@ interface WorkCardProps {
 const WorkCard = ({ work }: WorkCardProps) => {
 
     return (
-        <div className="card-hover" style={{
+        <div className="card-hover work-card-v95" style={{
             padding: '1rem',
             backgroundColor: 'white',
             border: '1px solid #e5e7eb',
@@ -26,9 +26,16 @@ const WorkCard = ({ work }: WorkCardProps) => {
             flexDirection: 'column',
             gap: '0.6rem',
             height: '100%',
-            transition: 'all 0.3s ease',
-            boxShadow: '0 10px 25px rgba(0,0,0,0.1)' // PREMIUM ELEVATION
+            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+            boxShadow: '0 12px 30px rgba(0,0,0,0.12)', // ENHANCED ELEVATION
+            position: 'relative'
         }}>
+            <style>{`
+                .work-card-v95:hover {
+                    border-color: #c5a059 !important;
+                    transform: translateY(-4px);
+                }
+            `}</style>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <span style={{
                     fontSize: '0.7rem',

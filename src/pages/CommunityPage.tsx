@@ -68,7 +68,7 @@ const CommunityPage = () => {
             </div>
 
             {/* Controls */}
-            <div className="glass-panel" style={{ padding: '1.5rem', marginBottom: '3rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1.4rem', backgroundColor: 'white' }}>
+            <div className="glass-panel" style={{ padding: '1.5rem', marginBottom: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1.4rem', backgroundColor: 'white' }}>
                 <div className="filter-scroll-container">
                     {filterButtons.map(filter => (
                         <button
@@ -114,6 +114,13 @@ const CommunityPage = () => {
                         }}
                     />
                 </div>
+            </div>
+
+            {/* Swipe Indicator Dots */}
+            <div className="swipe-indicator" style={{ display: 'none', justifyContent: 'center', gap: '0.5rem', marginBottom: '2.5rem' }}>
+                <div className="dot pulse"></div>
+                <div className="dot pulse" style={{ animationDelay: '0.2s' }}></div>
+                <div className="dot pulse" style={{ animationDelay: '0.4s' }}></div>
             </div>
 
             {/* Grid */}
@@ -170,6 +177,23 @@ const CommunityPage = () => {
                         grid-template-columns: 1fr !important;
                         gap: 20px !important;
                         padding: 0 0.5rem;
+                    }
+                    .swipe-indicator {
+                        display: flex !important;
+                    }
+                    .dot {
+                        width: 8px;
+                        height: 8px;
+                        background-color: #c5a059;
+                        border-radius: 50%;
+                    }
+                    @keyframes dot-pulse {
+                        0% { transform: scale(1); opacity: 0.4; }
+                        50% { transform: scale(1.5); opacity: 1; }
+                        100% { transform: scale(1); opacity: 0.4; }
+                    }
+                    .pulse {
+                        animation: dot-pulse 1.5s infinite ease-in-out;
                     }
                 }
             `}</style>

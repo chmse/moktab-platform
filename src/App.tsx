@@ -21,6 +21,8 @@ import AdminConsole from './pages/AdminConsole';
 import SearchPage from './pages/SearchPage';
 import UnitHubPage from './pages/UnitHubPage';
 
+import StudentProfilePage from './pages/StudentProfilePage';
+
 import { useAuth } from './context/AuthContext';
 
 // Protected Route Component
@@ -82,6 +84,7 @@ function App() {
           />
 
           <Route path="students" element={<StudentsPage />} />
+          <Route path="students/:id" element={<StudentProfilePage />} />
           <Route path="community" element={<CommunityPage />} />
           <Route path="community/:id" element={<TopicDetail />} />
           <Route path="about" element={<AboutPage />} />
