@@ -218,7 +218,13 @@ const StudentDashboard = () => {
             </div>
 
             {/* Tab Content */}
-            <div className="glass-panel" style={{ padding: '2rem', backgroundColor: 'white', minHeight: '400px' }}>
+            <div className={activeTab === 'creations' ? "" : "glass-panel"} style={{
+                padding: activeTab === 'creations' ? '0' : '2rem',
+                backgroundColor: activeTab === 'creations' ? 'transparent' : 'white',
+                minHeight: '400px',
+                width: '100%',
+                maxWidth: activeTab === 'creations' ? 'none' : '100%'
+            }}>
 
                 {/* Library Tab */}
                 {activeTab === 'library' && (
@@ -340,11 +346,11 @@ const StudentDashboard = () => {
                                                 <option value="Story">قصة قصيرة</option>
                                                 <option value="Poem">قصيدة شعرية</option>
                                                 <option value="Essay">خاطرة أدبية</option>
-                                                <option value="ResearchPaper">مقال بحثي / دراسة</option>
+                                                <option value="ResearchPaper">دراسة / مقال بحثي</option>
                                             </select>
                                         </div>
                                         <div>
-                                            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold', color: 'var(--color-primary)' }}>التخصص العلمي / الموضوع</label>
+                                            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold', color: 'var(--color-primary)' }}>التخصص الأكاديمي للبحث</label>
                                             <input
                                                 type="text"
                                                 value={specialty}
@@ -357,12 +363,12 @@ const StudentDashboard = () => {
 
                                     <div style={{ marginBottom: '2rem' }}>
                                         <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold', color: 'var(--color-primary)' }}>متن النص</label>
-                                        <div className="bg-parchment" style={{ minHeight: '450px', border: '1px solid #dcd3bc', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 10px rgba(0,0,0,0.02)' }}>
+                                        <div className="bg-parchment" style={{ width: '100%', minHeight: '500px', border: '2px solid #e8dec7', borderRadius: '16px', overflow: 'hidden', boxShadow: '0 10px 30px rgba(0,0,0,0.05)' }}>
                                             <ReactQuill
                                                 theme="snow"
                                                 value={content}
                                                 onChange={setContent}
-                                                style={{ height: '400px' }}
+                                                style={{ height: '450px', width: '100%' }}
                                                 placeholder="ابدأ في تدوين وحي قلمك هنا..."
                                                 modules={{
                                                     toolbar: [

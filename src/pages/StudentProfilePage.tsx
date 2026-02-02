@@ -323,9 +323,9 @@ const StudentProfilePage = () => {
                             </>
                         ) : (
                             <section className="glass-panel" style={{ backgroundColor: 'white', padding: '2.5rem', borderRadius: '24px', boxShadow: '0 10px 30px rgba(0,0,0,0.03)' }}>
-                                <div style={{ marginBottom: '3rem' }}>
-                                    <h2 style={{ fontSize: '1.8rem', fontWeight: '800', color: 'var(--color-primary)', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                                        <Feather size={28} color="var(--color-accent)" /> المقالات والدراسات البحثية
+                                <div style={{ marginBottom: '4rem' }}>
+                                    <h2 style={{ fontSize: '2rem', fontWeight: '900', color: 'var(--color-primary)', marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '1rem', borderRight: '5px solid var(--color-primary)', paddingRight: '1rem' }}>
+                                        <Feather size={32} color="var(--color-accent)" /> الأبحاث الطلابية (المقالات والدراسات)
                                     </h2>
                                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '2rem' }}>
                                         {myCreations.filter(c => c.category === 'ResearchPaper').length > 0 ? (
@@ -351,8 +351,8 @@ const StudentProfilePage = () => {
                                 </div>
 
                                 <div>
-                                    <h2 style={{ fontSize: '1.8rem', fontWeight: '800', color: 'var(--color-accent)', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                                        <Award size={28} /> الأعمال والأدبيات الإبداعية
+                                    <h2 style={{ fontSize: '2rem', fontWeight: '900', color: 'var(--color-accent)', marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '1rem', borderRight: '5px solid var(--color-accent)', paddingRight: '1rem' }}>
+                                        <Award size={32} /> رواق الإبداع (القصص والقصائد)
                                     </h2>
                                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '2rem' }}>
                                         {myCreations.filter(c => c.category !== 'ResearchPaper').length > 0 ? (
