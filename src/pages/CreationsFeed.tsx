@@ -9,19 +9,38 @@ const CreationsFeed = () => {
 
     useEffect(() => {
         const fetchCreations = async () => {
-            const { data, error } = await supabase
-                .from('student_creations')
-                .select(`
-                    *,
-                    profiles:student_id (full_name, id)
-                `)
-                .eq('status', 'published')
-                .order('created_at', { ascending: false });
+            try {
+                // First attempt: approved works
+                let { data, error } = await supabase
+                    .from('student_creations')
+                    .select(`
+                        *,
+                        profiles:student_id (full_name, id)
+                    `)
+                    .eq('status', 'approved')
+                    .order('created_at', { ascending: false });
 
-            if (!error && data) {
-                setCreations(data);
+                // Fallback: if no approved works, fetch all published works
+                if (!data || data.length === 0 || error) {
+                    const { data: allData, error: allErr } = await supabase
+                        .from('student_creations')
+                        .select(`
+                            *,
+                            profiles:student_id (full_name, id)
+                        `)
+                        .eq('status', 'published')
+                        .order('created_at', { ascending: false });
+
+                    if (allData) data = allData;
+                    if (allErr) throw allErr;
+                }
+
+                if (data) setCreations(data);
+            } catch (err) {
+                console.error('Error fetching creations:', err);
+            } finally {
+                setLoading(false);
             }
-            setLoading(false);
         };
         fetchCreations();
     }, []);

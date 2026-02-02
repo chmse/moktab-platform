@@ -5,6 +5,7 @@ import 'react-quill-new/dist/quill.snow.css';
 import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabaseClient';
 import { useAuth } from '../context/AuthContext';
+import SuccessToast from '../components/ui/SuccessToast';
 
 const StatCard = ({ icon: Icon, label, value, color }: any) => (
     <div className="glass-panel" style={{ padding: '1.5rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
@@ -41,6 +42,8 @@ const StudentDashboard = () => {
     const [category, setCategory] = useState<'Story' | 'Poem' | 'Essay' | 'ResearchPaper'>('Story');
     const [specialty, setSpecialty] = useState('');
     const [submitting, setSubmitting] = useState(false);
+    const [showToast, setShowToast] = useState(false);
+    const [toastMessage, setToastMessage] = useState('');
 
     const fetchData = async () => {
         setLoading(true);
@@ -122,10 +125,12 @@ const StudentDashboard = () => {
             setTitle('');
             setContent('');
             setSpecialty('');
-            alert('تم نشر عملك بنجاح! نثمن عطاءك العلمي والأدبي');
+            setToastMessage('تم نشر عملك بنجاح! نثمن عطاءك العلمي والأدبي');
+            setShowToast(true);
             fetchData();
         } catch (error: any) {
-            alert('خطأ في النشر: ' + error.message);
+            setToastMessage('خطأ في النشر: ' + error.message);
+            setShowToast(true);
         } finally {
             setSubmitting(false);
         }
@@ -137,6 +142,8 @@ const StudentDashboard = () => {
         const { error } = await supabase.from('student_creations').delete().eq('id', id);
         if (!error) {
             setMyCreations(prev => prev.filter(c => c.id !== id));
+            setToastMessage('تم حذف العمل بنجاح');
+            setShowToast(true);
         }
     };
 
@@ -443,6 +450,25 @@ const StudentDashboard = () => {
                     </div>
                 )}
             </div>
+            <SuccessToast
+                show={showToast}
+                message={toastMessage}
+                onClose={() => setShowToast(false)}
+            />
+
+            <style>{`
+                @media (max-width: 768px) {
+                    .full-width-mobile {
+                        margin: 0 -1rem !important;
+                        width: calc(100% + 2rem) !important;
+                        border-radius: 0 !important;
+                    }
+                    .bg-parchment {
+                        border-radius: 0 !important;
+                        border: none !important;
+                    }
+                }
+            `}</style>
         </div>
     );
 };
