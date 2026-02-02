@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabaseClient';
+import { useAuth } from '../context/AuthContext';
 import {
     ArrowRight,
     MessageSquare,
@@ -16,6 +17,7 @@ import DiscussionSection from '../components/works/DiscussionSection';
 const TopicDetail = () => {
     const { id } = useParams();
     const navigate = useNavigate();
+    const { profile } = useAuth();
     const [topic, setTopic] = useState<any>(null);
     const [comments, setComments] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
@@ -35,6 +37,13 @@ const TopicDetail = () => {
             .single();
 
         if (topicData && !topicError) {
+            // CRITICAL SECURITY: Redirect students from Professors-only topics
+            if (profile?.role === 'student' && topicData.category === 'Professors') {
+                console.warn('Security: Student blocked from Professors-only topic');
+                navigate('/community', { replace: true });
+                return;
+            }
+
             setTopic({
                 ...topicData,
                 authorName: topicData.profiles?.full_name || 'مستخدم مجهول',

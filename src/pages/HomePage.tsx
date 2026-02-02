@@ -1,10 +1,88 @@
+import { useEffect, useState } from 'react';
+import { supabase } from '../lib/supabaseClient';
+import { Bell, ArrowLeft } from 'lucide-react';
 import HeroSection from '../components/home/HeroSection';
 import { Link } from 'react-router-dom';
 
 const HomePage = () => {
+  const [news, setNews] = useState<any[]>([]);
+  const [loadingNews, setLoadingNews] = useState(true);
+
+  useEffect(() => {
+    const fetchNews = async () => {
+      const { data } = await supabase.from('news').select('*').order('created_at', { ascending: false }).limit(3);
+      setNews(data || []);
+      setLoadingNews(false);
+    };
+    fetchNews();
+  }, []);
+
   return (
     <>
       <HeroSection onSearch={() => { }} />
+
+      {/* Institutional News Section */}
+      <div style={{ backgroundColor: '#000033', padding: '4rem 0', color: 'white', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', top: 0, right: 0, width: '300px', height: '100%', background: 'linear-gradient(to left, rgba(197, 160, 89, 0.1), transparent)', pointerEvents: 'none' }}></div>
+        <div className="container">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '3rem' }}>
+            <div style={{ padding: '0.75rem', backgroundColor: 'rgba(197, 160, 89, 0.2)', borderRadius: '12px', color: '#c5a059' }}>
+              <Bell size={28} />
+            </div>
+            <div>
+              <h2 style={{ fontSize: '2rem', fontWeight: '900', color: '#c5a059', marginBottom: '0.25rem' }}>أخبار ومستجدات المعهد</h2>
+              <p style={{ opacity: 0.8, fontSize: '0.95rem' }}>المكتب الإعلامي وآخر الإعلانات الأكاديمية الرسمية</p>
+            </div>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '2rem' }}>
+            {!loadingNews ? (
+              news.map(item => (
+                <div key={item.id} className="news-card card-hover" style={{
+                  backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                  border: '1px solid rgba(197, 160, 89, 0.3)',
+                  padding: '2rem',
+                  borderRadius: '20px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '1rem',
+                  position: 'relative'
+                }}>
+                  <div style={{ fontSize: '0.75rem', color: '#c5a059', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px' }}>
+                    {new Date(item.created_at).toLocaleDateString('ar-DZ')}
+                  </div>
+                  <h3 style={{ fontSize: '1.25rem', fontWeight: '800', lineHeight: '1.4' }}>{item.title}</h3>
+                  <p style={{ fontSize: '0.9rem', opacity: 0.7, lineHeight: '1.7', display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                    {item.content}
+                  </p>
+                  <button style={{
+                    marginTop: 'auto',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    color: '#c5a059',
+                    fontWeight: 'bold',
+                    fontSize: '0.85rem',
+                    background: 'none',
+                    border: 'none',
+                    cursor: 'pointer'
+                  }}>
+                    اقرأ المزيد <ArrowLeft size={16} />
+                  </button>
+                </div>
+              ))
+            ) : (
+              <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '2rem', color: '#c5a059' }}>جاري تحميل المستجدات الرسمية...</div>
+            )}
+            {!loadingNews && news.length === 0 && (
+              <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '2rem', opacity: 0.5 }}>لا توجد أخبار منشورة حالياً.</div>
+            )}
+          </div>
+        </div>
+        <style>{`
+            .news-card:hover { border-color: #c5a059 !important; background-color: rgba(255,255,255,0.08) !important; }
+        `}</style>
+      </div>
 
       {/* Entrance Hub Section - 3D Glassmorphism */}
       <div style={{

@@ -3,6 +3,7 @@ import { Search, Plus, Filter, Users, Shield, TrendingUp } from 'lucide-react';
 import { supabase } from '../lib/supabaseClient';
 import TopicCard from '../components/community/TopicCard';
 import CreateTopicModal from '../components/community/CreateTopicModal';
+import { useAuth } from '../context/AuthContext';
 
 const CommunityPage = () => {
     const [searchTerm, setSearchTerm] = useState('');
@@ -35,9 +36,17 @@ const CommunityPage = () => {
         fetchTopics();
     }, []);
 
+    const { profile } = useAuth();
+
     const filteredTopics = topics.filter(topic => {
         const matchesSearch = topic.title.includes(searchTerm) || topic.description.includes(searchTerm);
         const matchesFilter = activeFilter === 'All' || topic.category === activeFilter;
+
+        // CRITICAL SECURITY: Hide Professors-only topics from students
+        if (profile?.role === 'student' && topic.category === 'Professors') {
+            return false;
+        }
+
         return matchesSearch && matchesFilter;
     });
 
