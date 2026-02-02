@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { supabase } from '../lib/supabaseClient';
-import { Building2, Mail, ExternalLink, Calendar, BookOpen, Target, Award, User, ChevronRight, HelpCircle } from 'lucide-react';
+import { Building2, Mail, ExternalLink, Calendar, BookOpen, Target, Award, User, ChevronRight, HelpCircle, Feather } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import type { Student, Professor } from '../data/mockData';
 
@@ -323,24 +323,55 @@ const StudentProfilePage = () => {
                             </>
                         ) : (
                             <section className="glass-panel" style={{ backgroundColor: 'white', padding: '2.5rem', borderRadius: '24px', boxShadow: '0 10px 30px rgba(0,0,0,0.03)' }}>
-                                <h2 style={{ fontSize: '1.6rem', fontWeight: '800', color: 'var(--color-accent)', marginBottom: '2rem' }}>رواق الإبداع الأدبي</h2>
-                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '2rem' }}>
-                                    {myCreations.length > 0 ? myCreations.map(creation => (
-                                        <Link key={creation.id} to={`/creations/${creation.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                                            <div className="card-hover" style={{ backgroundColor: '#fff9f0', padding: '2rem', borderRadius: '20px', border: '1px solid #fce8cc', height: '100%', display: 'flex', flexDirection: 'column' }}>
-                                                <span style={{ fontSize: '0.8rem', color: '#c5a059', fontWeight: 'bold', marginBottom: '0.5rem' }}>{creation.category === 'Poem' ? 'قصيدة' : creation.category === 'Story' ? 'قصة قصيرة' : 'خاطرة'}</span>
-                                                <h3 style={{ margin: '0 0 1rem 0', color: 'var(--color-primary)', fontSize: '1.3rem' }}>{creation.title}</h3>
-                                                <div style={{ fontSize: '0.9rem', color: '#4b5563', lineHeight: '1.6', overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', flex: 1 }} dangerouslySetInnerHTML={{ __html: creation.content }}></div>
-                                                <div style={{ marginTop: '1.5rem', paddingTop: '1rem', borderTop: '1px solid rgba(197, 160, 89, 0.2)', fontSize: '0.8rem', color: 'var(--color-text-secondary)' }}>
-                                                    {new Date(creation.created_at).toLocaleDateString('ar-EG')}
-                                                </div>
-                                            </div>
-                                        </Link>
-                                    )) : (
-                                        <div style={{ gridColumn: '1/-1', textAlign: 'center', padding: '4rem' }}>
-                                            <p style={{ color: 'var(--color-text-secondary)', fontSize: '1.1rem' }}>لم ينشر الطالب أي أعمال إبداعية بعد.</p>
-                                        </div>
-                                    )}
+                                <div style={{ marginBottom: '3rem' }}>
+                                    <h2 style={{ fontSize: '1.8rem', fontWeight: '800', color: 'var(--color-primary)', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                                        <Feather size={28} color="var(--color-accent)" /> المقالات والدراسات البحثية
+                                    </h2>
+                                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '2rem' }}>
+                                        {myCreations.filter(c => c.category === 'ResearchPaper').length > 0 ? (
+                                            myCreations.filter(c => c.category === 'ResearchPaper').map(creation => (
+                                                <Link key={creation.id} to={`/creations/${creation.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                                                    <div className="card-hover" style={{ backgroundColor: '#f8fafc', padding: '2rem', borderRadius: '20px', border: '1px solid #e2e8f0', height: '100%', display: 'flex', flexDirection: 'column' }}>
+                                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                                                            <span style={{ fontSize: '0.8rem', color: 'var(--color-primary)', fontWeight: 'bold' }}>مقال بحثي</span>
+                                                            {creation.specialty && <span style={{ fontSize: '0.75rem', backgroundColor: 'rgba(26,35,126,0.1)', color: 'var(--color-primary)', padding: '2px 8px', borderRadius: '4px' }}>{creation.specialty}</span>}
+                                                        </div>
+                                                        <h3 style={{ margin: '0 0 1rem 0', color: 'var(--color-primary)', fontSize: '1.3rem', fontWeight: '900' }}>{creation.title}</h3>
+                                                        <div style={{ fontSize: '0.9rem', color: '#4b5563', lineHeight: '1.6', overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', flex: 1 }} dangerouslySetInnerHTML={{ __html: creation.content }}></div>
+                                                        <div style={{ marginTop: '1.5rem', paddingTop: '1rem', borderTop: '1px solid #e2e8f0', fontSize: '0.8rem', color: 'var(--color-text-secondary)' }}>
+                                                            {new Date(creation.created_at).toLocaleDateString('ar-EG')}
+                                                        </div>
+                                                    </div>
+                                                </Link>
+                                            ))
+                                        ) : (
+                                            <p style={{ color: 'var(--color-text-secondary)', gridColumn: '1/-1', textAlign: 'center' }}>لم يتم نشر أي مقالات بحثية بعد.</p>
+                                        )}
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <h2 style={{ fontSize: '1.8rem', fontWeight: '800', color: 'var(--color-accent)', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                                        <Award size={28} /> الأعمال والأدبيات الإبداعية
+                                    </h2>
+                                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '2rem' }}>
+                                        {myCreations.filter(c => c.category !== 'ResearchPaper').length > 0 ? (
+                                            myCreations.filter(c => c.category !== 'ResearchPaper').map(creation => (
+                                                <Link key={creation.id} to={`/creations/${creation.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                                                    <div className="card-hover" style={{ backgroundColor: '#fffcf5', padding: '2rem', borderRadius: '20px', border: '1px solid #fce8cc', height: '100%', display: 'flex', flexDirection: 'column' }}>
+                                                        <span style={{ fontSize: '0.8rem', color: '#c5a059', fontWeight: 'bold', marginBottom: '0.5rem' }}>{creation.category === 'Poem' ? 'قصيدة' : creation.category === 'Story' ? 'قصة قصيرة' : 'خاطرة'}</span>
+                                                        <h3 style={{ margin: '0 0 1rem 0', color: 'var(--color-primary)', fontSize: '1.3rem' }}>{creation.title}</h3>
+                                                        <div style={{ fontSize: '0.9rem', color: '#4b5563', lineHeight: '1.6', overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', flex: 1 }} dangerouslySetInnerHTML={{ __html: creation.content }}></div>
+                                                        <div style={{ marginTop: '1.5rem', paddingTop: '1rem', borderTop: '1px solid rgba(197, 160, 89, 0.2)', fontSize: '0.8rem', color: 'var(--color-text-secondary)' }}>
+                                                            {new Date(creation.created_at).toLocaleDateString('ar-EG')}
+                                                        </div>
+                                                    </div>
+                                                </Link>
+                                            ))
+                                        ) : (
+                                            <p style={{ color: 'var(--color-text-secondary)', gridColumn: '1/-1', textAlign: 'center' }}>لم يتم نشر أي أعمال إبداعية بعد.</p>
+                                        )}
+                                    </div>
                                 </div>
                             </section>
                         )}

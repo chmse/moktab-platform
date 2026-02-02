@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { BookOpen, Users, HelpCircle, CheckCircle, ExternalLink, Bookmark, Clock, Feather, Send, Trash2 } from 'lucide-react';
+import { BookOpen, Users, HelpCircle, CheckCircle, ExternalLink, Bookmark, Clock, Feather, Send, Trash2, Target } from 'lucide-react';
 import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
 import { Link } from 'react-router-dom';
@@ -38,7 +38,8 @@ const StudentDashboard = () => {
     // Writing Lab State
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
-    const [category, setCategory] = useState<'Story' | 'Poem' | 'Essay'>('Story');
+    const [category, setCategory] = useState<'Story' | 'Poem' | 'Essay' | 'ResearchPaper'>('Story');
+    const [specialty, setSpecialty] = useState('');
     const [submitting, setSubmitting] = useState(false);
 
     const fetchData = async () => {
@@ -111,6 +112,7 @@ const StudentDashboard = () => {
                     title: title.trim(),
                     content: content.trim(),
                     category,
+                    specialty: specialty.trim(),
                     student_id: profile?.id,
                     status: 'published'
                 }]);
@@ -119,7 +121,8 @@ const StudentDashboard = () => {
 
             setTitle('');
             setContent('');
-            alert('تم نشر إبداعك بنجاح! نثمن قلمك الراقي');
+            setSpecialty('');
+            alert('تم نشر عملك بنجاح! نثمن عطاءك العلمي والأدبي');
             fetchData();
         } catch (error: any) {
             alert('خطأ في النشر: ' + error.message);
@@ -304,7 +307,7 @@ const StudentDashboard = () => {
                 {/* Creations Tab (Writing Lab) */}
                 {activeTab === 'creations' && (
                     <div className="animate-fade-in">
-                        <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 0.8fr', gap: '3rem' }}>
+                        <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '3rem' }}>
                             {/* Editor Section */}
                             <div>
                                 <h2 style={{ fontSize: '1.8rem', color: 'var(--color-primary)', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem', fontFamily: 'var(--font-family-serif)' }}>
@@ -326,17 +329,30 @@ const StudentDashboard = () => {
                                         />
                                     </div>
 
-                                    <div style={{ marginBottom: '1.5rem' }}>
-                                        <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold', color: 'var(--color-primary)' }}>جنس العمل</label>
-                                        <select
-                                            value={category}
-                                            onChange={(e) => setCategory(e.target.value as any)}
-                                            style={{ width: '100%', padding: '1rem', borderRadius: '12px', border: '1px solid #dcd3bc', outline: 'none', fontSize: '1.1rem', backgroundColor: 'rgba(255,255,255,0.5)' }}
-                                        >
-                                            <option value="Story">قصة قصيرة</option>
-                                            <option value="Poem">قصيدة شعرية</option>
-                                            <option value="Essay">خاطرة أدبية</option>
-                                        </select>
+                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '1.5rem' }}>
+                                        <div>
+                                            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold', color: 'var(--color-primary)' }}>جنس العمل</label>
+                                            <select
+                                                value={category}
+                                                onChange={(e) => setCategory(e.target.value as any)}
+                                                style={{ width: '100%', padding: '1rem', borderRadius: '12px', border: '1px solid #dcd3bc', outline: 'none', fontSize: '1.1rem', backgroundColor: 'rgba(255,255,255,0.5)' }}
+                                            >
+                                                <option value="Story">قصة قصيرة</option>
+                                                <option value="Poem">قصيدة شعرية</option>
+                                                <option value="Essay">خاطرة أدبية</option>
+                                                <option value="ResearchPaper">مقال بحثي / دراسة</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold', color: 'var(--color-primary)' }}>التخصص العلمي / الموضوع</label>
+                                            <input
+                                                type="text"
+                                                value={specialty}
+                                                onChange={(e) => setSpecialty(e.target.value)}
+                                                placeholder="مثال: الأدب العباسي، اللسانيات..."
+                                                style={{ width: '100%', padding: '1rem', borderRadius: '12px', border: '1px solid #dcd3bc', outline: 'none', fontSize: '1.1rem', backgroundColor: 'rgba(255,255,255,0.5)' }}
+                                            />
+                                        </div>
                                     </div>
 
                                     <div style={{ marginBottom: '2rem' }}>
@@ -367,15 +383,14 @@ const StudentDashboard = () => {
                                         className="btn-premium"
                                         style={{ width: '100%', padding: '1.2rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.75rem', fontSize: '1.1rem', borderRadius: '15px' }}
                                     >
-                                        <Send size={24} /> {submitting ? 'جاري تخليد العمل...' : 'نشر العمل في الرواق الأدبي'}
+                                        <Send size={24} /> {submitting ? 'جاري تخليد العمل...' : category === 'ResearchPaper' ? 'نشر الدراسة في الرواق العلمي' : 'نشر العمل في الرواق الأدبي'}
                                     </button>
                                 </form>
                             </div>
 
-                            {/* My Published List */}
                             <div>
-                                <h2 style={{ fontSize: '1.5rem', color: 'var(--color-primary)', marginBottom: '1.5rem' }}>ديواني الخاص</h2>
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                                <h2 style={{ fontSize: '1.8rem', color: 'var(--color-primary)', marginBottom: '1.5rem', fontFamily: 'var(--font-family-serif)' }}>أعمالي المنشورة</h2>
+                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', gap: '1.5rem' }}>
                                     {myCreations.length > 0 ? myCreations.map(creation => (
                                         <div key={creation.id} style={{
                                             padding: '1.5rem',
@@ -384,22 +399,34 @@ const StudentDashboard = () => {
                                             boxShadow: '0 5px 15px rgba(0,0,0,0.02)',
                                             border: '1px solid var(--color-border)',
                                             display: 'flex',
-                                            justifyContent: 'space-between',
-                                            alignItems: 'center'
+                                            flexDirection: 'column',
+                                            justifyContent: 'space-between'
                                         }}>
-                                            <div>
-                                                <div style={{ fontWeight: '900', fontSize: '1.2rem', color: 'var(--color-primary)', fontFamily: 'serif' }}>{creation.title}</div>
-                                                <div style={{ fontSize: '0.85rem', color: 'var(--color-text-secondary)', marginTop: '0.25rem' }}>
-                                                    {creation.category === 'Poem' ? 'قصيدة' : creation.category === 'Story' ? 'قصة' : 'خاطرة'} | {new Date(creation.created_at).toLocaleDateString('ar-EG')}
+                                            <div style={{ marginBottom: '1rem' }}>
+                                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                                                    <span style={{ fontSize: '0.8rem', color: 'var(--color-accent)', fontWeight: 'bold' }}>
+                                                        {creation.category === 'Poem' ? 'قصيدة' : creation.category === 'Story' ? 'قصة' : creation.category === 'Essay' ? 'خاطرة' : 'مقال بحثي'}
+                                                    </span>
+                                                    <span style={{ fontSize: '0.75rem', color: 'var(--color-text-secondary)' }}>{new Date(creation.created_at).toLocaleDateString('ar-EG')}</span>
                                                 </div>
+                                                <h3 style={{ fontWeight: '900', fontSize: '1.3rem', color: 'var(--color-primary)', fontFamily: 'serif', marginTop: '0.5rem' }}>{creation.title}</h3>
+                                                {creation.specialty && (
+                                                    <div style={{ fontSize: '0.85rem', color: 'var(--color-text-secondary)', marginTop: '0.25rem' }}>
+                                                        <Target size={14} style={{ display: 'inline', verticalAlign: 'middle', marginLeft: '4px' }} /> التخصص: {creation.specialty}
+                                                    </div>
+                                                )}
                                             </div>
-                                            <div style={{ display: 'flex', gap: '0.75rem' }}>
-                                                <Link to={`/creations/${creation.id}`} style={{ padding: '0.6rem', color: 'var(--color-accent)', backgroundColor: 'rgba(197,160,89,0.1)', borderRadius: '10px' }}><BookOpen size={20} /></Link>
-                                                <button onClick={() => handleDeleteCreation(creation.id)} style={{ padding: '0.6rem', color: '#ef4444', backgroundColor: 'rgba(239,68,68,0.05)', border: 'none', borderRadius: '10px', cursor: 'pointer' }}><Trash2 size={20} /></button>
+                                            <div style={{ display: 'flex', gap: '0.75rem', borderTop: '1px solid var(--color-border)', paddingTop: '1rem' }}>
+                                                <Link to={`/creations/${creation.id}`} style={{ flex: 1, padding: '0.6rem', color: 'var(--color-accent)', backgroundColor: 'rgba(197,160,89,0.1)', borderRadius: '10px', textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
+                                                    <BookOpen size={18} /> عرض العمل
+                                                </Link>
+                                                <button onClick={() => handleDeleteCreation(creation.id)} style={{ padding: '0.6rem', color: '#ef4444', backgroundColor: 'rgba(239,68,68,0.05)', border: 'none', borderRadius: '10px', cursor: 'pointer' }}>
+                                                    <Trash2 size={18} />
+                                                </button>
                                             </div>
                                         </div>
                                     )) : (
-                                        <div style={{ padding: '3rem', textAlign: 'center', background: '#fffcf9', borderRadius: '24px', border: '2px dashed #fce8cc' }}>
+                                        <div style={{ gridColumn: '1 / -1', padding: '3rem', textAlign: 'center', background: '#fffcf9', borderRadius: '24px', border: '2px dashed #fce8cc' }}>
                                             <Feather size={40} color="#c5a059" style={{ opacity: 0.3, marginBottom: '1rem' }} />
                                             <p style={{ color: 'var(--color-text-secondary)', fontStyle: 'italic' }}>بانتظار قطرات حبرك الأولى...</p>
                                         </div>
