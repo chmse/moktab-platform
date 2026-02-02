@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { BookOpen, Plus, FileText, Presentation, MessageCircle, MessageSquare } from 'lucide-react';
+import { BookOpen, Plus, FileText, Presentation, MessageCircle, MessageSquare, Award } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import AddWorkModal from '../components/dashboard/AddWorkModal';
 import { supabase } from '../lib/supabaseClient';
 import { useAuth } from '../context/AuthContext';
@@ -28,9 +29,12 @@ const StatCard = ({ icon: Icon, label, value, color }: any) => (
 const ProfessorDashboard = () => {
     const { profile } = useAuth();
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [activeTab, setActiveTab] = useState<'management' | 'teaching' | 'discussions'>('management');
+    const [activeTab, setActiveTab] = useState<'management' | 'teaching' | 'discussions' | 'supervisees'>('management');
     const [worksList, setWorksList] = useState<any[]>([]);
+    const [supervisees, setSupervisees] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
+    const [selectedStudent, setSelectedStudent] = useState<any>(null);
+    const [showBadgeModal, setShowBadgeModal] = useState(false);
 
     const fetchData = async () => {
         setLoading(true);
@@ -46,11 +50,49 @@ const ProfessorDashboard = () => {
 
                 if (worksError) throw worksError;
                 setWorksList(worksData || []);
+
+                // Fetch Supervisees
+                const { data: studentsData } = await supabase
+                    .from('profiles')
+                    .select('*')
+                    .eq('supervisor_id', user.id)
+                    .eq('role', 'student');
+
+                if (studentsData) setSupervisees(studentsData);
             }
         } catch (err) {
             console.error('Error fetching dashboard data:', err);
         } finally {
             setLoading(false);
+        }
+    };
+
+    const handleAwardBadge = async (badgeName: string) => {
+        if (!selectedStudent) return;
+
+        try {
+            const currentBadges = Array.isArray(selectedStudent.badges) ? selectedStudent.badges : [];
+            if (currentBadges.includes(badgeName)) {
+                alert('هذا الطالب يحمل هذا الوسام بالفعل.');
+                return;
+            }
+
+            const newBadges = [...currentBadges, badgeName];
+
+            const { error } = await supabase
+                .from('profiles')
+                .update({ badges: newBadges })
+                .eq('id', selectedStudent.id);
+
+            if (error) throw error;
+
+            alert(`تم منح وسام "${badgeName}" للطالب ${selectedStudent.full_name} بنجاح!`);
+            setShowBadgeModal(false);
+            setSelectedStudent(null);
+            fetchData(); // Refresh list to show new badge
+        } catch (err) {
+            console.error('Error awarding badge:', err);
+            alert('حدث خطأ أثناء منح الوسام. يرجى المحاولة لاحقاً.');
         }
     };
 
@@ -153,6 +195,22 @@ const ProfessorDashboard = () => {
                     <MessageCircle size={20} />
                     النقاشات
                 </button>
+                <button
+                    onClick={() => setActiveTab('supervisees')}
+                    style={{
+                        padding: '1rem 2rem',
+                        fontSize: '1.1rem',
+                        fontWeight: 'bold',
+                        color: activeTab === 'supervisees' ? 'var(--color-primary)' : 'var(--color-text-secondary)',
+                        borderBottom: activeTab === 'supervisees' ? '3px solid var(--color-primary)' : '3px solid transparent',
+                        marginBottom: '-2px',
+                        display: 'flex', alignItems: 'center', gap: '0.5rem',
+                        whiteSpace: 'nowrap', background: 'none', border: 'none', cursor: 'pointer'
+                    }}
+                >
+                    <BookOpen size={20} />
+                    طلبتي المقيدين
+                </button>
             </div>
 
             {/* Tab Content */}
@@ -211,6 +269,59 @@ const ProfessorDashboard = () => {
                         <p style={{ color: 'var(--color-text-secondary)' }}>لا توجد نقاشات جديدة حالياً.</p>
                     </div>
                 )}
+
+                {activeTab === 'supervisees' && (
+                    <div className="animate-fade-in">
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+                            <h3 style={{ fontSize: '1.5rem', color: 'var(--color-primary)', fontFamily: 'var(--font-family-serif)', fontWeight: '700' }}>البيئة البحثية: الطلاب تحت الإشراف العلمي</h3>
+                            <span style={{ backgroundColor: 'rgba(197, 160, 89, 0.1)', color: 'var(--color-accent)', padding: '0.4rem 1rem', borderRadius: '50px', fontSize: '0.9rem', fontWeight: '800' }}>
+                                عدد الطلاب: {supervisees.length}
+                            </span>
+                        </div>
+
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', gap: '2rem' }}>
+                            {supervisees.length > 0 ? supervisees.map(student => (
+                                <div key={student.id} className="glass-panel card-hover" style={{ padding: '1.8rem', border: '1px solid #f1f5f9', borderRadius: '24px', display: 'flex', flexDirection: 'column', gap: '1.5rem', backgroundColor: 'white' }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '1.2rem' }}>
+                                        <div style={{ position: 'relative' }}>
+                                            <img src={student.avatar_url || 'https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&q=80&w=100'} alt="" style={{ width: '70px', height: '70px', borderRadius: '20px', objectFit: 'cover', border: '3px solid white', boxShadow: '0 10px 20px rgba(0,0,0,0.05)' }} />
+                                            <div style={{ position: 'absolute', bottom: '-5px', right: '-5px', width: '24px', height: '24px', borderRadius: '50%', backgroundColor: '#10b981', border: '3px solid white' }}></div>
+                                        </div>
+                                        <div style={{ flex: 1 }}>
+                                            <h4 style={{ margin: 0, color: 'var(--color-primary)', fontSize: '1.2rem', fontWeight: '800' }}>{student.full_name}</h4>
+                                            <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--color-text-secondary)', fontWeight: '600' }}>{student.specialty || 'باحث في علم اللغات'}</p>
+                                        </div>
+                                    </div>
+
+                                    {/* Student Badges Preview */}
+                                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+                                        {Array.isArray(student.badges) && student.badges.length > 0 ? student.badges.map((b: string, i: number) => (
+                                            <span key={i} style={{ fontSize: '0.7rem', backgroundColor: '#fff9eb', color: '#c5a059', padding: '0.2rem 0.6rem', borderRadius: '6px', border: '1px solid #fce8cc', fontWeight: 'bold' }}>{b}</span>
+                                        )) : (
+                                            <span style={{ fontSize: '0.75rem', color: '#94a3b8', fontStyle: 'italic' }}>لا توجد أوسمة بعد</span>
+                                        )}
+                                    </div>
+
+                                    <div style={{ display: 'flex', gap: '0.8rem', marginTop: 'auto' }}>
+                                        <Link to={`/students/${student.id}`} style={{ flex: 1, textAlign: 'center', padding: '0.75rem', borderRadius: '12px', backgroundColor: 'var(--color-surface)', color: 'var(--color-primary)', fontWeight: 'bold', textDecoration: 'none', border: '1px solid #f1f5f9' }} className="card-hover">الملف العلمي</Link>
+                                        <button
+                                            onClick={() => { setSelectedStudent(student); setShowBadgeModal(true); }}
+                                            style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', padding: '0.75rem', borderRadius: '12px', backgroundColor: 'var(--color-accent)', color: 'white', fontWeight: 'bold' }}
+                                            className="card-hover"
+                                        >
+                                            <Award size={18} /> منح وسام
+                                        </button>
+                                    </div>
+                                </div>
+                            )) : (
+                                <div style={{ gridColumn: '1/-1', textAlign: 'center', padding: '5rem', background: 'var(--color-surface)', borderRadius: '32px', border: '2px dashed #e2e8f0' }}>
+                                    <BookOpen size={48} style={{ opacity: 0.1, marginBottom: '1.5rem' }} />
+                                    <p style={{ color: 'var(--color-text-secondary)', fontSize: '1.1rem' }}>لا يوجد طلاب مسجلون تحت إشرافك حالياً في هذا الرواق.</p>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                )}
             </div>
 
             <AddWorkModal
@@ -218,6 +329,67 @@ const ProfessorDashboard = () => {
                 onClose={() => setIsModalOpen(false)}
                 onSuccess={fetchData}
             />
+
+            {/* Badge Award Modal */}
+            {showBadgeModal && selectedStudent && (
+                <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.6)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(10px)' }}>
+                    <div className="glass-panel" style={{ backgroundColor: 'white', padding: '2.5rem', borderRadius: '32px', maxWidth: '480px', width: '90%', textAlign: 'center', boxShadow: '0 25px 50px rgba(0,0,0,0.2)', border: '1px solid rgba(255,255,255,0.3)' }}>
+                        <div className="badge-gold-medal" style={{ width: '80px', height: '80px', margin: '0 auto 1.5rem' }}>
+                            <Award size={40} />
+                        </div>
+                        <h2 style={{ color: 'var(--color-primary)', marginBottom: '0.5rem', fontFamily: 'var(--font-family-serif)', fontSize: '1.8rem' }}>التكريم الشرفي</h2>
+                        <p style={{ color: 'var(--color-text-secondary)', marginBottom: '2rem', fontSize: '1.1rem' }}>اختر الوسام المستحق للطالب <strong style={{ color: 'var(--color-primary)' }}>{selectedStudent.full_name}</strong></p>
+
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                            {[
+                                { name: 'طالب متميز', color: '#ffd700', icon: Award },
+                                { name: 'باحث صاعد', color: '#c5a059', icon: BookOpen },
+                                { name: 'مناقش بارع', color: '#10b981', icon: MessageCircle },
+                                { name: 'قلم الإبداع', color: '#ec4899', icon: FileText }
+                            ].map(badge => (
+                                <button
+                                    key={badge.name}
+                                    onClick={() => handleAwardBadge(badge.name)}
+                                    style={{
+                                        padding: '1.2rem',
+                                        borderRadius: '20px',
+                                        background: 'white',
+                                        border: `2px solid ${badge.color}20`,
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        alignItems: 'center',
+                                        gap: '0.8rem',
+                                        cursor: 'pointer',
+                                        transition: 'all 0.3s ease'
+                                    }}
+                                    className="card-hover"
+                                >
+                                    <div style={{
+                                        width: '45px',
+                                        height: '45px',
+                                        borderRadius: '14px',
+                                        backgroundColor: `${badge.color}15`,
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        color: badge.color
+                                    }}>
+                                        <badge.icon size={24} />
+                                    </div>
+                                    <span style={{ fontWeight: '800', fontSize: '0.95rem', color: 'var(--color-primary)' }}>{badge.name}</span>
+                                </button>
+                            ))}
+                        </div>
+
+                        <button
+                            onClick={() => { setShowBadgeModal(false); setSelectedStudent(null); }}
+                            style={{ background: 'none', border: 'none', marginTop: '2.5rem', color: '#ef4444', fontWeight: '900', cursor: 'pointer', fontSize: '1.1rem' }}
+                        >
+                            إلغاء العملية
+                        </button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

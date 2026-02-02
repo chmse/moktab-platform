@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { User as UserIcon, LogOut, LayoutDashboard, Shield, UserCircle, ChevronDown, Menu, X, BookOpen, GraduationCap, Calendar, FlaskConical, Info, Cpu, Settings } from 'lucide-react';
+import { User as UserIcon, LogOut, LayoutDashboard, Shield, UserCircle, ChevronDown, Menu, X, BookOpen, GraduationCap, Calendar, FlaskConical, Info, Cpu, Settings, Feather } from 'lucide-react';
 
 const Navbar = () => {
     const { user, profile, loading, signOut } = useAuth();
@@ -169,6 +169,10 @@ const Navbar = () => {
                         <Link to="/hub/activities" onClick={() => setIsMobileMenuOpen(false)} className="drawer-link">
                             <Calendar size={22} color="#c5a059" />
                             <span>الأنشطة والفعاليات</span>
+                        </Link>
+                        <Link to="/creations" onClick={() => setIsMobileMenuOpen(false)} className="drawer-link">
+                            <Feather size={22} color="#c5a059" />
+                            <span>رواق الإبداع الأدبي</span>
                         </Link>
                         <Link to="/hub/about" onClick={() => setIsMobileMenuOpen(false)} className="drawer-link">
                             <Info size={22} color="#c5a059" />

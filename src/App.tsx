@@ -23,6 +23,8 @@ import UnitHubPage from './pages/UnitHubPage';
 import SettingsPage from './pages/SettingsPage';
 
 import StudentProfilePage from './pages/StudentProfilePage';
+import CreationsFeed from './pages/CreationsFeed';
+import CreationDetail from './pages/CreationDetail';
 
 import { useAuth } from './context/AuthContext';
 
@@ -88,6 +90,8 @@ function App() {
           <Route path="students/:id" element={<StudentProfilePage />} />
           <Route path="community" element={<CommunityPage />} />
           <Route path="community/:id" element={<TopicDetail />} />
+          <Route path="creations" element={<CreationsFeed />} />
+          <Route path="creations/:id" element={<CreationDetail />} />
           <Route path="about" element={<AboutPage />} />
           <Route path="hub/:unitId" element={<UnitHubPage />} />
           <Route

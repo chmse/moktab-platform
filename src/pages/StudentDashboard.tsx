@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
-import { BookOpen, Users, HelpCircle, CheckCircle, ExternalLink, Bookmark, Clock } from 'lucide-react';
+import { BookOpen, Users, HelpCircle, CheckCircle, ExternalLink, Bookmark, Clock, Feather, Send, Trash2 } from 'lucide-react';
+import ReactQuill from 'react-quill-new';
+import 'react-quill-new/dist/quill.snow.css';
 import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabaseClient';
 import { useAuth } from '../context/AuthContext';
@@ -27,10 +29,17 @@ const StatCard = ({ icon: Icon, label, value, color }: any) => (
 
 const StudentDashboard = () => {
     const { profile } = useAuth();
-    const [activeTab, setActiveTab] = useState<'library' | 'questions'>('library');
+    const [activeTab, setActiveTab] = useState<'library' | 'questions' | 'creations'>('library');
     const [savedWorks, setSavedWorks] = useState<any[]>([]);
     const [myQuestions, setMyQuestions] = useState<any[]>([]);
+    const [myCreations, setMyCreations] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
+
+    // Writing Lab State
+    const [title, setTitle] = useState('');
+    const [content, setContent] = useState('');
+    const [category, setCategory] = useState<'Story' | 'Poem' | 'Essay'>('Story');
+    const [submitting, setSubmitting] = useState(false);
 
     const fetchData = async () => {
         setLoading(true);
@@ -73,6 +82,15 @@ const StudentDashboard = () => {
                     isAnswered: false
                 })));
             }
+
+            // Fetch My Creations
+            const { data: creationsData } = await supabase
+                .from('student_creations')
+                .select('*')
+                .eq('student_id', user.id)
+                .order('created_at', { ascending: false });
+
+            if (creationsData) setMyCreations(creationsData);
         }
         setLoading(false);
     };
@@ -80,6 +98,44 @@ const StudentDashboard = () => {
     useEffect(() => {
         fetchData();
     }, []);
+
+    const handlePublish = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!title.trim() || !content.trim()) return;
+
+        setSubmitting(true);
+        try {
+            const { error } = await supabase
+                .from('student_creations')
+                .insert([{
+                    title: title.trim(),
+                    content: content.trim(),
+                    category,
+                    student_id: profile?.id,
+                    status: 'published'
+                }]);
+
+            if (error) throw error;
+
+            setTitle('');
+            setContent('');
+            alert('تم نشر إبداعك بنجاح! نثمن قلمك الراقي');
+            fetchData();
+        } catch (error: any) {
+            alert('خطأ في النشر: ' + error.message);
+        } finally {
+            setSubmitting(false);
+        }
+    };
+
+    const handleDeleteCreation = async (id: string) => {
+        if (!window.confirm('هل أنت متأكد من حذف هذا العمل؟')) return;
+
+        const { error } = await supabase.from('student_creations').delete().eq('id', id);
+        if (!error) {
+            setMyCreations(prev => prev.filter(c => c.id !== id));
+        }
+    };
 
     if (loading) {
         return (
@@ -139,6 +195,22 @@ const StudentDashboard = () => {
                 >
                     <HelpCircle size={20} />
                     أسئلتي
+                </button>
+                <button
+                    onClick={() => setActiveTab('creations')}
+                    style={{
+                        padding: '1rem 2rem',
+                        fontSize: '1.1rem',
+                        fontWeight: 'bold',
+                        color: activeTab === 'creations' ? 'var(--color-accent)' : 'var(--color-text-secondary)',
+                        borderBottom: activeTab === 'creations' ? '3px solid var(--color-accent)' : '3px solid transparent',
+                        marginBottom: '-2px',
+                        display: 'flex', alignItems: 'center', gap: '0.5rem',
+                        background: 'none', border: 'none', cursor: 'pointer'
+                    }}
+                >
+                    <Feather size={20} />
+                    مختبر الإبداع
                 </button>
             </div>
 
@@ -226,6 +298,115 @@ const StudentDashboard = () => {
                                 <p>لا توجد أسئلة أو نقاشات مسجلة.</p>
                             </div>
                         )}
+                    </div>
+                )}
+
+                {/* Creations Tab (Writing Lab) */}
+                {activeTab === 'creations' && (
+                    <div className="animate-fade-in">
+                        <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 0.8fr', gap: '3rem' }}>
+                            {/* Editor Section */}
+                            <div>
+                                <h2 style={{ fontSize: '1.8rem', color: 'var(--color-primary)', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem', fontFamily: 'var(--font-family-serif)' }}>
+                                    <Feather size={28} className="text-accent" /> مختبر الإبداع الأدبي
+                                </h2>
+                                <form onSubmit={handlePublish} className="glass-panel bg-parchment" style={{ padding: '2.5rem', border: '2px solid #e8dec7', borderRadius: '24px', position: 'relative' }}>
+                                    <div style={{ position: 'absolute', top: '10px', right: '10px', opacity: 0.1 }}>
+                                        <Feather size={80} />
+                                    </div>
+                                    <div style={{ marginBottom: '1.5rem', position: 'relative' }}>
+                                        <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold', color: 'var(--color-primary)' }}>عنوان المخطوطة</label>
+                                        <input
+                                            type="text"
+                                            value={title}
+                                            onChange={(e) => setTitle(e.target.value)}
+                                            placeholder="أدخل عنواناً ملهماً لعملك القادم..."
+                                            style={{ width: '100%', padding: '1rem', borderRadius: '12px', border: '1px solid #dcd3bc', outline: 'none', fontSize: '1.1rem', backgroundColor: 'rgba(255,255,255,0.5)' }}
+                                            required
+                                        />
+                                    </div>
+
+                                    <div style={{ marginBottom: '1.5rem' }}>
+                                        <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold', color: 'var(--color-primary)' }}>جنس العمل</label>
+                                        <select
+                                            value={category}
+                                            onChange={(e) => setCategory(e.target.value as any)}
+                                            style={{ width: '100%', padding: '1rem', borderRadius: '12px', border: '1px solid #dcd3bc', outline: 'none', fontSize: '1.1rem', backgroundColor: 'rgba(255,255,255,0.5)' }}
+                                        >
+                                            <option value="Story">قصة قصيرة</option>
+                                            <option value="Poem">قصيدة شعرية</option>
+                                            <option value="Essay">خاطرة أدبية</option>
+                                        </select>
+                                    </div>
+
+                                    <div style={{ marginBottom: '2rem' }}>
+                                        <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold', color: 'var(--color-primary)' }}>متن النص</label>
+                                        <div className="bg-parchment" style={{ minHeight: '450px', border: '1px solid #dcd3bc', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 10px rgba(0,0,0,0.02)' }}>
+                                            <ReactQuill
+                                                theme="snow"
+                                                value={content}
+                                                onChange={setContent}
+                                                style={{ height: '400px' }}
+                                                placeholder="ابدأ في تدوين وحي قلمك هنا..."
+                                                modules={{
+                                                    toolbar: [
+                                                        [{ 'header': [1, 2, 3, false] }],
+                                                        ['bold', 'italic', 'underline', 'strike'],
+                                                        [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                                                        [{ 'align': [] }],
+                                                        ['clean']
+                                                    ],
+                                                }}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <button
+                                        type="submit"
+                                        disabled={submitting || !title || !content}
+                                        className="btn-premium"
+                                        style={{ width: '100%', padding: '1.2rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.75rem', fontSize: '1.1rem', borderRadius: '15px' }}
+                                    >
+                                        <Send size={24} /> {submitting ? 'جاري تخليد العمل...' : 'نشر العمل في الرواق الأدبي'}
+                                    </button>
+                                </form>
+                            </div>
+
+                            {/* My Published List */}
+                            <div>
+                                <h2 style={{ fontSize: '1.5rem', color: 'var(--color-primary)', marginBottom: '1.5rem' }}>ديواني الخاص</h2>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                                    {myCreations.length > 0 ? myCreations.map(creation => (
+                                        <div key={creation.id} style={{
+                                            padding: '1.5rem',
+                                            backgroundColor: 'white',
+                                            borderRadius: '20px',
+                                            boxShadow: '0 5px 15px rgba(0,0,0,0.02)',
+                                            border: '1px solid var(--color-border)',
+                                            display: 'flex',
+                                            justifyContent: 'space-between',
+                                            alignItems: 'center'
+                                        }}>
+                                            <div>
+                                                <div style={{ fontWeight: '900', fontSize: '1.2rem', color: 'var(--color-primary)', fontFamily: 'serif' }}>{creation.title}</div>
+                                                <div style={{ fontSize: '0.85rem', color: 'var(--color-text-secondary)', marginTop: '0.25rem' }}>
+                                                    {creation.category === 'Poem' ? 'قصيدة' : creation.category === 'Story' ? 'قصة' : 'خاطرة'} | {new Date(creation.created_at).toLocaleDateString('ar-EG')}
+                                                </div>
+                                            </div>
+                                            <div style={{ display: 'flex', gap: '0.75rem' }}>
+                                                <Link to={`/creations/${creation.id}`} style={{ padding: '0.6rem', color: 'var(--color-accent)', backgroundColor: 'rgba(197,160,89,0.1)', borderRadius: '10px' }}><BookOpen size={20} /></Link>
+                                                <button onClick={() => handleDeleteCreation(creation.id)} style={{ padding: '0.6rem', color: '#ef4444', backgroundColor: 'rgba(239,68,68,0.05)', border: 'none', borderRadius: '10px', cursor: 'pointer' }}><Trash2 size={20} /></button>
+                                            </div>
+                                        </div>
+                                    )) : (
+                                        <div style={{ padding: '3rem', textAlign: 'center', background: '#fffcf9', borderRadius: '24px', border: '2px dashed #fce8cc' }}>
+                                            <Feather size={40} color="#c5a059" style={{ opacity: 0.3, marginBottom: '1rem' }} />
+                                            <p style={{ color: 'var(--color-text-secondary)', fontStyle: 'italic' }}>بانتظار قطرات حبرك الأولى...</p>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 )}
             </div>
