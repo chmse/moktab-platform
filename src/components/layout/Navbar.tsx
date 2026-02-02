@@ -42,18 +42,17 @@ const Navbar = () => {
             alignItems: 'center'
         }}>
             <div className="container" style={{
-                display: 'flex',
+                display: 'grid',
+                gridTemplateColumns: '1fr auto 1fr',
+                gap: '10px',
                 alignItems: 'center',
                 height: '100%',
                 width: '100%',
-                position: 'relative',
                 padding: '0 1rem'
             }}>
 
-                {/* LEFT SIDE: User Profile / Login (Absolute Left) */}
-                <div style={{
-                    position: 'absolute', left: '1rem', zIndex: 1003, display: 'flex', alignItems: 'center', height: '100%'
-                }}>
+                {/* LEFT COLUMN: User Profile / Login */}
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
                     <div ref={menuRef} style={{ position: 'relative' }}>
                         {!loading && (
                             user ? (
@@ -119,20 +118,16 @@ const Navbar = () => {
                     </div>
                 </div>
 
-                {/* CENTER: Logo (Absolute Center) */}
-                <div style={{
-                    position: 'absolute', left: '50%', transform: 'translateX(-50%)', zIndex: 1002, textAlign: 'center'
-                }}>
+                {/* CENTER COLUMN: Logo */}
+                <div style={{ textAlign: 'center' }}>
                     <Link to="/" style={{ textDecoration: 'none', color: 'white' }}>
                         <div className="navbar-logo-text" style={{ fontSize: '1.25rem', fontWeight: '900', color: '#c5a059', lineHeight: '1.1' }}>مَنْصَة مَكْتَب</div>
                         <div className="navbar-logo-sub" style={{ fontSize: '0.8rem', opacity: 0.8, letterSpacing: '1px' }}>الأكاديمية</div>
                     </Link>
                 </div>
 
-                {/* RIGHT SIDE: Hamburger (Universal) */}
-                <div style={{
-                    position: 'absolute', right: '1rem', zIndex: 1003, display: 'flex', alignItems: 'center', height: '100%'
-                }}>
+                {/* RIGHT COLUMN: Hamburger */}
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
                     <button
                         className="mobile-hamburger"
                         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}

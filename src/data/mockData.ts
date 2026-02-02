@@ -21,6 +21,8 @@ export interface Professor {
     imageUrl: string;
     interests: string[];
     courses: Course[];
+    specialty?: string;
+    skills?: string[];
     bio?: string;
     role?: 'professor' | 'student';
     level?: string;

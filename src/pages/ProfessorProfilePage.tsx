@@ -140,6 +140,12 @@ const ProfessorProfilePage = () => {
                                 <Building2 size={20} color="var(--color-accent)" />
                                 {professor.department}
                             </span>
+                            {professor.specialty && (
+                                <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--color-accent)', fontWeight: 'bold' }}>
+                                    <BookOpen size={20} />
+                                    التخصص: {professor.specialty}
+                                </span>
+                            )}
                         </div>
                     </div>
 
@@ -212,6 +218,30 @@ const ProfessorProfilePage = () => {
                             {professor.bio || `${professor.name} ${professor.role === 'student' ? 'طالب مجتهد' : 'أحد أبرز الأكاديميين'} في ${professor.department}. ${professor.role === 'student' ? 'يسعى لتطوير مهاراته العلمية' : 'يتميز بمسيرة علمية حافلة بالعطاء والبحث العلمي الجاد'}. يهتم بشكل خاص بمجالات ${professor.interests && professor.interests.length > 0 ? professor.interests.join(" و ") : 'البحث العلمي'}.`}
                         </p>
                     </section>
+
+                    {/* Skills Section */}
+                    {professor.skills && professor.skills.length > 0 && (
+                        <section style={{ marginBottom: '2.5rem' }}>
+                            <h3 style={{ fontSize: '1.3rem', color: 'var(--color-primary)', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                                <GraduationCap size={22} color="var(--color-accent)" /> المهارات العلمية والبحثية
+                            </h3>
+                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
+                                {professor.skills.map((skill, idx) => (
+                                    <span key={idx} style={{
+                                        backgroundColor: 'rgba(26, 35, 126, 0.05)',
+                                        color: 'var(--color-primary)',
+                                        padding: '0.5rem 1rem',
+                                        borderRadius: '10px',
+                                        fontSize: '0.9rem',
+                                        fontWeight: '700',
+                                        border: '1px solid rgba(26, 35, 126, 0.1)'
+                                    }}>
+                                        {skill}
+                                    </span>
+                                ))}
+                            </div>
+                        </section>
+                    )}
 
                     {/* Conditional Sections for Students vs Professors */}
                     {professor.role === 'student' ? (
