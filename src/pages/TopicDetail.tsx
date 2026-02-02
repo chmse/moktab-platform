@@ -184,7 +184,7 @@ const TopicDetail = () => {
                     </div>
 
                     {/* Comments Section */}
-                    <DiscussionSection topicId={id} />
+                    <DiscussionSection topicId={id} sectionOwnerId={topic.author_id} />
                 </div>
 
                 {/* Sidebar */}

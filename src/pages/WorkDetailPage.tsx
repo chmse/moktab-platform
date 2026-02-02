@@ -3,10 +3,14 @@ import { useParams, Link } from 'react-router-dom';
 import { supabase } from '../lib/supabaseClient';
 import AISidebar from '../components/works/AISidebar';
 import DiscussionSection from '../components/works/DiscussionSection';
-import { ChevronRight, Calendar, User, Bot, X, Bookmark, BookOpen } from 'lucide-react';
+import { ChevronRight, Calendar, User, Bot, X, Bookmark, BookOpen, Trash2, Archive, Edit } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const WorkDetailPage = () => {
     const { id } = useParams<{ id: string }>();
+    const navigate = useNavigate();
+    const { profile, user } = useAuth();
     const [showMobileSidebar, setShowMobileSidebar] = useState(false);
     const [work, setWork] = useState<any | null>(null);
     const [loading, setLoading] = useState(true);
@@ -54,8 +58,6 @@ const WorkDetailPage = () => {
     const handleSaveWork = async () => {
         if (!id || saving) return;
         setSaving(true);
-        const { data: { user } } = await supabase.auth.getUser();
-
         if (!user) {
             alert('يرجى تسجيل الدخول لحفظ الأعمال');
             setSaving(false);
@@ -76,6 +78,28 @@ const WorkDetailPage = () => {
             if (!error) setIsSaved(true);
         }
         setSaving(false);
+    };
+
+    const handleDeleteWork = async () => {
+        if (!window.confirm('هل أنت متأكد من حذف هذا العمل نهائياً؟')) return;
+
+        const { error } = await supabase.from('works').delete().eq('id', id);
+        if (!error) {
+            alert('تم الحذف بنجاح');
+            navigate('/works');
+        } else {
+            alert('خطأ في الحذف: ' + error.message);
+        }
+    };
+
+    const handleArchiveWork = async () => {
+        if (!window.confirm('هل تريد أرشفة هذا العمل؟')) return;
+
+        const { error } = await supabase.from('works').update({ status: 'archived' }).eq('id', id);
+        if (!error) {
+            alert('تمت الأرشفة بنجاح');
+            setWork({ ...work, status: 'archived' });
+        }
     };
 
     if (loading) {
@@ -102,6 +126,43 @@ const WorkDetailPage = () => {
 
     return (
         <div className="container" style={{ padding: '3rem 1rem', paddingTop: '100px', position: 'relative' }}>
+            {/* Admin Control Bar */}
+            {(profile?.is_admin || profile?.role === 'admin') && (
+                <div style={{
+                    backgroundColor: '#000033',
+                    color: 'white',
+                    padding: '1rem 2rem',
+                    borderRadius: '12px',
+                    marginBottom: '2rem',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    border: '1px solid #c5a059',
+                    boxShadow: '0 4px 15px rgba(0,0,0,0.2)'
+                }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                        <div style={{ padding: '0.4rem', backgroundColor: '#c5a059', borderRadius: '8px', color: '#000033' }}>
+                            <Edit size={20} />
+                        </div>
+                        <span style={{ fontWeight: 'bold' }}>لوحة التحكم الإدارية</span>
+                    </div>
+                    <div style={{ display: 'flex', gap: '1rem' }}>
+                        <button className="btn-premium" style={{ padding: '0.5rem 1.5rem', fontSize: '0.9rem' }}>تعديل البحث</button>
+                        <button
+                            onClick={handleArchiveWork}
+                            style={{ backgroundColor: 'rgba(197, 160, 89, 0.1)', color: '#c5a059', border: '1px solid #c5a059', padding: '0.5rem 1.5rem', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+                        >
+                            <Archive size={18} /> أرشفة
+                        </button>
+                        <button
+                            onClick={handleDeleteWork}
+                            style={{ backgroundColor: '#ef4444', color: 'white', border: 'none', padding: '0.5rem 1.5rem', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+                        >
+                            <Trash2 size={18} /> حذف
+                        </button>
+                    </div>
+                </div>
+            )}
             <div style={{ marginBottom: '2rem' }}>
                 <Link to="/works" style={{ display: 'flex', alignItems: 'center', color: 'var(--color-text-secondary)', fontSize: '0.9rem', width: 'fit-content' }}>
                     <ChevronRight size={16} />
@@ -220,7 +281,7 @@ const WorkDetailPage = () => {
                         )}
                     </div>
 
-                    <DiscussionSection workId={id} />
+                    <DiscussionSection workId={id} sectionOwnerId={work.professor_id} />
                 </div>
 
                 {/* Desktop Sidebar */}

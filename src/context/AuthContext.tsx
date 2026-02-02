@@ -6,7 +6,7 @@ interface AuthProfile {
     id: string;
     full_name: string;
     avatar_url: string | null;
-    role: 'professor' | 'student' | null;
+    role: 'professor' | 'student' | 'admin' | null;
     is_admin: boolean;
     rank?: string;
     department?: string;

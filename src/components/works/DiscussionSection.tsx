@@ -19,16 +19,19 @@ interface Comment {
 interface DiscussionSectionProps {
     workId?: string;
     topicId?: string;
+    sectionOwnerId?: string; // ID of the work/topic owner
 }
 
-const DiscussionSection = ({ workId, topicId }: DiscussionSectionProps) => {
-    const { user } = useAuth();
+const DiscussionSection = ({ workId, topicId, sectionOwnerId }: DiscussionSectionProps) => {
+    const { user, profile } = useAuth();
     const [comments, setComments] = useState<Comment[]>([]);
     const [newComment, setNewComment] = useState('');
     const [replyingTo, setReplyingTo] = useState<string | null>(null);
     const [replyContent, setReplyContent] = useState('');
     const [loading, setLoading] = useState(true);
     const [submitting, setSubmitting] = useState(false);
+    const [editingId, setEditingId] = useState<string | null>(null);
+    const [editContent, setEditContent] = useState('');
 
     const fetchComments = async () => {
         setLoading(true);
@@ -68,7 +71,6 @@ const DiscussionSection = ({ workId, topicId }: DiscussionSectionProps) => {
 
         setSubmitting(true);
         try {
-            console.log('DiscussionSection: Adding comment for user:', user.id);
             const { error } = await supabase
                 .from('comments')
                 .insert([{
@@ -96,8 +98,50 @@ const DiscussionSection = ({ workId, topicId }: DiscussionSectionProps) => {
         }
     };
 
+    const handleDeleteComment = async (id: string) => {
+        if (!window.confirm('هل أنت متأكد من حذف هذا التعليق؟')) return;
+
+        try {
+            const { error } = await supabase
+                .from('comments')
+                .delete()
+                .eq('id', id);
+
+            if (error) throw error;
+
+            // Instant UI update
+            setComments(prev => prev.filter(c => c.id !== id));
+        } catch (error: any) {
+            alert('خطأ في الحذف: ' + error.message);
+        }
+    };
+
+    const handleUpdateComment = async (id: string) => {
+        if (!editContent.trim()) return;
+
+        try {
+            const { error } = await supabase
+                .from('comments')
+                .update({ content: editContent.trim() })
+                .eq('id', id);
+
+            if (error) throw error;
+
+            // Instant UI update
+            setComments(prev => prev.map(c => c.id === id ? { ...c, content: editContent.trim() } : c));
+            setEditingId(null);
+        } catch (error: any) {
+            alert('خطأ في التعديل: ' + error.message);
+        }
+    };
+
     const renderComment = (comment: Comment, isReply = false) => {
         const isProfessor = comment?.profiles?.role === 'professor';
+        const isAuthor = user?.id === comment.author_id;
+        const isOwner = user?.id === sectionOwnerId;
+        const isAdmin = profile?.is_admin || profile?.role === 'admin';
+        const canModerate = isAuthor || isOwner || isAdmin;
+        const isEditing = editingId === comment.id;
 
         return (
             <div key={comment.id} style={{
@@ -172,9 +216,24 @@ const DiscussionSection = ({ workId, topicId }: DiscussionSectionProps) => {
                         </span>
                     </div>
                 </div>
-                <p style={{ color: 'var(--color-text-primary)', lineHeight: '1.6', margin: '0 0 1rem 0' }}>{comment?.content}</p>
 
-                <div style={{ display: 'flex', gap: '1rem' }}>
+                {isEditing ? (
+                    <div style={{ marginBottom: '1rem' }}>
+                        <textarea
+                            value={editContent}
+                            onChange={(e) => setEditContent(e.target.value)}
+                            style={{ width: '100%', minHeight: '80px', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-accent)', marginBottom: '0.5rem', outline: 'none' }}
+                        />
+                        <div style={{ display: 'flex', gap: '0.5rem' }}>
+                            <button onClick={() => handleUpdateComment(comment.id)} className="btn-premium" style={{ padding: '0.4rem 1rem', fontSize: '0.8rem' }}>حفظ</button>
+                            <button onClick={() => setEditingId(null)} style={{ background: '#f1f5f9', border: 'none', padding: '0.4rem 1rem', borderRadius: '8px', fontSize: '0.8rem' }}>إلغاء</button>
+                        </div>
+                    </div>
+                ) : (
+                    <p style={{ color: 'var(--color-text-primary)', lineHeight: '1.6', margin: '0 0 1rem 0' }}>{comment?.content}</p>
+                )}
+
+                <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
                     <button
                         onClick={() => setReplyingTo(replyingTo === comment.id ? null : comment.id)}
                         style={{ background: 'none', border: 'none', color: 'var(--color-primary)', fontSize: '0.85rem', fontWeight: 'bold', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.3rem' }}
@@ -182,6 +241,26 @@ const DiscussionSection = ({ workId, topicId }: DiscussionSectionProps) => {
                         <CornerDownLeft size={14} />
                         رد
                     </button>
+
+                    {canModerate && !isEditing && (
+                        <div style={{ display: 'flex', gap: '1rem' }}>
+                            <button
+                                onClick={() => {
+                                    setEditingId(comment.id);
+                                    setEditContent(comment.content);
+                                }}
+                                style={{ background: 'none', border: 'none', color: '#64748b', fontSize: '0.8rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.2rem' }}
+                            >
+                                تعديل
+                            </button>
+                            <button
+                                onClick={() => handleDeleteComment(comment.id)}
+                                style={{ background: 'none', border: 'none', color: '#ef4444', fontSize: '0.8rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.2rem' }}
+                            >
+                                حذف
+                            </button>
+                        </div>
+                    )}
                 </div>
 
                 {replyingTo === comment.id && (
