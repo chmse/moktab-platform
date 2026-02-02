@@ -66,12 +66,14 @@ const LoginPage = () => {
             }
         } catch (err: any) {
             console.error('LoginPage: Login process failed:', err);
-            setLoading(false); // Only stop loading if we DON'T navigate
             if (err.message.includes('Invalid login credentials')) {
                 setError('البريد الإلكتروني أو كلمة المرور غير صحيحة');
             } else {
                 setError('حدث خطأ أثناء تسجيل الدخول. يرجى المحاولة مرة أخرى.');
             }
+        } finally {
+            // Note: We only reach here if navigation didn't happen
+            setLoading(false);
         }
     };
 

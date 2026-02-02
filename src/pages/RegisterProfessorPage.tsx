@@ -70,7 +70,6 @@ const RegisterProfessorPage = () => {
             }
         } catch (err: any) {
             console.error('RegisterProfessor: Process failed:', err);
-            setLoading(false); // Only stop loading if we DON'T navigate
             // Professional Arabic error messages
             if (err.message.includes('User already registered')) {
                 setError('هذا البريد الإلكتروني مسجل بالفعل');
@@ -79,6 +78,8 @@ const RegisterProfessorPage = () => {
             } else {
                 setError('حدث خطأ أثناء التسجيل. يرجى المحاولة مرة أخرى.');
             }
+        } finally {
+            setLoading(false);
         }
     };
 

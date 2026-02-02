@@ -71,20 +71,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         supabase.auth.getSession().then(({ data: { session }, error }) => {
             if (error) {
                 console.error('AuthContext: getSession error:', error);
-                setLoading(false);
                 return;
             }
             const currentUser = session?.user ?? null;
             setUser(currentUser);
             if (currentUser) {
                 fetchProfile(currentUser.id);
-            } else {
-                console.log('AuthContext: No active session found.');
-                setLoading(false);
             }
         }).catch((err) => {
             console.error('AuthContext: getSession promise rejected:', err);
-            setLoading(false);
+        }).finally(() => {
+            // Only set false if we don't have a user, otherwise fetchProfile will handle it
+            supabase.auth.getSession().then(({ data: { session } }) => {
+                if (!session?.user) setLoading(false);
+            });
         });
 
         // 2. Listen for auth changes

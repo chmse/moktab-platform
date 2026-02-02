@@ -36,22 +36,27 @@ const SettingsPage = () => {
         setLoading(true);
         setMessage(null);
 
-        const { error } = await supabase
-            .from('profiles')
-            .update({
-                full_name: fullName,
-                bio,
-                specialty,
-                avatar_url: avatarUrl
-            })
-            .eq('id', authUser?.id);
+        try {
+            const { error } = await supabase
+                .from('profiles')
+                .update({
+                    full_name: fullName,
+                    bio,
+                    specialty,
+                    avatar_url: avatarUrl
+                })
+                .eq('id', authUser?.id);
 
-        if (error) {
-            setMessage({ type: 'error', text: 'حدث خطأ أثناء تحديث الملف الشخصي' });
-        } else {
-            setMessage({ type: 'success', text: 'تم تحديث البيانات الشخصية بنجاح' });
+            if (error) {
+                setMessage({ type: 'error', text: 'حدث خطأ أثناء تحديث الملف الشخصي. يرجى المحاولة مرة أخرى.' });
+            } else {
+                setMessage({ type: 'success', text: 'تم تحديث البيانات الشخصية بنجاح' });
+            }
+        } catch (err: any) {
+            setMessage({ type: 'error', text: 'خطأ غير متوقع: ' + err.message });
+        } finally {
+            setLoading(false);
         }
-        setLoading(false);
     };
 
     const handleUpdateSecurity = async (e: React.FormEvent) => {
@@ -59,31 +64,35 @@ const SettingsPage = () => {
         setLoading(true);
         setMessage(null);
 
-        if (newPassword && newPassword !== confirmPassword) {
-            setMessage({ type: 'error', text: 'كلمات المرور غير متطابقة' });
+        try {
+            if (newPassword && newPassword !== confirmPassword) {
+                setMessage({ type: 'error', text: 'كلمات المرور غير متطابقة' });
+                return;
+            }
+
+            const updateData: any = {};
+            if (email !== authUser?.email) updateData.email = email;
+            if (newPassword) updateData.password = newPassword;
+
+            if (Object.keys(updateData).length === 0) {
+                setMessage({ type: 'error', text: 'لم يتم تغيير أي بيانات لتحديثها' });
+                return;
+            }
+
+            const { error } = await supabase.auth.updateUser(updateData);
+
+            if (error) {
+                setMessage({ type: 'error', text: `فشل التحديث: ${error.message}` });
+            } else {
+                setMessage({ type: 'success', text: 'تم تحديث بيانات الحساب والأمان بنجاح' });
+                setNewPassword('');
+                setConfirmPassword('');
+            }
+        } catch (err: any) {
+            setMessage({ type: 'error', text: 'خطأ في الأمان: ' + err.message });
+        } finally {
             setLoading(false);
-            return;
         }
-
-        const updateData: any = {};
-        if (email !== authUser?.email) updateData.email = email;
-        if (newPassword) updateData.password = newPassword;
-
-        if (Object.keys(updateData).length === 0) {
-            setLoading(false);
-            return;
-        }
-
-        const { error } = await supabase.auth.updateUser(updateData);
-
-        if (error) {
-            setMessage({ type: 'error', text: error.message });
-        } else {
-            setMessage({ type: 'success', text: 'تم تحديث بيانات الحساب بنجاح' });
-            setNewPassword('');
-            setConfirmPassword('');
-        }
-        setLoading(false);
     };
 
     const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -106,10 +115,19 @@ const SettingsPage = () => {
                 .from('avatars')
                 .getPublicUrl(filePath);
 
+            // CRITICAL FIX: Update profiles table immediately to persist the image
+            const { error: updateError } = await supabase
+                .from('profiles')
+                .update({ avatar_url: publicUrl })
+                .eq('id', authUser?.id);
+
+            if (updateError) throw updateError;
+
             setAvatarUrl(publicUrl);
-            setMessage({ type: 'success', text: 'تم رفع الصورة بنجاح!' });
+            setMessage({ type: 'success', text: 'تم رفع وحفظ صورة الملف الشخصي بنجاح!' });
         } catch (error: any) {
-            setMessage({ type: 'error', text: 'فشل الرفع: ' + error.message });
+            console.error('Avatar upload error:', error);
+            setMessage({ type: 'error', text: 'فشل في رفع وحفظ الصورة: ' + error.message });
         } finally {
             setLoading(false);
         }

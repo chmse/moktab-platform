@@ -79,14 +79,15 @@ const RegisterStudentPage = () => {
             }
         } catch (err: any) {
             console.error('RegisterStudent: Process failed:', err);
-            setLoading(false); // Only stop loading if we DON'T navigate
             if (err.message.includes('User already registered')) {
                 setError('هذا البريد الإلكتروني مسجل بالفعل');
             } else if (err.message.includes('Password should be at least 6 characters')) {
-                setError('يجب أن تكون كلمة المرور 6 أحرف على الألقل');
+                setError('يجب أن تكون كلمة المرور 6 أحرف على الأقل');
             } else {
                 setError('حدث خطأ أثناء التسجيل. يرجى المحاولة مرة أخرى.');
             }
+        } finally {
+            setLoading(false);
         }
     };
 
