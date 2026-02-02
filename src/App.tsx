@@ -20,6 +20,7 @@ import TopicDetail from './pages/TopicDetail';
 import AdminConsole from './pages/AdminConsole';
 import SearchPage from './pages/SearchPage';
 import UnitHubPage from './pages/UnitHubPage';
+import SettingsPage from './pages/SettingsPage';
 
 import StudentProfilePage from './pages/StudentProfilePage';
 
@@ -89,6 +90,14 @@ function App() {
           <Route path="community/:id" element={<TopicDetail />} />
           <Route path="about" element={<AboutPage />} />
           <Route path="hub/:unitId" element={<UnitHubPage />} />
+          <Route
+            path="settings"
+            element={
+              <ProtectedRoute>
+                <SettingsPage />
+              </ProtectedRoute>
+            }
+          />
           <Route path="coming-soon" element={<ComingSoon />} />
 
           <Route

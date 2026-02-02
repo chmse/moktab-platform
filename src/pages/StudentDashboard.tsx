@@ -27,7 +27,7 @@ const StatCard = ({ icon: Icon, label, value, color }: any) => (
 
 const StudentDashboard = () => {
     const { profile } = useAuth();
-    const [activeTab, setActiveTab] = useState<'library' | 'feed' | 'questions' | 'settings'>('library');
+    const [activeTab, setActiveTab] = useState<'library' | 'questions'>('library');
     const [savedWorks, setSavedWorks] = useState<any[]>([]);
     const [myQuestions, setMyQuestions] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
@@ -73,10 +73,6 @@ const StudentDashboard = () => {
                     isAnswered: false
                 })));
             }
-        } else {
-            // Demo Fallback
-            const { data: works } = await supabase.from('works').select('*').limit(3);
-            if (works) setSavedWorks(works);
         }
         setLoading(false);
     };
@@ -144,29 +140,10 @@ const StudentDashboard = () => {
                     <HelpCircle size={20} />
                     أسئلتي
                 </button>
-                <button
-                    onClick={() => setActiveTab('settings')}
-                    style={{
-                        padding: '1rem 2rem',
-                        fontSize: '1.1rem',
-                        fontWeight: 'bold',
-                        color: activeTab === 'settings' ? 'var(--color-primary)' : 'var(--color-text-secondary)',
-                        borderBottom: activeTab === 'settings' ? '3px solid var(--color-primary)' : '3px solid transparent',
-                        marginBottom: '-2px',
-                        display: 'flex', alignItems: 'center', gap: '0.5rem',
-                        background: 'none', border: 'none', cursor: 'pointer'
-                    }}
-                >
-                    <Clock size={20} />
-                    الإعدادات
-                </button>
             </div>
 
             {/* Tab Content */}
             <div className="glass-panel" style={{ padding: '2rem', backgroundColor: 'white', minHeight: '400px' }}>
-
-                {/* Settings Tab */}
-                {activeTab === 'settings' && <ProfileSettings />}
 
                 {/* Library Tab */}
                 {activeTab === 'library' && (
@@ -253,210 +230,6 @@ const StudentDashboard = () => {
                 )}
             </div>
         </div>
-    );
-};
-
-const ProfileSettings = () => {
-    const [loading, setLoading] = useState(false);
-    const [fullName, setFullName] = useState('');
-    const [department, setDepartment] = useState('');
-    const [level, setLevel] = useState('');
-    const [specialty, setSpecialty] = useState('');
-    const [avatarUrl, setAvatarUrl] = useState('');
-    const [bio, setBio] = useState('');
-    const [skills, setSkills] = useState('');
-    const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
-
-    useEffect(() => {
-        const fetchCurrentProfile = async () => {
-            const { data: { user } } = await supabase.auth.getUser();
-            if (user) {
-                const { data } = await supabase.from('profiles').select('*').eq('id', user.id).single();
-                if (data) {
-                    setFullName(data.full_name || '');
-                    setDepartment(data.department || '');
-                    setLevel(data.level || '');
-                    setSpecialty(data.specialty || '');
-                    setAvatarUrl(data.avatar_url || '');
-                    setBio(data.bio || '');
-                    setSkills(Array.isArray(data.skills) ? data.skills.join(', ') : '');
-                }
-            }
-        };
-        fetchCurrentProfile();
-    }, []);
-
-    const handleUpdateProfile = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setLoading(true);
-        setMessage(null);
-
-        const { data: { user } } = await supabase.auth.getUser();
-        if (!user) return;
-
-        const skillsArray = skills.split(',').map(i => i.trim()).filter(i => i !== '');
-
-        const { error } = await supabase
-            .from('profiles')
-            .update({
-                full_name: fullName,
-                department,
-                level,
-                specialty,
-                avatar_url: avatarUrl,
-                bio,
-                skills: skillsArray
-            })
-            .eq('id', user.id);
-
-        if (error) {
-            setMessage({ type: 'error', text: 'حدث خطأ أثناء تحديث الملف الشخصي' });
-        } else {
-            setMessage({ type: 'success', text: 'تم تحديث الملف الشخصي الأكاديمي بنجاح' });
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-        setLoading(false);
-    };
-
-    return (
-        <form onSubmit={handleUpdateProfile} className="animate-fade-in" style={{ maxWidth: '800px', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-            <div style={{ borderBottom: '2px solid var(--color-border)', paddingBottom: '1rem', marginBottom: '1rem' }}>
-                <h2 style={{ color: 'var(--color-primary)', fontSize: '1.8rem', fontWeight: '900' }}>الهوية الأكاديمية</h2>
-                <p style={{ color: 'var(--color-text-secondary)' }}>أكمل ملفك الشخصي لتظهر كباحث معتمد في المنصة.</p>
-            </div>
-
-            {message && (
-                <div style={{ padding: '1rem', borderRadius: 'var(--radius-md)', backgroundColor: message.type === 'success' ? '#dcfce7' : '#fee2e2', color: message.type === 'success' ? '#166534' : '#991b1b', fontWeight: 'bold' }}>
-                    {message.text}
-                </div>
-            )}
-
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
-                <div>
-                    <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '700', color: 'var(--color-primary)' }}>الاسم الكامل</label>
-                    <input
-                        type="text"
-                        value={fullName}
-                        onChange={(e) => setFullName(e.target.value)}
-                        placeholder="اسمك الثلاثي..."
-                        required
-                        style={{ width: '100%', padding: '0.85rem', borderRadius: '12px', border: '1px solid var(--color-border)', outline: 'none' }}
-                    />
-                </div>
-                <div>
-                    <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '700', color: 'var(--color-primary)' }}>القسم</label>
-                    <input
-                        type="text"
-                        value={department}
-                        onChange={(e) => setDepartment(e.target.value)}
-                        placeholder="مثال: قسم اللغة العربية"
-                        style={{ width: '100%', padding: '0.85rem', borderRadius: '12px', border: '1px solid var(--color-border)', outline: 'none' }}
-                    />
-                </div>
-            </div>
-
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
-                <div>
-                    <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '700', color: 'var(--color-primary)' }}>المستوى الدراسي</label>
-                    <select
-                        value={level}
-                        onChange={(e) => setLevel(e.target.value)}
-                        style={{ width: '100%', padding: '0.85rem', borderRadius: '12px', border: '1px solid var(--color-border)', outline: 'none', backgroundColor: 'white' }}
-                    >
-                        <option value="">اختر المستوى...</option>
-                        <option value="licence">ليسانس</option>
-                        <option value="master">ماستر</option>
-                        <option value="phd">دكتوراه</option>
-                    </select>
-                </div>
-                <div>
-                    <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '700', color: 'var(--color-primary)' }}>التخصص الدقيق</label>
-                    <input
-                        type="text"
-                        value={specialty}
-                        onChange={(e) => setSpecialty(e.target.value)}
-                        placeholder="مثال: اللسانيات التطبيقية"
-                        style={{ width: '100%', padding: '0.85rem', borderRadius: '12px', border: '1px solid var(--color-border)', outline: 'none' }}
-                    />
-                </div>
-            </div>
-
-            <div>
-                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '700', color: 'var(--color-primary)' }}>رابط الصورة الشخصية (URL)</label>
-                <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-                    <input
-                        type="url"
-                        value={avatarUrl}
-                        onChange={(e) => setAvatarUrl(e.target.value)}
-                        placeholder="أدخل رابط صورتك..."
-                        style={{ flex: 1, padding: '0.85rem', borderRadius: '12px', border: '1px solid var(--color-border)', outline: 'none' }}
-                    />
-                    <label className="btn-premium" style={{ cursor: 'pointer', whiteSpace: 'nowrap', padding: '0.85rem 1.5rem' }}>
-                        رفع صورة
-                        <input
-                            type="file"
-                            accept="image/*"
-                            style={{ display: 'none' }}
-                            onChange={async (e) => {
-                                const file = e.target.files?.[0];
-                                if (!file) return;
-                                try {
-                                    setLoading(true);
-                                    const { data: { user } } = await supabase.auth.getUser();
-                                    if (!user) return;
-
-                                    const fileExt = file.name.split('.').pop();
-                                    const fileName = `${user.id}-${Math.random()}.${fileExt}`;
-                                    const filePath = `avatars/${fileName}`;
-
-                                    const { error: uploadError } = await supabase.storage
-                                        .from('avatars')
-                                        .upload(filePath, file);
-
-                                    if (uploadError) throw uploadError;
-
-                                    const { data: { publicUrl } } = supabase.storage
-                                        .from('avatars')
-                                        .getPublicUrl(filePath);
-
-                                    setAvatarUrl(publicUrl);
-                                    setMessage({ type: 'success', text: 'تم رفع الصورة بنجاح!' });
-                                } catch (error: any) {
-                                    setMessage({ type: 'error', text: 'فشل الرفع: ' + error.message });
-                                } finally {
-                                    setLoading(false);
-                                }
-                            }}
-                        />
-                    </label>
-                </div>
-            </div>
-
-            <div>
-                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '700', color: 'var(--color-primary)' }}>السيرة العلمية (Bio)</label>
-                <textarea
-                    value={bio}
-                    onChange={(e) => setBio(e.target.value)}
-                    placeholder="اكتب نبذة قصيرة عن مسارك الأكاديمي..."
-                    style={{ width: '100%', minHeight: '120px', padding: '1rem', borderRadius: '12px', border: '1px solid var(--color-border)', outline: 'none', fontFamily: 'inherit', resize: 'vertical' }}
-                />
-            </div>
-
-            <div>
-                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '700', color: 'var(--color-primary)' }}>المهارات (افصل بينها بفاصلة)</label>
-                <input
-                    type="text"
-                    value={skills}
-                    onChange={(e) => setSkills(e.target.value)}
-                    placeholder="تحليل البيانات، الكتابة الأكاديمية، اللغات..."
-                    style={{ width: '100%', padding: '0.85rem', borderRadius: '12px', border: '1px solid var(--color-border)', outline: 'none' }}
-                />
-            </div>
-
-            <button type="submit" disabled={loading} className="btn-premium" style={{ width: '100%', padding: '1.25rem', fontSize: '1.1rem', marginTop: '1rem' }}>
-                {loading ? 'جاري تحديث هويتك الأكاديمية...' : 'حفظ ونشر الملف الأكاديمي'}
-            </button>
-        </form>
     );
 };
 

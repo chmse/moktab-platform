@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { User as UserIcon, LogOut, LayoutDashboard, Shield, UserCircle, ChevronDown, Menu, X, BookOpen, GraduationCap, Calendar, FlaskConical, Info, Cpu } from 'lucide-react';
+import { User as UserIcon, LogOut, LayoutDashboard, Shield, UserCircle, ChevronDown, Menu, X, BookOpen, GraduationCap, Calendar, FlaskConical, Info, Cpu, Settings } from 'lucide-react';
 
 const Navbar = () => {
     const { user, profile, loading, signOut } = useAuth();
@@ -51,8 +51,27 @@ const Navbar = () => {
                 padding: '0 1rem'
             }}>
 
-                {/* LEFT COLUMN: User Profile / Login */}
+                {/* RIGHT COLUMN: Hamburger (Starting Column in RTL) */}
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
+                    <button
+                        className="mobile-hamburger"
+                        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                        style={{ color: '#c5a059', padding: '0.25rem', display: 'flex', alignItems: 'center', cursor: 'pointer', background: 'none', border: 'none' }}
+                    >
+                        {isMobileMenuOpen ? <X size={32} /> : <Menu size={32} />}
+                    </button>
+                </div>
+
+                {/* CENTER COLUMN: Logo */}
+                <div style={{ textAlign: 'center' }}>
+                    <Link to="/" style={{ textDecoration: 'none', color: 'white' }}>
+                        <div className="navbar-logo-text" style={{ fontSize: '1.25rem', fontWeight: '900', color: '#c5a059', lineHeight: '1.1' }}>مَنْصَة مَكْتَب</div>
+                        <div className="navbar-logo-sub" style={{ fontSize: '0.8rem', opacity: 0.8, letterSpacing: '1px' }}>الأكاديمية</div>
+                    </Link>
+                </div>
+
+                {/* LEFT COLUMN: User Profile / Login (Ending Column in RTL) */}
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
                     <div ref={menuRef} style={{ position: 'relative' }}>
                         {!loading && (
                             user ? (
@@ -92,6 +111,9 @@ const Navbar = () => {
                                             <Link to={profile?.role === 'professor' ? "/dashboard" : "/student-dashboard"} onClick={() => setIsMenuOpen(false)} className="dropdown-item" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.75rem 1rem', textDecoration: 'none', color: 'inherit', borderRadius: 'var(--radius-md)' }}>
                                                 <LayoutDashboard size={18} color="var(--color-primary)" /> <span>لوحة التحكم</span>
                                             </Link>
+                                            <Link to="/settings" onClick={() => setIsMenuOpen(false)} className="dropdown-item" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.75rem 1rem', textDecoration: 'none', color: 'inherit', borderRadius: 'var(--radius-md)' }}>
+                                                <Settings size={18} color="var(--color-primary)" /> <span>إعدادات الملف الشخصي</span>
+                                            </Link>
                                             {profile?.is_admin && (
                                                 <Link to="/admin" onClick={() => setIsMenuOpen(false)} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.75rem 1rem', textDecoration: 'none', color: '#C5A059', fontWeight: 'bold', borderRadius: 'var(--radius-md)' }} className="dropdown-item">
                                                     <Shield size={18} color="#C5A059" /> <span>لوحة الإدارة</span>
@@ -116,25 +138,6 @@ const Navbar = () => {
                             )
                         )}
                     </div>
-                </div>
-
-                {/* CENTER COLUMN: Logo */}
-                <div style={{ textAlign: 'center' }}>
-                    <Link to="/" style={{ textDecoration: 'none', color: 'white' }}>
-                        <div className="navbar-logo-text" style={{ fontSize: '1.25rem', fontWeight: '900', color: '#c5a059', lineHeight: '1.1' }}>مَنْصَة مَكْتَب</div>
-                        <div className="navbar-logo-sub" style={{ fontSize: '0.8rem', opacity: 0.8, letterSpacing: '1px' }}>الأكاديمية</div>
-                    </Link>
-                </div>
-
-                {/* RIGHT COLUMN: Hamburger */}
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
-                    <button
-                        className="mobile-hamburger"
-                        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                        style={{ color: '#c5a059', padding: '0.25rem', display: 'flex', alignItems: 'center', cursor: 'pointer', background: 'none', border: 'none' }}
-                    >
-                        {isMobileMenuOpen ? <X size={32} /> : <Menu size={32} />}
-                    </button>
                 </div>
 
             </div>
