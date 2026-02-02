@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { User as UserIcon, LogOut, LayoutDashboard, Shield, UserCircle, ChevronDown, Menu, X, BookOpen, GraduationCap, Calendar, FlaskConical, Info, Cpu, Settings, Feather } from 'lucide-react';
+import { User as UserIcon, LogOut, LayoutDashboard, Shield, UserCircle, ChevronDown, Menu, X, BookOpen, GraduationCap, Calendar, FlaskConical, Info, Cpu, Settings, Feather, Target } from 'lucide-react';
 
 const Navbar = () => {
     const { user, profile, loading, signOut } = useAuth();
@@ -111,6 +111,11 @@ const Navbar = () => {
                                             <Link to={profile?.role === 'professor' ? "/dashboard" : "/student-dashboard"} onClick={() => setIsMenuOpen(false)} className="dropdown-item" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.75rem 1rem', textDecoration: 'none', color: 'inherit', borderRadius: 'var(--radius-md)' }}>
                                                 <LayoutDashboard size={18} color="var(--color-primary)" /> <span>لوحة التحكم</span>
                                             </Link>
+                                            {profile?.role === 'professor' && (
+                                                <Link to="/research-hub" onClick={() => setIsMenuOpen(false)} className="dropdown-item" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.75rem 1rem', textDecoration: 'none', color: 'inherit', borderRadius: 'var(--radius-md)' }}>
+                                                    <Target size={18} color="var(--color-accent)" /> <span>منصة تحكيم البحوث</span>
+                                                </Link>
+                                            )}
                                             <Link to="/settings" onClick={() => setIsMenuOpen(false)} className="dropdown-item" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.75rem 1rem', textDecoration: 'none', color: 'inherit', borderRadius: 'var(--radius-md)' }}>
                                                 <Settings size={18} color="var(--color-primary)" /> <span>إعدادات الملف الشخصي</span>
                                             </Link>

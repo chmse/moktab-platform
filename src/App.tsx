@@ -25,6 +25,7 @@ import SettingsPage from './pages/SettingsPage';
 import StudentProfilePage from './pages/StudentProfilePage';
 import CreationsFeed from './pages/CreationsFeed';
 import CreationDetail from './pages/CreationDetail';
+import StudentResearchHub from './pages/StudentResearchHub';
 
 import { useAuth } from './context/AuthContext';
 
@@ -74,6 +75,14 @@ function App() {
             element={
               <ProtectedRoute role="professor">
                 <ProfessorDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="research-hub"
+            element={
+              <ProtectedRoute role="professor">
+                <StudentResearchHub />
               </ProtectedRoute>
             }
           />

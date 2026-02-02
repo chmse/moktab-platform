@@ -347,13 +347,16 @@ const StudentDashboard = () => {
                                             <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold', color: 'var(--color-primary)' }}>جنس العمل</label>
                                             <select
                                                 value={category}
-                                                onChange={(e) => setCategory(e.target.value as any)}
+                                                onChange={(e) => {
+                                                    console.log('Category changed to:', e.target.value);
+                                                    setCategory(e.target.value as any);
+                                                }}
                                                 style={{ width: '100%', padding: '1rem', borderRadius: '12px', border: '1px solid #dcd3bc', outline: 'none', fontSize: '1.1rem', backgroundColor: 'rgba(255,255,255,0.5)' }}
                                             >
                                                 <option value="Story">قصة قصيرة</option>
                                                 <option value="Poem">قصيدة شعرية</option>
                                                 <option value="Essay">خاطرة أدبية</option>
-                                                <option value="ResearchPaper">دراسة / مقال بحثي</option>
+                                                <option value="ResearchPaper">دراسة بحثية (للمراجعة العلمية)</option>
                                             </select>
                                         </div>
                                         <div>
@@ -420,12 +423,33 @@ const StudentDashboard = () => {
                                                     <span style={{ fontSize: '0.8rem', color: 'var(--color-accent)', fontWeight: 'bold' }}>
                                                         {creation.category === 'Poem' ? 'قصيدة' : creation.category === 'Story' ? 'قصة' : creation.category === 'Essay' ? 'خاطرة' : 'مقال بحثي'}
                                                     </span>
-                                                    <span style={{ fontSize: '0.75rem', color: 'var(--color-text-secondary)' }}>{new Date(creation.created_at).toLocaleDateString('ar-EG')}</span>
+                                                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.25rem' }}>
+                                                        <span style={{ fontSize: '0.75rem', color: 'var(--color-text-secondary)' }}>{new Date(creation.created_at).toLocaleDateString('ar-EG')}</span>
+                                                        <span style={{
+                                                            fontSize: '0.7rem',
+                                                            padding: '2px 8px',
+                                                            borderRadius: '4px',
+                                                            fontWeight: 'bold',
+                                                            backgroundColor: creation.status === 'approved' ? '#dcfce7' : '#fef9c3',
+                                                            color: creation.status === 'approved' ? '#166534' : '#854d0e'
+                                                        }}>
+                                                            {creation.status === 'approved' ? 'تمت المراجعة والنشر' : 'قيد التحكيم والمراجعة'}
+                                                        </span>
+                                                    </div>
                                                 </div>
                                                 <h3 style={{ fontWeight: '900', fontSize: '1.3rem', color: 'var(--color-primary)', fontFamily: 'serif', marginTop: '0.5rem' }}>{creation.title}</h3>
                                                 {creation.specialty && (
                                                     <div style={{ fontSize: '0.85rem', color: 'var(--color-text-secondary)', marginTop: '0.25rem' }}>
                                                         <Target size={14} style={{ display: 'inline', verticalAlign: 'middle', marginLeft: '4px' }} /> التخصص: {creation.specialty}
+                                                    </div>
+                                                )}
+
+                                                {/* Professor Feedback Section */}
+                                                {(creation.method_notes || creation.lang_notes) && (
+                                                    <div style={{ marginTop: '1rem', padding: '1rem', backgroundColor: '#f8fafc', borderRadius: '12px', border: '1px dashed #cbd5e1' }}>
+                                                        <p style={{ fontSize: '0.8rem', fontWeight: 'bold', color: 'var(--color-primary)', marginBottom: '0.5rem' }}>ملاحظات الأستاذ المحكم:</p>
+                                                        {creation.method_notes && <p style={{ fontSize: '0.75rem', color: '#475569', marginBottom: '0.3rem' }}>• <strong>المنهجية:</strong> {creation.method_notes}</p>}
+                                                        {creation.lang_notes && <p style={{ fontSize: '0.75rem', color: '#475569' }}>• <strong>اللغوية:</strong> {creation.lang_notes}</p>}
                                                     </div>
                                                 )}
                                             </div>

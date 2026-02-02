@@ -17,7 +17,8 @@ const CreationsFeed = () => {
                         *,
                         profiles:student_id (full_name, id)
                     `)
-                    .eq('status', 'approved')
+                    .in('category', ['Story', 'Poem', 'Essay'])
+                    .eq('status', 'published')
                     .order('created_at', { ascending: false });
 
                 // Fallback: if no approved works, fetch all published works
