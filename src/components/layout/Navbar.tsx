@@ -111,7 +111,7 @@ const Navbar = () => {
                                             <Link to={profile?.role === 'professor' ? "/dashboard" : "/student-dashboard"} onClick={() => setIsMenuOpen(false)} className="dropdown-item" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.75rem 1rem', textDecoration: 'none', color: 'inherit', borderRadius: 'var(--radius-md)' }}>
                                                 <LayoutDashboard size={18} color="var(--color-primary)" /> <span>لوحة التحكم</span>
                                             </Link>
-                                            {profile?.role === 'professor' && (
+                                            {(profile?.role === 'professor' || profile?.is_admin) && (
                                                 <Link to="/research-hub" onClick={() => setIsMenuOpen(false)} className="dropdown-item" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.75rem 1rem', textDecoration: 'none', color: 'inherit', borderRadius: 'var(--radius-md)' }}>
                                                     <Target size={18} color="var(--color-accent)" /> <span>منصة تحكيم البحوث</span>
                                                 </Link>

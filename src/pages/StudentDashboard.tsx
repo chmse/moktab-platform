@@ -117,7 +117,7 @@ const StudentDashboard = () => {
                     category,
                     specialty: specialty.trim(),
                     student_id: profile?.id,
-                    status: 'published'
+                    status: category === 'ResearchPaper' ? 'pending' : 'published'
                 }]);
 
             if (error) throw error;

@@ -23,12 +23,16 @@ const StudentResearchHub = () => {
             .from('student_creations')
             .select('*, profiles:student_id(full_name, department)')
             .eq('category', 'ResearchPaper')
-            .eq('status', 'published') // Published but not yet approved
+            .eq('status', 'pending') // STRICT: Only pending for review
             .order('created_at', { ascending: false });
 
         if (data && !error) setPendingWorks(data);
         setLoading(false);
     };
+
+    if (profile && profile.role !== 'professor' && !profile.is_admin) {
+        return <div style={{ padding: '5rem', textAlign: 'center' }}>الوصول غير مصرح به.</div>;
+    }
 
     useEffect(() => {
         fetchPending();

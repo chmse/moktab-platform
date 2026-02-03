@@ -49,7 +49,7 @@ const ProtectedRoute = ({ children, role }: { children: React.ReactNode; role?: 
 };
 
 function App() {
-  const { loading } = useAuth();
+  const { profile, loading } = useAuth();
 
   if (loading) {
     return (
@@ -82,7 +82,7 @@ function App() {
             path="research-hub"
             element={
               <ProtectedRoute role="professor">
-                <StudentResearchHub />
+                {(profile?.role === 'professor' || profile?.is_admin) ? <StudentResearchHub /> : <Navigate to="/" replace />}
               </ProtectedRoute>
             }
           />

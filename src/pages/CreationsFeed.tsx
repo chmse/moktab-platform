@@ -11,7 +11,8 @@ const CreationsFeed = () => {
         const fetchCreations = async () => {
             try {
                 // First attempt: approved works
-                let { data, error } = await supabase
+                // Strict filtering for creative categories only
+                let { data } = await supabase
                     .from('student_creations')
                     .select(`
                         *,
@@ -21,19 +22,16 @@ const CreationsFeed = () => {
                     .eq('status', 'published')
                     .order('created_at', { ascending: false });
 
-                // Fallback: if no approved works, fetch all published works
-                if (!data || data.length === 0 || error) {
-                    const { data: allData, error: allErr } = await supabase
-                        .from('student_creations')
-                        .select(`
-                            *,
-                            profiles:student_id (full_name, id)
-                        `)
-                        .eq('status', 'published')
-                        .order('created_at', { ascending: false });
+                // If specialized approved works exist, prioritize them (still only creative)
+                const { data: approvedData } = await supabase
+                    .from('student_creations')
+                    .select(`*, profiles:student_id (full_name, id)`)
+                    .in('category', ['Story', 'Poem', 'Essay'])
+                    .eq('status', 'approved')
+                    .order('created_at', { ascending: false });
 
-                    if (allData) data = allData;
-                    if (allErr) throw allErr;
+                if (approvedData && approvedData.length > 0) {
+                    data = approvedData;
                 }
 
                 if (data) setCreations(data);
