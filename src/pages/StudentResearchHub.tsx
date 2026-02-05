@@ -103,6 +103,7 @@ const StudentResearchHub = () => {
                     reviews: updatedReviews,
                     method_notes: methodNotes,
                     lang_notes: langNotes,
+                    other_notes: otherNotes, // Ensure other_notes is also synced
                     reviewed_by: profile?.id,
                     reviewed_at: new Date().toISOString()
                 })
@@ -142,13 +143,30 @@ const StudentResearchHub = () => {
             const currentReviews = selectedWork.reviews || [];
             const updatedReviews = [...currentReviews, newReview];
 
+            // 1. Insert into history table
+            const { error: reviewError } = await supabase
+                .from('student_research_reviews')
+                .insert([{
+                    work_id: selectedWork.id,
+                    professor_id: profile?.id,
+                    professor_name: profile?.full_name,
+                    method_notes: methodNotes,
+                    lang_notes: langNotes,
+                    other_notes: otherNotes,
+                    type: 'revision_request'
+                }]);
+
+            if (reviewError) throw reviewError;
+
+            // 2. Update creations table
             const { error } = await supabase
                 .from('student_creations')
                 .update({
                     status: 'needs_revision',
                     reviews: updatedReviews,
                     method_notes: methodNotes,
-                    lang_notes: langNotes
+                    lang_notes: langNotes,
+                    other_notes: otherNotes // Sync other_notes here too
                 })
                 .eq('id', selectedWork.id);
 
@@ -225,14 +243,15 @@ const StudentResearchHub = () => {
                                     </div>
                                     <div className="research-article-box" style={{
                                         fontSize: '1.35rem',
-                                        lineHeight: '2.2',
+                                        lineHeight: '1.8', // Adjusted for readability
                                         color: '#1e293b',
                                         textAlign: 'justify',
                                         fontFamily: 'var(--font-family-serif)',
                                         minHeight: '600px',
                                         whiteSpace: 'pre-wrap',
-                                        wordBreak: 'break-word',
-                                        overflowWrap: 'break-word'
+                                        wordBreak: 'normal', // STOP cutting words
+                                        overflowWrap: 'break-word',
+                                        hyphens: 'none' // Prevent auto-hyphenation
                                     }} dangerouslySetInnerHTML={{ __html: selectedWork.content }}></div>
                                 </div>
 
