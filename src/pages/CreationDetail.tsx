@@ -190,22 +190,27 @@ const CreationDetail = () => {
                     )}
 
                     {/* Main Content */}
-                    <div
-                        className="academic-journal-content"
-                        style={{
-                            fontSize: isFocusMode ? '2.2rem' : '1.4rem',
-                            color: '#1a1a1a',
-                            lineHeight: isFocusMode ? '2.8' : '2.3',
-                            whiteSpace: 'pre-wrap',
-                            fontFamily: isFocusMode ? 'var(--academic-font-serif)' : 'var(--academic-font-serif)',
-                            textAlign: creation.category === 'Poem' ? 'center' : 'justify',
-                            maxWidth: '100%',
-                            transition: 'all 0.5s ease',
-                            direction: 'rtl',
-                            minHeight: '400px'
-                        }}
-                        dangerouslySetInnerHTML={{ __html: creation.content }}
-                    ></div>
+                    <div style={{ maxWidth: '900px', margin: '0 auto', padding: '0 20px', width: '100%', boxSizing: 'border-box' }}>
+                        <div
+                            className="academic-journal-content"
+                            style={{
+                                fontSize: isFocusMode ? '2.2rem' : '1.4rem',
+                                color: '#1a1a1a',
+                                lineHeight: isFocusMode ? '2.8' : '2.3',
+                                whiteSpace: 'pre-wrap',
+                                fontFamily: isFocusMode ? 'var(--academic-font-serif)' : 'var(--academic-font-serif)',
+                                textAlign: creation.category === 'Poem' ? 'center' : 'justify',
+                                maxWidth: '100%',
+                                transition: 'all 0.5s ease',
+                                direction: 'rtl',
+                                minHeight: '400px',
+                                wordWrap: 'break-word',
+                                overflowWrap: 'break-word',
+                                wordBreak: 'break-word'
+                            }}
+                            dangerouslySetInnerHTML={{ __html: creation.content }}
+                        ></div>
+                    </div>
 
                     {/* Academic References */}
                     {creation.category === 'ResearchPaper' && creation.references && (

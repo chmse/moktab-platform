@@ -174,7 +174,7 @@ const StudentResearchHub = () => {
     }
 
     return (
-        <div style={{ backgroundColor: '#f8fafc', minHeight: '100vh', padding: '140px 1.5rem 4rem' }}>
+        <div style={{ backgroundColor: '#f8fafc', minHeight: '100vh', padding: '140px 1.5rem 4rem', maxWidth: '100vw', overflowX: 'hidden' }}>
             <div className="container-fluid" style={{ maxWidth: '1700px', margin: '0 auto' }}>
                 <div style={{ marginBottom: '3rem', borderRight: '5px solid var(--color-accent)', paddingRight: '1.5rem' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', color: 'var(--color-primary)', marginBottom: '0.5rem' }}>
@@ -186,76 +186,13 @@ const StudentResearchHub = () => {
 
                 <div style={{
                     display: 'grid',
-                    gridTemplateColumns: '350px 1fr',
+                    gridTemplateColumns: '1fr 350px',
                     gap: '2rem',
                     alignItems: 'start',
-                    direction: 'ltr' // Force Left-to-Right Grid Flow visually
+                    direction: 'ltr' // Ensures physical placement where 1fr is left and 350px is right
                 }}>
 
-                    {/* LEFT COLUMN (350px): List of Student Works */}
-                    <div style={{ position: 'sticky', top: '2rem', height: 'fit-content', direction: 'rtl' }}>
-                        <div style={{
-                            backgroundColor: 'white',
-                            padding: '1.5rem',
-                            borderRadius: '24px',
-                            border: '1px solid #e2e8f0',
-                            boxShadow: '0 4px 15px rgba(0,0,0,0.03)'
-                        }}>
-                            <h2 style={{ fontSize: '1.3rem', paddingBottom: '1rem', borderBottom: '3px solid var(--color-primary)', marginBottom: '1.5rem', color: 'var(--color-primary)', fontWeight: 'bold' }}>
-                                قائمة الأبحاث المعلقة ({pendingWorks.length})
-                            </h2>
-
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', maxHeight: '70vh', overflowY: 'auto', paddingLeft: '0.5rem' }}>
-                                {pendingWorks.length > 0 ? pendingWorks.map(work => (
-                                    <div key={work.id}
-                                        onClick={() => setSelectedWork(work)}
-                                        className="card-hover"
-                                        style={{
-                                            backgroundColor: selectedWork?.id === work.id ? 'var(--color-primary)' : 'white',
-                                            padding: '1.2rem',
-                                            borderRadius: '16px',
-                                            border: selectedWork?.id === work.id ? 'none' : '1px solid #e2e8f0',
-                                            cursor: 'pointer',
-                                            transition: 'all 0.3s ease',
-                                            color: selectedWork?.id === work.id ? 'white' : 'inherit'
-                                        }}>
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.8rem' }}>
-                                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                                                <div style={{
-                                                    width: '32px',
-                                                    height: '32px',
-                                                    borderRadius: '50%',
-                                                    backgroundColor: selectedWork?.id === work.id ? 'rgba(255,255,255,0.2)' : 'rgba(197, 160, 89, 0.1)',
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    justifyContent: 'center',
-                                                    color: selectedWork?.id === work.id ? 'white' : 'var(--color-accent)'
-                                                }}>
-                                                    <User size={14} />
-                                                </div>
-                                                <h3 style={{ margin: 0, fontSize: '0.9rem', fontWeight: 'bold' }}>{work.profiles?.full_name}</h3>
-                                            </div>
-                                            {work.status === 'corrected' && (
-                                                <span style={{ fontSize: '0.65rem', backgroundColor: '#dcfce7', color: '#166534', padding: '2px 8px', borderRadius: '20px', fontWeight: 'bold' }}>تم التصحيح</span>
-                                            )}
-                                        </div>
-                                        <h4 style={{ fontSize: '0.95rem', marginBottom: '0.5rem', lineHeight: '1.4', fontWeight: '600' }}>{work.title}</h4>
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', opacity: 0.8 }}>
-                                            <span>{work.specialty}</span>
-                                            <span><Clock size={12} style={{ verticalAlign: 'middle' }} /> {new Date(work.created_at).toLocaleDateString('ar-EG')}</span>
-                                        </div>
-                                    </div>
-                                )) : (
-                                    <div style={{ textAlign: 'center', padding: '3rem 1rem' }}>
-                                        <CheckCircle size={40} color="#cbd5e1" style={{ marginBottom: '1rem' }} />
-                                        <p style={{ color: '#94a3b8', fontSize: '0.9rem' }}>لا توجد أبحاث معلقة حالياً.</p>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* RIGHT COLUMN (1fr): Research Article Content & Review Form */}
+                    {/* LEFT COLUMN (1fr): Research Article Content & Review Form */}
                     <div style={{ direction: 'rtl' }}>
                         {selectedWork ? (
                             <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '3rem' }}>
@@ -274,11 +211,14 @@ const StudentResearchHub = () => {
                                 {/* 2. LARGE READABLE BOX FOR RESEARCH TEXT */}
                                 <div className="glass-panel" style={{
                                     backgroundColor: 'white',
-                                    padding: '4rem',
+                                    padding: '2rem', // Fixed padding as requested
+                                    width: '100%',
+                                    boxSizing: 'border-box', // Ensure padding doesn't cause overflow
                                     borderRadius: '32px',
                                     boxShadow: '0 10px 40px rgba(0,0,0,0.04)',
                                     border: '1px solid #e2e8f0',
-                                    position: 'relative'
+                                    position: 'relative',
+                                    overflow: 'hidden' // Prevent any internal overflow leaking out
                                 }}>
                                     <div style={{ position: 'absolute', top: '2rem', left: '2rem', opacity: 0.05 }}>
                                         <BookOpen size={100} />
@@ -290,11 +230,13 @@ const StudentResearchHub = () => {
                                         textAlign: 'justify',
                                         fontFamily: 'var(--font-family-serif)',
                                         minHeight: '600px',
-                                        whiteSpace: 'pre-wrap'
+                                        whiteSpace: 'pre-wrap',
+                                        wordBreak: 'break-word',
+                                        overflowWrap: 'break-word'
                                     }} dangerouslySetInnerHTML={{ __html: selectedWork.content }}></div>
                                 </div>
 
-                                {/* 3. PREVIOUS REVIEWS SECTION (BELOW TEXT) */}
+                                {/* 3. PREVIOUS REVIEWS SECTION */}
                                 {selectedWork.reviews && selectedWork.reviews.length > 0 && (
                                     <div style={{ backgroundColor: '#fff7ed', padding: '2.5rem', borderRadius: '24px', border: '2px dashed #fdba74' }}>
                                         <h3 style={{ fontSize: '1.5rem', color: '#9a3412', marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '0.75rem', fontWeight: '900' }}>
@@ -432,6 +374,69 @@ const StudentResearchHub = () => {
                                 <p style={{ fontSize: '1rem', opacity: 0.8, marginTop: '0.5rem' }}>نقدر جهودكم في إثراء البحث العلمي في المعهد.</p>
                             </div>
                         )}
+                    </div>
+
+                    {/* RIGHT COLUMN (350px): List of Student Works */}
+                    <div style={{ position: 'sticky', top: '2rem', height: 'fit-content', direction: 'rtl' }}>
+                        <div style={{
+                            backgroundColor: 'white',
+                            padding: '1.5rem',
+                            borderRadius: '24px',
+                            border: '1px solid #e2e8f0',
+                            boxShadow: '0 4px 15px rgba(0,0,0,0.03)'
+                        }}>
+                            <h2 style={{ fontSize: '1.3rem', paddingBottom: '1rem', borderBottom: '3px solid var(--color-primary)', marginBottom: '1.5rem', color: 'var(--color-primary)', fontWeight: 'bold' }}>
+                                قائمة الأبحاث المعلقة ({pendingWorks.length})
+                            </h2>
+
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', maxHeight: '70vh', overflowY: 'auto', paddingLeft: '0.5rem' }}>
+                                {pendingWorks.length > 0 ? pendingWorks.map(work => (
+                                    <div key={work.id}
+                                        onClick={() => setSelectedWork(work)}
+                                        className="card-hover"
+                                        style={{
+                                            backgroundColor: selectedWork?.id === work.id ? 'var(--color-primary)' : 'white',
+                                            padding: '1.2rem',
+                                            borderRadius: '16px',
+                                            border: selectedWork?.id === work.id ? 'none' : '1px solid #e2e8f0',
+                                            cursor: 'pointer',
+                                            transition: 'all 0.3s ease',
+                                            color: selectedWork?.id === work.id ? 'white' : 'inherit'
+                                        }}>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.8rem' }}>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                                                <div style={{
+                                                    width: '32px',
+                                                    height: '32px',
+                                                    borderRadius: '50%',
+                                                    backgroundColor: selectedWork?.id === work.id ? 'rgba(255,255,255,0.2)' : 'rgba(197, 160, 89, 0.1)',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    color: selectedWork?.id === work.id ? 'white' : 'var(--color-accent)'
+                                                }}>
+                                                    <User size={14} />
+                                                </div>
+                                                <h3 style={{ margin: 0, fontSize: '0.9rem', fontWeight: 'bold' }}>{work.profiles?.full_name}</h3>
+                                            </div>
+                                            {work.status === 'corrected' && (
+                                                <span style={{ fontSize: '0.65rem', backgroundColor: '#dcfce7', color: '#166534', padding: '2px 8px', borderRadius: '20px', fontWeight: 'bold' }}>تم التصحيح</span>
+                                            )}
+                                        </div>
+                                        <h4 style={{ fontSize: '0.95rem', marginBottom: '0.5rem', lineHeight: '1.4', fontWeight: '600' }}>{work.title}</h4>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', opacity: 0.8 }}>
+                                            <span>{work.specialty}</span>
+                                            <span><Clock size={12} style={{ verticalAlign: 'middle' }} /> {new Date(work.created_at).toLocaleDateString('ar-EG')}</span>
+                                        </div>
+                                    </div>
+                                )) : (
+                                    <div style={{ textAlign: 'center', padding: '3rem 1rem' }}>
+                                        <CheckCircle size={40} color="#cbd5e1" style={{ marginBottom: '1rem' }} />
+                                        <p style={{ color: '#94a3b8', fontSize: '0.9rem' }}>لا توجد أبحاث معلقة حالياً.</p>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
