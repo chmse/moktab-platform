@@ -41,6 +41,9 @@ const StudentDashboard = () => {
     const [content, setContent] = useState('');
     const [category, setCategory] = useState<'Story' | 'Poem' | 'Essay' | 'ResearchPaper'>('Story');
     const [specialty, setSpecialty] = useState('');
+    const [abstract, setAbstract] = useState('');
+    const [references, setReferences] = useState('');
+    const [editingId, setEditingId] = useState<string | null>(null);
     const [submitting, setSubmitting] = useState(false);
     const [showToast, setShowToast] = useState(false);
     const [toastMessage, setToastMessage] = useState('');
@@ -87,10 +90,10 @@ const StudentDashboard = () => {
                 })));
             }
 
-            // Fetch My Creations
+            // Fetch My Creations with reviews
             const { data: creationsData } = await supabase
                 .from('student_creations')
-                .select('*')
+                .select('*, reviews:student_research_reviews(*)')
                 .eq('student_id', user.id)
                 .order('created_at', { ascending: false });
 
@@ -109,31 +112,55 @@ const StudentDashboard = () => {
 
         setSubmitting(true);
         try {
-            const { error } = await supabase
-                .from('student_creations')
-                .insert([{
-                    title: title.trim(),
-                    content: content.trim(),
-                    category,
-                    specialty: specialty.trim(),
-                    student_id: profile?.id,
-                    status: category === 'ResearchPaper' ? 'pending' : 'published'
-                }]);
+            // Check category for status
+            let status = 'published';
+            if (category === 'ResearchPaper') status = 'pending';
+
+            const creationData = {
+                title: title.trim(),
+                content: content.trim(),
+                category,
+                specialty: specialty.trim(),
+                abstract: abstract.trim(),
+                references: references.trim(),
+                student_id: profile?.id,
+                status: status
+            };
+
+            const { error } = editingId
+                ? await supabase.from('student_creations').update(creationData).eq('id', editingId)
+                : await supabase.from('student_creations').insert([creationData]);
 
             if (error) throw error;
 
             setTitle('');
             setContent('');
             setSpecialty('');
-            setToastMessage('تم نشر عملك بنجاح! نثمن عطاءك العلمي والأدبي');
+            setAbstract('');
+            setReferences('');
+            setEditingId(null);
+            setToastMessage(editingId ? 'تم تحديث العمل بنجاح' : 'تم نشر عملك بنجاح! نثمن عطاءك العلمي والأدبي');
             setShowToast(true);
             fetchData();
         } catch (error: any) {
-            setToastMessage('خطأ في النشر: ' + error.message);
-            setShowToast(true);
+            alert('Error: ' + error.message);
         } finally {
             setSubmitting(false);
         }
+    };
+
+    const handleStartEdit = (work: any) => {
+        setEditingId(work.id);
+        setTitle(work.title);
+        setContent(work.content);
+        setCategory(work.category);
+        setSpecialty(work.specialty || '');
+        setAbstract(work.abstract || '');
+        setReferences(work.references || '');
+        setActiveTab('creations');
+        // Scroll to editor
+        const editor = document.getElementById('editor-section');
+        if (editor) editor.scrollIntoView({ behavior: 'smooth' });
     };
 
     const handleDeleteCreation = async (id: string) => {
@@ -144,6 +171,23 @@ const StudentDashboard = () => {
             setMyCreations(prev => prev.filter(c => c.id !== id));
             setToastMessage('تم حذف العمل بنجاح');
             setShowToast(true);
+        }
+    };
+
+    const handleCorrectionComplete = async (workId: string) => {
+        if (!window.confirm('هل قمت بإجراء التعديلات المطلوبة وتود إعادة الإرسال؟')) return;
+        try {
+            const { error } = await supabase
+                .from('student_creations')
+                .update({ status: 'corrected' }) // This status tells prof it's ready for re-review
+                .eq('id', workId);
+
+            if (error) throw error;
+            setToastMessage('تم إبلاغ الأساتذة بإتمام التصحيح.');
+            setShowToast(true);
+            fetchData();
+        } catch (e: any) {
+            alert(e.message);
         }
     };
 
@@ -164,6 +208,53 @@ const StudentDashboard = () => {
                 <h1 style={{ fontSize: '2.5rem', color: 'var(--color-primary)', marginBottom: '0.5rem' }}>مرحباً، {profile?.full_name || 'طالب العلم'}</h1>
                 <p style={{ color: 'var(--color-text-secondary)' }}>واصل رحلتك المعرفية، إليك ملخص نشاطك.</p>
             </div>
+
+            {/* Red Alert Box for Revision Requests */}
+            {myCreations.some(c => c.status === 'needs_revision') && (
+                <div className="animate-bounce-subtle" style={{
+                    backgroundColor: '#fee2e2',
+                    border: '2px solid #ef4444',
+                    borderRadius: '20px',
+                    padding: '1.5rem',
+                    marginBottom: '2rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '1.5rem',
+                    boxShadow: '0 10px 25px rgba(239, 68, 68, 0.15)'
+                }}>
+                    <div style={{
+                        width: '60px',
+                        height: '60px',
+                        backgroundColor: '#ef4444',
+                        borderRadius: '50%',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        color: 'white'
+                    }}>
+                        <Target size={30} />
+                    </div>
+                    <div style={{ flex: 1 }}>
+                        <h3 style={{ margin: 0, color: '#991b1b', fontSize: '1.2rem', fontWeight: 'bold' }}>تنبيه بخصوص التحكيم العلمي</h3>
+                        <p style={{ margin: '0.25rem 0 0', color: '#b91c1c' }}>لديك أبحاث علمية تتطلب مراجعة فورية وتصحيحاً بناءً على ملاحظات الأساتذة المحكمين. يرجى التوجه لقسم "مختبر الإبداع" للتعديل.</p>
+                    </div>
+                    <button
+                        onClick={() => setActiveTab('creations')}
+                        style={{
+                            backgroundColor: '#ef4444',
+                            color: 'white',
+                            border: 'none',
+                            padding: '0.8rem 1.5rem',
+                            borderRadius: '12px',
+                            fontWeight: 'bold',
+                            cursor: 'pointer',
+                            boxShadow: '0 4px 10px rgba(239, 68, 68, 0.3)'
+                        }}
+                    >
+                        انتقل للتصحيح الآن
+                    </button>
+                </div>
+            )}
 
             {/* Stats */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem', marginBottom: '3rem' }}>
@@ -322,7 +413,7 @@ const StudentDashboard = () => {
                     <div className="animate-fade-in">
                         <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '3rem' }}>
                             {/* Editor Section */}
-                            <div>
+                            <div id="editor-section">
                                 <h2 style={{ fontSize: '1.8rem', color: 'var(--color-primary)', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem', fontFamily: 'var(--font-family-serif)' }}>
                                     <Feather size={28} className="text-accent" /> مختبر الإبداع الأدبي
                                 </h2>
@@ -348,7 +439,6 @@ const StudentDashboard = () => {
                                             <select
                                                 value={category}
                                                 onChange={(e) => {
-                                                    console.log('Category changed to:', e.target.value);
                                                     setCategory(e.target.value as any);
                                                 }}
                                                 style={{ width: '100%', padding: '1rem', borderRadius: '12px', border: '1px solid #dcd3bc', outline: 'none', fontSize: '1.1rem', backgroundColor: 'rgba(255,255,255,0.5)' }}
@@ -391,16 +481,58 @@ const StudentDashboard = () => {
                                                 }}
                                             />
                                         </div>
+
+                                        {category === 'ResearchPaper' && (
+                                            <>
+                                                <div style={{ marginBottom: '1.5rem', marginTop: '1.5rem' }}>
+                                                    <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold', color: 'var(--color-primary)' }}>الملخص الأكاديمي (Abstract)</label>
+                                                    <textarea
+                                                        value={abstract}
+                                                        onChange={(e) => setAbstract(e.target.value)}
+                                                        placeholder="اكتب ملخصاً موجزاً..."
+                                                        style={{ width: '100%', padding: '1rem', borderRadius: '12px', border: '1px solid #dcd3bc', minHeight: '100px', outline: 'none', backgroundColor: 'rgba(255,255,255,0.5)' }}
+                                                    />
+                                                </div>
+                                                <div style={{ marginBottom: '1.5rem' }}>
+                                                    <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold', color: 'var(--color-primary)' }}>المصادر والمراجع (References)</label>
+                                                    <textarea
+                                                        value={references}
+                                                        onChange={(e) => setReferences(e.target.value)}
+                                                        placeholder="وثق المصادر والمراجع هنا..."
+                                                        style={{ width: '100%', padding: '1rem', borderRadius: '12px', border: '1px solid #dcd3bc', minHeight: '100px', outline: 'none', backgroundColor: 'rgba(255,255,255,0.5)' }}
+                                                    />
+                                                </div>
+                                            </>
+                                        )}
                                     </div>
 
-                                    <button
-                                        type="submit"
-                                        disabled={submitting || !title || !content}
-                                        className="btn-premium"
-                                        style={{ width: '100%', padding: '1.2rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.75rem', fontSize: '1.1rem', borderRadius: '15px' }}
-                                    >
-                                        <Send size={24} /> {submitting ? 'جاري تخليد العمل...' : category === 'ResearchPaper' ? 'نشر الدراسة في الرواق العلمي' : 'نشر العمل في الرواق الأدبي'}
-                                    </button>
+                                    <div style={{ display: 'flex', gap: '1rem' }}>
+                                        <button
+                                            type="submit"
+                                            disabled={submitting || !title || !content}
+                                            className="btn-premium"
+                                            style={{ flex: 1, padding: '1.2rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.75rem', fontSize: '1.1rem', borderRadius: '15px' }}
+                                        >
+                                            <Send size={24} /> {submitting ? 'جاري الحفظ...' : editingId ? 'تحديث العمل' : category === 'ResearchPaper' ? 'نشر الدراسة في الرواق العلمي' : 'نشر العمل في الرواق الأدبي'}
+                                        </button>
+                                        {editingId && (
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    setEditingId(null);
+                                                    setTitle('');
+                                                    setContent('');
+                                                    setCategory('Story');
+                                                    setSpecialty('');
+                                                    setAbstract('');
+                                                    setReferences('');
+                                                }}
+                                                style={{ padding: '1rem', borderRadius: '15px', border: '1px solid #ef4444', color: '#ef4444', cursor: 'pointer' }}
+                                            >
+                                                إلغاء التعديل
+                                            </button>
+                                        )}
+                                    </div>
                                 </form>
                             </div>
 
@@ -412,8 +544,8 @@ const StudentDashboard = () => {
                                             padding: '1.5rem',
                                             backgroundColor: 'white',
                                             borderRadius: '20px',
-                                            boxShadow: '0 5px 15px rgba(0,0,0,0.02)',
-                                            border: '1px solid var(--color-border)',
+                                            boxShadow: creation.status === 'needs_revision' ? '0 0 0 2px #ef4444' : '0 5px 15px rgba(0,0,0,0.02)',
+                                            border: creation.status === 'needs_revision' ? 'none' : '1px solid var(--color-border)',
                                             display: 'flex',
                                             flexDirection: 'column',
                                             justifyContent: 'space-between'
@@ -421,7 +553,7 @@ const StudentDashboard = () => {
                                             <div style={{ marginBottom: '1rem' }}>
                                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                                                     <span style={{ fontSize: '0.8rem', color: 'var(--color-accent)', fontWeight: 'bold' }}>
-                                                        {creation.category === 'Poem' ? 'قصيدة' : creation.category === 'Story' ? 'قصة' : creation.category === 'Essay' ? 'خاطرة' : 'مقال بحثي'}
+                                                        {creation.category === 'Poem' ? 'قصيدة' : creation.category === 'Story' ? 'قصة' : creation.category === 'Essay' ? 'خاطرة' : 'دراسة بحثية محكمة'}
                                                     </span>
                                                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.25rem' }}>
                                                         <span style={{ fontSize: '0.75rem', color: 'var(--color-text-secondary)' }}>{new Date(creation.created_at).toLocaleDateString('ar-EG')}</span>
@@ -430,13 +562,21 @@ const StudentDashboard = () => {
                                                             padding: '2px 8px',
                                                             borderRadius: '4px',
                                                             fontWeight: 'bold',
-                                                            backgroundColor: creation.status === 'approved' ? '#dcfce7' : '#fef9c3',
-                                                            color: creation.status === 'approved' ? '#166534' : '#854d0e'
+                                                            backgroundColor: creation.status === 'approved' ? '#dcfce7' : creation.status === 'needs_revision' ? '#fee2e2' : '#fef9c3',
+                                                            color: creation.status === 'approved' ? '#166534' : creation.status === 'needs_revision' ? '#991b1b' : '#854d0e'
                                                         }}>
-                                                            {creation.status === 'approved' ? 'تمت المراجعة والنشر' : 'قيد التحكيم والمراجعة'}
+                                                            {creation.status === 'approved' ? 'تمت المراجعة والنشر' : creation.status === 'needs_revision' ? 'يحتاج إلى تصحيح' : 'قيد التحكيم والمراجعة'}
                                                         </span>
                                                     </div>
                                                 </div>
+
+                                                {creation.status === 'needs_revision' && (
+                                                    <div style={{ backgroundColor: '#fee2e2', color: '#991b1b', padding: '0.75rem', borderRadius: '8px', marginTop: '0.5rem', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                                        <HelpCircle size={16} />
+                                                        <strong>تنبيه:</strong> توجد ملاحظات جديدة من الأساتذة تتطلب تصحيحاً.
+                                                    </div>
+                                                )}
+
                                                 <h3 style={{ fontWeight: '900', fontSize: '1.3rem', color: 'var(--color-primary)', fontFamily: 'serif', marginTop: '0.5rem' }}>{creation.title}</h3>
                                                 {creation.specialty && (
                                                     <div style={{ fontSize: '0.85rem', color: 'var(--color-text-secondary)', marginTop: '0.25rem' }}>
@@ -444,16 +584,108 @@ const StudentDashboard = () => {
                                                     </div>
                                                 )}
 
-                                                {/* Professor Feedback Section */}
-                                                {(creation.method_notes || creation.lang_notes) && (
-                                                    <div style={{ marginTop: '1rem', padding: '1rem', backgroundColor: '#f8fafc', borderRadius: '12px', border: '1px dashed #cbd5e1' }}>
-                                                        <p style={{ fontSize: '0.8rem', fontWeight: 'bold', color: 'var(--color-primary)', marginBottom: '0.5rem' }}>ملاحظات الأستاذ المحكم:</p>
-                                                        {creation.method_notes && <p style={{ fontSize: '0.75rem', color: '#475569', marginBottom: '0.3rem' }}>• <strong>المنهجية:</strong> {creation.method_notes}</p>}
-                                                        {creation.lang_notes && <p style={{ fontSize: '0.75rem', color: '#475569' }}>• <strong>اللغوية:</strong> {creation.lang_notes}</p>}
+                                                {/* Official Reviewer Feedback Log */}
+                                                {(creation.reviews && creation.reviews.length > 0) ? (
+                                                    <div style={{ marginTop: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                                                        <h4 style={{ fontSize: '0.9rem', color: 'var(--color-primary)', display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 'bold' }}>
+                                                            <CheckCircle size={16} /> سجل ملاحظات المحكمين ({creation.reviews.length})
+                                                        </h4>
+                                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
+                                                            {creation.reviews.map((rev: any, idx: number) => (
+                                                                <div key={idx} style={{
+                                                                    backgroundColor: '#1A237E',
+                                                                    color: 'white',
+                                                                    padding: '1.2rem',
+                                                                    borderRadius: '12px',
+                                                                    border: '2px solid #C5A059',
+                                                                    boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+                                                                }}>
+                                                                    <div style={{ borderBottom: '1px solid rgba(197, 160, 89, 0.3)', paddingBottom: '0.5rem', marginBottom: '0.8rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                                                        <span style={{ fontWeight: 'bold', color: '#C5A059', fontSize: '1rem' }}>بروفيسور: {rev.professor_name}</span>
+                                                                        <span style={{ fontSize: '0.7rem', opacity: 0.8 }}>{rev.created_at ? new Date(rev.created_at).toLocaleDateString('ar-EG') : ''}</span>
+                                                                    </div>
+
+                                                                    {rev.type === 'revision_request' && <div style={{ backgroundColor: '#ef4444', color: 'white', padding: '0.4rem', borderRadius: '4px', fontSize: '0.8rem', textAlign: 'center', marginBottom: '1rem', fontWeight: 'bold' }}>⚠ طلب تصحيح</div>}
+
+                                                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+                                                                        <div style={{ backgroundColor: 'rgba(255,255,255,0.05)', padding: '0.8rem', borderRadius: '8px' }}>
+                                                                            <p style={{ color: '#C5A059', fontWeight: 'bold', fontSize: '0.8rem', marginBottom: '0.2rem' }}>الملاحظات المنهجية:</p>
+                                                                            <p style={{ fontSize: '0.85rem', lineHeight: '1.5' }}>{rev.method_notes || 'لا يوجد ملاحظات'}</p>
+                                                                        </div>
+                                                                        <div style={{ backgroundColor: 'rgba(255,255,255,0.05)', padding: '0.8rem', borderRadius: '8px' }}>
+                                                                            <p style={{ color: '#C5A059', fontWeight: 'bold', fontSize: '0.8rem', marginBottom: '0.2rem' }}>الملاحظات اللغوية:</p>
+                                                                            <p style={{ fontSize: '0.85rem', lineHeight: '1.5' }}>{rev.lang_notes || 'لا يوجد ملاحظات'}</p>
+                                                                        </div>
+                                                                        {rev.other_notes && (
+                                                                            <div style={{ backgroundColor: 'rgba(255,255,255,0.05)', padding: '0.8rem', borderRadius: '8px' }}>
+                                                                                <p style={{ color: '#C5A059', fontWeight: 'bold', fontSize: '0.8rem', marginBottom: '0.2rem' }}>ملاحظات أخرى:</p>
+                                                                                <p style={{ fontSize: '0.85rem', lineHeight: '1.5' }}>{rev.other_notes}</p>
+                                                                            </div>
+                                                                        )}
+                                                                    </div>
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                ) : (creation.method_notes || creation.lang_notes) && (
+                                                    <div style={{ marginTop: '1rem', padding: '1.2rem', backgroundColor: '#1A237E', borderRadius: '12px', border: '2px solid #C5A059', color: 'white' }}>
+                                                        <p style={{ fontSize: '0.9rem', fontWeight: 'bold', color: '#C5A059', marginBottom: '0.8rem' }}>ملاحظات الأستاذ المحكم:</p>
+                                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                                                            {creation.method_notes && <p style={{ fontSize: '0.85rem' }}><strong>المنهج:</strong> {creation.method_notes}</p>}
+                                                            {creation.lang_notes && <p style={{ fontSize: '0.85rem' }}><strong>اللغة:</strong> {creation.lang_notes}</p>}
+                                                        </div>
+                                                    </div>
+                                                )}
+
+                                                {/* ACTIONS */}
+                                                {(creation.status === 'pending' || creation.status === 'needs_revision') && (
+                                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginTop: '1rem' }}>
+                                                        <button
+                                                            onClick={() => handleStartEdit(creation)}
+                                                            className="btn-accent"
+                                                            style={{
+                                                                width: '100%',
+                                                                padding: '0.6rem',
+                                                                borderRadius: '8px',
+                                                                backgroundColor: 'rgba(197, 160, 89, 0.1)',
+                                                                color: 'var(--color-accent)',
+                                                                border: '1px solid var(--color-accent)',
+                                                                fontWeight: 'bold',
+                                                                cursor: 'pointer',
+                                                                display: 'flex',
+                                                                alignItems: 'center',
+                                                                justifyContent: 'center',
+                                                                gap: '0.5rem'
+                                                            }}
+                                                        >
+                                                            تعديل العمل {creation.status === 'needs_revision' && '(مطلوب)'}
+                                                        </button>
+
+                                                        {creation.status === 'needs_revision' && (
+                                                            <button
+                                                                onClick={() => handleCorrectionComplete(creation.id)}
+                                                                style={{
+                                                                    width: '100%',
+                                                                    padding: '0.6rem',
+                                                                    borderRadius: '8px',
+                                                                    backgroundColor: '#10b981',
+                                                                    color: 'white',
+                                                                    border: 'none',
+                                                                    fontWeight: 'bold',
+                                                                    cursor: 'pointer',
+                                                                    display: 'flex',
+                                                                    alignItems: 'center',
+                                                                    justifyContent: 'center',
+                                                                    gap: '0.5rem'
+                                                                }}
+                                                            >
+                                                                <CheckCircle size={16} /> تم استكمال التصحيح
+                                                            </button>
+                                                        )}
                                                     </div>
                                                 )}
                                             </div>
-                                            <div style={{ display: 'flex', gap: '0.75rem', borderTop: '1px solid var(--color-border)', paddingTop: '1rem' }}>
+                                            <div style={{ display: 'flex', gap: '0.75rem', borderTop: '1px solid var(--color-border)', paddingTop: '1rem', marginTop: '1rem' }}>
                                                 <Link to={`/creations/${creation.id}`} style={{ flex: 1, padding: '0.6rem', color: 'var(--color-accent)', backgroundColor: 'rgba(197,160,89,0.1)', borderRadius: '10px', textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
                                                     <BookOpen size={18} /> عرض العمل
                                                 </Link>
